@@ -12,16 +12,19 @@ import de.loki.metallum.entity.AbstractEntity;
 
 public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
-	protected final String	html;
-	protected final boolean	loadImage;
-	protected final boolean	loadLinks;
-	protected final T		entity;
+	protected final String		html;
+	protected final Document	doc;
+	protected final boolean		loadImage;
+	protected final boolean		loadLinks;
+	protected final T			entity;
 
 	public AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
 		this.entity = entity;
 		this.loadImage = loadImage;
 		this.loadLinks = loadLinks;
 		this.html = Downloader.getHTML(getSiteURL());
+//		may we should mark html as deprecated
+		this.doc = Jsoup.parse(this.html);
 	}
 
 	public abstract T parse();

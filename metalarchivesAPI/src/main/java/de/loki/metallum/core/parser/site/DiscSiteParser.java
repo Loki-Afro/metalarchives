@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.loki.metallum.core.parser.site.helper.ReviewParser;
 import de.loki.metallum.core.parser.site.helper.disc.DiscSiteMemberParser;
@@ -163,11 +165,12 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
 	private final String parseArtworkURL() {
 		String artworkURL = null;
-		if (this.html.contains("<div class=\"album_img\">")) {
-			artworkURL = this.html.substring(this.html.indexOf("<div class=\"album_img\""));
-			artworkURL = artworkURL.substring(artworkURL.indexOf("href=\"") + 6);
-			artworkURL = artworkURL.substring(0, artworkURL.indexOf("\""));
+		Elements elements = this.doc.getElementsByClass("album_img");
+		if (elements.size() > 0) {
+			Element imgElement = elements.get(0).select("img[src~=(?i)\\.(png|jpe?g|gif)]").get(0);
+			artworkURL = imgElement.attr("src");
 		}
+		logger.debug("ArtworkURL: " + artworkURL);
 		return artworkURL;
 	}
 
@@ -195,31 +198,30 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private final Band[] parseSplitBands() {
-		String bandHtml = this.html.substring(this.html.indexOf("<h2 class=\"band_name\">"), this.html.indexOf("</h2>"));
-		String bandName = Jsoup.parse(bandHtml).text();
-		String[] bandSplit = bandName.split("/");
-		Band[] splitBands = new Band[bandSplit.length];
-		for (int i = 0; i < bandSplit.length; i++) {
-			Band bandToAdd = new Band(i);
-			bandToAdd.setName(bandSplit[i].trim());
-			String bandId = bandHtml.substring(0, bandHtml.indexOf("\">" + bandSplit[i].trim()));
+		Element bandsElement = this.doc.getElementsByClass("band_name").get(0);
+		Elements bands = bandsElement.select(("a[href]"));
+		Band[] splitBands = new Band[bands.size()];
+		for (Element bandElem : bands) {
+			String bandLink = bandElem.toString();
+			String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandElem.text()));
 			bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
-			bandToAdd.setId(Long.parseLong(bandId));
-			splitBands[i] = bandToAdd;
+			Band band = new Band(Long.parseLong(bandId), bandElem.text());
+			splitBands[bands.indexOf(bandElem)] = band;
 		}
+		logger.debug("SplitBands: " + splitBands);
 		return splitBands;
 	}
 
 	private Band parseBand() {
-		Band band = new Band(parseBandId());
-		band.setName(parseBandName());
+		Band band = new Band(parseBandId(), parseBandName());
 		return band;
 	}
 
 	private String parseBandName() {
-		String bandName = this.html.substring(this.html.indexOf("<h2 class=\"band_name\">"), this.html.indexOf("</h2>"));
-		bandName = bandName.substring(bandName.indexOf(">") + 1);
-		return Jsoup.parse(bandName).text();
+		Element element = this.doc.getElementsByClass("band_name").get(0);
+		String bandName = element.text();
+		logger.debug("BandName: " + bandName);
+		return bandName;
 	}
 
 	private long parseBandId() {
