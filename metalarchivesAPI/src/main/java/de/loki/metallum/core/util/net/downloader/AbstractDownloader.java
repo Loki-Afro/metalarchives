@@ -13,7 +13,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
@@ -36,7 +36,7 @@ public abstract class AbstractDownloader {
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		final SchemeRegistry schemeRegistry = new SchemeRegistry();
 		schemeRegistry.register(new Scheme(PROTOCOL, PORT, PlainSocketFactory.getSocketFactory()));
-		HTTP_CLIENT = new CachingHttpClient(new DefaultHttpClient(new ThreadSafeClientConnManager(schemeRegistry), params), cacheConfig);
+		HTTP_CLIENT = new CachingHttpClient(new DefaultHttpClient(new PoolingClientConnectionManager(schemeRegistry), params), cacheConfig);
 	}
 
 	protected AbstractDownloader(final String urlString) {

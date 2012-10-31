@@ -11,6 +11,9 @@ public class Track extends AbstractEntity {
 	private String	playTime;
 	private int		trackNumber;
 	private String	splitBandName	= "";
+	/**
+	 * 1 by default.
+	 */
 	private int		discNumber		= 1;
 
 	/**
@@ -28,7 +31,7 @@ public class Track extends AbstractEntity {
 		this.discFromTrack = new Disc(0);
 	}
 
-	public void setDiscName(String discName) {
+	public void setDiscName(final String discName) {
 		this.discFromTrack.setName(discName);
 	}
 
@@ -42,7 +45,7 @@ public class Track extends AbstractEntity {
 
 	// exists because there are also split discs, and we have no chance to determine which track is
 	// from which band
-	public void setBandName(String bandName) {
+	public void setBandName(final String bandName) {
 		this.splitBandName = bandName;
 	}
 
@@ -58,7 +61,7 @@ public class Track extends AbstractEntity {
 		return this.instrumental;
 	}
 
-	public void setDiscType(DiscType discType) {
+	public void setDiscType(final DiscType discType) {
 		this.discFromTrack.setDiscType(discType);
 	}
 
@@ -66,11 +69,11 @@ public class Track extends AbstractEntity {
 		return this.discFromTrack;
 	}
 
-	public void setGenre(String genre) {
+	public void setGenre(final String genre) {
 		this.discFromTrack.getBand().setGenre(genre);
 	}
 
-	public void setLyrics(String lyrics) {
+	public void setLyrics(final String lyrics) {
 		this.lyrics = lyrics;
 	}
 
