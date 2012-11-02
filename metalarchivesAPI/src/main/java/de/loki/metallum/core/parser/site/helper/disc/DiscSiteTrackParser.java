@@ -6,6 +6,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
@@ -13,101 +16,102 @@ import de.loki.metallum.entity.Track;
 
 public class DiscSiteTrackParser {
 	private static Logger	logger	= Logger.getLogger(DiscSiteTrackParser.class);
+	private final Document	doc;
 
-	public Track[] parse(final String html, final boolean isSplit, final boolean loadLyrics) {
-		final String[] tracks = prepareHtml(html);
-		final List<Track> trackList = new ArrayList<Track>();
-		int trackNo = 0;
-		// boolean isSplit = html.contains("<dd>Split</dd>");
-		String discNo = "";
-		for (int i = 1; i < tracks.length - 1; i += 2) {
-			if (tracks[i].contains("<td colspan=\"4\">")) {
-				discNo = tracks[i].substring(tracks[i].indexOf("<td") + 3, tracks[i].indexOf("</td>"));
-				discNo = discNo.substring(discNo.indexOf(">") + 1);
-				i--;
-				trackNo = 0;
-				continue;
-			}
-			if (tracks[i].contains("<td align=\"right\"><strong>")) {
-				i--;
-				continue;
-			}
-			final Track track = new Track();
-			final String[] trackDetails = tracks[i].split("<td");
+	public DiscSiteTrackParser(final String html) {
+		this.doc = Jsoup.parse(html);
+	}
 
-			track.setId(parseTrackId(trackDetails[1]));
-			track.setName(parseTrackTitle(trackDetails[2], isSplit));
-			track.setPlayTime(parsePlayTime(trackDetails[3]));
-
-			if (isSplit) {
-				track.setBandName(parseBandName(trackDetails[2]));
-			} else if (discNo != null && !discNo.isEmpty()) {
-				track.setDiscNumber(Integer.parseInt(discNo.replaceAll("[^0-9]", "")));
-			}
-
-			// if (trackDetails.length < 5 || trackDetails[4].contains("instrumental")) {
-			if (trackDetails[4].contains("instrumental")) {
-				track.setInstrumental(true);
-				// } else if (loadLyrics && trackDetails[4].contains("Show lyrics")) {
-			} else if (loadLyrics && trackDetails[4].contains("toggleLyrics")) {
-				track.setLyrics(parseLyrics(trackDetails[4]));
-			}
-
-			track.setTrackNumber(++trackNo);
-			trackList.add(track);
+	private boolean parseIsInstrumental(final Element row) {
+		Element lastTd = row.getElementsByTag("td").last();
+		if (lastTd.text().contains("instrumental")) {
+			return true;
+		} else {
+			return false;
 		}
-		Track[] trackArray = new Track[trackList.size()];
-		return trackList.toArray(trackArray);
 	}
 
-	private String[] prepareHtml(final String html) {
-		String tracksHtml = html.substring(html.indexOf("table_lyrics"));
-		tracksHtml = tracksHtml.substring(tracksHtml.indexOf(">") + 1, tracksHtml.indexOf("</table>"));
-		return tracksHtml.split("<tr");
-	}
-
-	private String parseLyrics(final String hitWithId) {
-		String lyricsId = hitWithId.substring(hitWithId.indexOf("toggleLyrics(") + 13, hitWithId.length());
-		lyricsId = lyricsId.substring(0, lyricsId.indexOf(");"));
-
+	private String parseLyrics(final Element row, final long trackId) {
+		if (row.getElementById("lyricsButton" + trackId) == null) {
+			return "";
+		}
 		try {
-			// loading the Lyrics!
-			final String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(Long.parseLong(lyricsId))).trim();
-			final String lyrics = lyricsHtml.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
-			return lyrics;
-		} catch (final ExecutionException e) {
-			logger.error("unanble to get lyrics from \"" + hitWithId + "\"", e);
+			String lyricsHTML = Downloader.getHTML(MetallumURL.assembleLyricsURL(trackId));
+			lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
+			return lyricsHTML.trim();
+		} catch (ExecutionException e) {
+			logger.error("unanble to get lyrics from \"" + trackId + "\"", e);
 		}
-		// making it nice and if there are no lyrics there should be nothing to return!
 		return "";
 	}
 
-	private long parseTrackId(final String html) {
-		String id = html.substring(html.indexOf("name=\"") + 6);
-		id = id.substring(0, id.indexOf("\""));
-		return Long.parseLong(id);
+	/*
+	 * only called when isSplit is true
+	 */
+	private String parseBandName(final Element row) {
+		String bandName = row.getElementsByTag("td").get(1).text();
+		bandName = bandName.substring(0, bandName.indexOf(" - "));
+		return bandName;
 	}
 
-	private String parseBandName(final String html) {
-		String name = Jsoup.parse(html).text();
-		name = name.substring(2, name.indexOf(" - "));
-		return name;
+	private int parseTrackNumber(final Element row) {
+		String trackNo = row.getElementsByTag("td").get(0).text();
+		return Integer.parseInt(trackNo.replaceAll("\\.", ""));
 	}
 
-	private String parseTrackTitle(final String html, final boolean isSplit) {
-		String title = Jsoup.parse(html).text();
-		title = title.substring(2, title.length());
-		if (!isSplit) {
+	public Track[] parse(final boolean isSplit, final boolean loadLyrics) {
+		Element tabeElement = this.doc.select("table[class$=table_lyrics]").first();
+//		final int discCount = tabeElement.select("td[colspan=4]").size();
+		int counter = 1;
+		boolean foundFirstFirstTrack = false;
+		Elements rows = tabeElement.select("tr[class~=(even|odd)]");
+		List<Track> trackList = new ArrayList<Track>();
+		for (Element row : rows) {
+			long trackId = parseTrackId(row);
+			Track track = new Track(trackId);
+			track.setName(parseTrackTitle(row, isSplit));
+			track.setPlayTime(parsePlayTime(row));
+			int trackNumber = parseTrackNumber(row);
+			track.setTrackNumber(trackNumber);
+			if (foundFirstFirstTrack && trackNumber == 1) {
+				counter++;
+			} else if (trackNumber == 1 && !foundFirstFirstTrack) {
+				foundFirstFirstTrack = true;
+			}
+			track.setDiscNumber(counter);
+//			because otherwise the bandname is always the same
+			if (isSplit) {
+				track.setBandName(parseBandName(row));
+			}
+			track.setInstrumental(parseIsInstrumental(row));
+			if (loadLyrics) {
+				track.setLyrics(parseLyrics(row, trackId));
+			}
+			trackList.add(track);
+
+		}
+		return trackList.toArray(new Track[trackList.size()]);
+	}
+
+	private long parseTrackId(final Element row) {
+//		<a name="5767" class="anchor"> </a>
+		String idStr = row.select("a[name~=\\d.*]").first().attr("name");
+		return Long.parseLong(idStr);
+	}
+
+	private String parseTrackTitle(final Element row, final boolean isSplit) {
+		String title = row.getElementsByTag("td").get(1).text();
+		if (isSplit) {
+//			because the result is smth like: BnadName - TitleName
+			title = title.substring(title.indexOf(" - ") + 3, title.length());
 			return title;
 		} else {
-			title = title.substring(title.indexOf(" - ") + 3, title.length());
 			return title;
 		}
 	}
 
-	private String parsePlayTime(final String html) {
-		String playtime = html.substring(html.indexOf(">") + 1);
-		playtime = playtime.substring(0, playtime.indexOf("</td>"));
-		return playtime;
+	private String parsePlayTime(final Element row) {
+		return row.getElementsByTag("td").get(2).text();
 	}
+
 }

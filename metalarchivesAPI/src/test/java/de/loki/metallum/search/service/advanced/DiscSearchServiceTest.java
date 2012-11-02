@@ -702,4 +702,26 @@ public class DiscSearchServiceTest {
 		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
 	}
 
+	@Test
+	public void instrumentalTrackTest() throws MetallumException {
+		final DiscSearchService service = new DiscSearchService();
+		final DiscSearchQuery query = new DiscSearchQuery();
+		query.setReleaseName("Vikingligr Veldi", false);
+		final Disc discResult = service.performSearch(query).get(0);
+		Assert.assertEquals("Enslaved", discResult.getBandName());
+		Assert.assertEquals("Vikingligr Veldi", discResult.getName());
+		List<Track> trackList = discResult.getTrackList();
+		Assert.assertEquals(5, trackList.size());
+		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
+		Assert.assertEquals("Deathlike Silence", discResult.getLabel().getName());
+		Assert.assertNull(discResult.getArtwork());
+		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
+		Assert.assertFalse(discResult.getAddedBy().isEmpty());
+		Assert.assertFalse(discResult.getAddedOn().isEmpty());
+		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
+		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
+		Track lastTrack = trackList.get(trackList.size() - 1);
+		Assert.assertTrue(lastTrack.isInstrumental());
+	}
+
 }
