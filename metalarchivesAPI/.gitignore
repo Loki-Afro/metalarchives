@@ -1,2 +1,5 @@
+metalarchivesAPI/target/
+/.settings/*
+target/*
+.settings
 /target
-/.settings

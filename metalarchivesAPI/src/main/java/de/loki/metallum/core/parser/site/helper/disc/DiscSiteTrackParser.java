@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -18,8 +17,8 @@ public class DiscSiteTrackParser {
 	private static Logger	logger	= Logger.getLogger(DiscSiteTrackParser.class);
 	private final Document	doc;
 
-	public DiscSiteTrackParser(final String html) {
-		this.doc = Jsoup.parse(html);
+	public DiscSiteTrackParser(final Document doc) {
+		this.doc = doc;
 	}
 
 	private boolean parseIsInstrumental(final Element row) {

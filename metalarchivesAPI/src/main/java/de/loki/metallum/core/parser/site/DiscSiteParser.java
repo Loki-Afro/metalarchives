@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -67,25 +66,21 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private String parseDetails() {
-		if (this.html.contains(" id=\"album_tabs_notes\"")) {
-			String details = this.html.substring(this.html.indexOf("id=\"album_tabs_notes\""));
-			details = details.substring(details.indexOf("ui-tabs-panel-content"));
-			details = details.substring(details.indexOf(">") + 1);
-			details = details.substring(0, details.indexOf("</div>")).trim();
-			details = MetallumUtil.parseHtmlWithLineSeperators(details);
-			return details;
+		Element notesElement = this.doc.getElementById("album_tabs_notes");
+		if (notesElement != null) {
+			return MetallumUtil.parseHtmlWithLineSeperators(notesElement.html());
 		}
 		return "";
 	}
 
 	private String parseName() {
-		String name = this.html.substring(this.html.indexOf("<h1 class=\"album_name\">"), this.html.indexOf("</h1>"));
-		name = name.substring(name.indexOf(">") + 1);
-		return Jsoup.parse(name).text();
+		Element albumNameElement = this.doc.getElementsByClass("album_name").first();
+		logger.debug("albumName: " + albumNameElement.text());
+		return albumNameElement.text();
 	}
 
 	private Track[] parseTracks(final Disc disc) {
-		DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.html);
+		DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc);
 		Track[] tracks = trackParser.parse(disc.isSplit(), this.loadLyrics);
 		for (final Track track : tracks) {
 			track.setDisc(disc);
@@ -94,6 +89,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private DiscType parseDiscType() {
+		Element secondElement = this.doc.select("dl[class=float_left]").first();
 		String details = this.html.substring(this.html.indexOf("<dl class=\"float_left\""));
 		String[] discDetails = details.split("<dd>");
 		details = discDetails[1].substring(0, discDetails[1].indexOf("</dd>"));
