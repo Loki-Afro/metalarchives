@@ -232,4 +232,23 @@ public class TrackSearchServiceTest {
 		}
 	}
 
+	/*
+	 * This was once an issue, it happened randomly:
+	 * https://code.google.com/p/metalarchives/issues/detail?id=1&can=1
+	 */
+	@Test
+	public void wasOnceAnIssue() throws MetallumException {
+		TrackSearchService service = new TrackSearchService();
+		TrackSearchQuery query = new TrackSearchQuery();
+		query.setSongTitle("Fatal Self Inflicted Disfigurement", true);
+		service.performSearch(query);
+		List<Track> trackList = service.getResultAsList();
+		Assert.assertEquals(1, trackList.size());
+		Track track = trackList.get(0);
+
+		Assert.assertEquals("Defeated Sanity", track.getBandName());
+		Assert.assertEquals("Psalms of the Moribund", track.getDiscName());
+		Assert.assertEquals("Fatal Self Inflicted Disfigurement", track.getName());
+	}
+
 }
