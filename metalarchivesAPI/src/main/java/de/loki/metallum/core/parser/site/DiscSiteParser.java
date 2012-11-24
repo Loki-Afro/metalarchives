@@ -104,28 +104,28 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 		return date;
 	}
 
+	/**
+	 * Tries to parse the label.
+	 * If there is none or unsigned/selfreleased,
+	 * a new Label will be created with id = 0 and name unsigned/selfreleased.
+	 * 
+	 * @return the Label of the Disc if there is one.
+	 */
 	private Label parseLabel() {
-		String details = this.html.substring(this.html.indexOf("<dl class=\"float_right\""));
-		details = details.substring(details.indexOf(">") + 1, details.indexOf("</dl>"));
-		String[] discDetails = details.split("<dd>");
-		String labelStr = discDetails[1];
-		Label label = new Label(0);
-		String labelName = "";
-		String labelId = "";
-		if (labelStr.contains("</a>")) {
-			labelName = labelStr.substring(labelStr.indexOf(">") + 1, labelStr.indexOf("</a>"));
-			labelId = labelStr.substring(labelStr.indexOf("/labels/") + 8);
-			labelId = labelId.substring(0, labelId.indexOf("#"));
-			labelId = labelId.substring(labelId.lastIndexOf("/") + 1, labelId.length());
-			if (labelId.contains("#")) {
-				labelId = labelId.substring(0, labelId.indexOf("#"));
+		Element labelElement = this.doc.select("dl[class=float_right]").first();
+		Element labelLink = labelElement.getElementsByTag("dd").first();
+		String labelName = labelLink.text();
+		String labelIdStr = "0";
+		Element link = labelLink.getElementsByTag("a").first();
+		if (link != null) {
+			labelIdStr = link.attr("href");
+			labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
+			labelIdStr = labelIdStr.substring(labelIdStr.lastIndexOf("/") + 1, labelIdStr.length());
+			if (labelIdStr.contains("#")) {
+				labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
 			}
-			label.setId(Long.parseLong(labelId));
-		} else {
-			labelName = labelStr.substring(0, labelStr.indexOf("</"));
-
 		}
-		label.setName(labelName);
+		Label label = new Label(Long.parseLong(labelIdStr), labelName);
 		return label;
 	}
 
