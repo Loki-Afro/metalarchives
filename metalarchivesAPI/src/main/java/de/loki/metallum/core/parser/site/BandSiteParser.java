@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 
 import de.loki.metallum.core.parser.site.helper.ReviewParser;
 import de.loki.metallum.core.parser.site.helper.band.BandLinkParser;
@@ -73,23 +74,11 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	}
 
 	private String parseLogoUrl() {
-		String logoUrl = null;
-		if (this.html.contains("class=\"band_name_img\"")) {
-			logoUrl = this.html.substring(this.html.indexOf("class=\"band_name_img\"") + 21);
-			logoUrl = logoUrl.substring(logoUrl.indexOf("src=\"") + 5);
-			logoUrl = logoUrl.substring(0, logoUrl.indexOf("\""));
-		}
-		return logoUrl;
+		return parseImageURL(this.doc, "band_name_img");
 	}
 
 	private String parsePhotoUrl() {
-		String photoUrl = null;
-		if (this.html.contains("class=\"band_img\"")) {
-			photoUrl = this.html.substring(this.html.indexOf("class=\"band_img\"") + 16);
-			photoUrl = photoUrl.substring(photoUrl.indexOf("src=\"") + 5);
-			photoUrl = photoUrl.substring(0, photoUrl.indexOf("\""));
-		}
-		return photoUrl;
+		return parseImageURL(this.doc, "band_img");
 	}
 
 	private final Band parseSecondHtmlPart(final Band band) {
@@ -122,9 +111,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	}
 
 	private final String parseBandName() {
-		String name = this.html.substring(this.html.indexOf("<h1 class=\"band_name\">") + 22);
-		name = name.substring(name.indexOf(">") + 1, name.indexOf("</a>"));
-		return name;
+		Element bandNameElement = this.doc.getElementsByClass("band_name").first();
+		return bandNameElement.text();
 	}
 
 	private final Country parseCountry(final String firstParthtml) {

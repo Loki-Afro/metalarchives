@@ -37,8 +37,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 	protected abstract String getSiteURL();
 
 	protected T parseModfications(final T entity) {
-		final Document document = Jsoup.parse(this.html);
-		final Element footer = document.getElementById("auditTrail");
+		final Element footer = this.doc.getElementById("auditTrail");
 		final Elements elements = footer.select("td");
 		entity.setAddedBy(modificationElementToString(elements.get(0)));
 		entity.setModifiedBy(modificationElementToString(elements.get(1)));
@@ -56,6 +55,23 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 		String text = element.text();
 		text = text.replaceAll(".*?:\\s", "");
 		return text;
+	}
+
+	/**
+	 * Convenience Method to extract an image URL from html.
+	 * 
+	 * @param element the wrapping Element.
+	 * @param cssClass where the image link is in.
+	 * @return
+	 */
+	protected final String parseImageURL(final Element element, final String cssClass) {
+		String imageURL = null;
+		Elements elements = this.doc.getElementsByClass(cssClass);
+		if (!elements.isEmpty()) {
+			Element imgElement = elements.first().select("img[src~=(?i)\\.(png|jpe?g|gif)]").first();
+			imageURL = imgElement.attr("src");
+		}
+		return imageURL;
 	}
 
 }

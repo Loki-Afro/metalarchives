@@ -167,14 +167,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private final String parseArtworkURL() {
-		String artworkURL = null;
-		Elements elements = this.doc.getElementsByClass("album_img");
-		if (elements.size() > 0) {
-			Element imgElement = elements.get(0).select("img[src~=(?i)\\.(png|jpe?g|gif)]").get(0);
-			artworkURL = imgElement.attr("src");
-		}
-		logger.debug("ArtworkURL: " + artworkURL);
-		return artworkURL;
+		return parseImageURL(this.doc, "album_img");
 	}
 
 	/**
