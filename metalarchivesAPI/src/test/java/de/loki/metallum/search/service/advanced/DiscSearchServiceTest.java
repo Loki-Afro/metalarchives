@@ -348,6 +348,7 @@ public class DiscSearchServiceTest {
 		Assert.assertFalse(discResult.getAddedOn().isEmpty());
 		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
 		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
+		Assert.assertEquals(discResult.getReleaseDate(), "January 25th, 1996");
 	}
 
 	@Test

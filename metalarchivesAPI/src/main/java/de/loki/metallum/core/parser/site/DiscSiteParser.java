@@ -88,19 +88,25 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 		return tracks;
 	}
 
+	/**
+	 * Parses the DiscType from the left float thing.
+	 * 
+	 * @return the parsed DiscType.
+	 */
 	private DiscType parseDiscType() {
-		Element secondElement = this.doc.select("dl[class=float_left]").first();
-		String details = this.html.substring(this.html.indexOf("<dl class=\"float_left\""));
-		String[] discDetails = details.split("<dd>");
-		details = discDetails[1].substring(0, discDetails[1].indexOf("</dd>"));
-		return DiscType.getTypeDiscTypeForString(details);
+		Element leftThing = this.doc.select("dl[class=float_left]").first();
+		String discType = leftThing.getElementsByTag("dd").first().text();
+		return DiscType.getTypeDiscTypeForString(discType);
 	}
 
+	/**
+	 * Parses the release date, as String, from the left float thing.
+	 * 
+	 * @return the parsed release date as String.
+	 */
 	private String parseReleaseDate() {
-		String details = this.html.substring(this.html.indexOf("<dl class=\"float_left\""));
-		String[] discDetails = details.split("<dd>");
-		String date = discDetails[2].substring(0, discDetails[2].indexOf("</dd>"));
-		// return MetallumUtil.getMetallumDate(date);
+		Element leftThing = this.doc.select("dl[class=float_left]").first();
+		String date = leftThing.getElementsByTag("dd").get(1).text();
 		return date;
 	}
 
@@ -222,9 +228,8 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private long parseBandId() {
-		String bandId = this.html.substring(this.html.indexOf("/bands/") + 7);
-		bandId = bandId.substring(0, bandId.indexOf("#"));
-		bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
+		String bandId = this.doc.select("a[href~=#band_tab_discography]").first().attr("href");
+		bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.lastIndexOf("#"));
 		return Long.parseLong(bandId);
 	}
 
