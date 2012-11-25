@@ -26,7 +26,7 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	private final Band			dummyBand	= new Band(0, "Various Artists");
 	protected final Map<K, V>	mainMap		= new HashMap<K, V>();
 
-	public AbstractRosterParser(long labelId, byte numberPerPage, boolean alphabetical, PARSE_STYLE sortType) {
+	public AbstractRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE sortType) {
 		this.labelId = labelId;
 		this.numberPerPage = numberPerPage;
 		this.alphabetical = alphabetical;
@@ -46,6 +46,12 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 		return this.mainMap;
 	}
 
+	/**
+	 * parses a JSon Array and fills the {@link AbstractRosterParser#mainMap}
+	 * 
+	 * @param jsonArray
+	 * @throws JSONException
+	 */
 	protected abstract void parseSpecific(JSONArray jsonArray) throws JSONException;
 
 	protected abstract String getSearchURL(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType);

@@ -1,6 +1,7 @@
 package de.loki.metallum.search.service.advanced;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Level;
 import org.junit.Assert;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import de.loki.metallum.MetallumException;
 import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Disc;
+import de.loki.metallum.entity.Member;
 import de.loki.metallum.entity.Review;
 import de.loki.metallum.entity.Track;
 import de.loki.metallum.enums.Country;
@@ -722,6 +724,27 @@ public class DiscSearchServiceTest {
 		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
 		Track lastTrack = trackList.get(trackList.size() - 1);
 		Assert.assertTrue(lastTrack.isInstrumental());
+	}
+
+	@Test
+	public void testMember() throws MetallumException {
+		final DiscSearchService service = new DiscSearchService();
+		final DiscSearchQuery query = new DiscSearchQuery();
+		query.setReleaseTypes(DiscType.SPLIT_VIDEO);
+		query.setReleaseName("Live & Plugged vol.2", false);
+		final Disc discResult = service.performSearch(query).get(0);
+		Map<Member, String> members = discResult.getMember();
+		boolean foundMember = false;
+		for (Member member : members.keySet()) {
+			if (member.getId() == 1032L) {
+				Assert.assertEquals(members.get(member), "Guitars, Vocals");
+				Assert.assertEquals(member.getId(), 1032L);
+				Assert.assertEquals(member.getName(), "Jon Nödtveidt");
+				foundMember = true;
+				break;
+			}
+		}
+		Assert.assertTrue(foundMember);
 	}
 
 }
