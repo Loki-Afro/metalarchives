@@ -190,9 +190,9 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	private final Disc[] parseDiscography() {
 		final List<Disc> discs = this.entity.getDiscs();
 		if (discs.isEmpty()) {
-			final DiscParser bsdp = new DiscParser();
 			try {
-				return bsdp.parse(this.entity.getId());
+				final DiscParser bsdp = new DiscParser(this.entity.getId());
+				return bsdp.parse();
 			} catch (final ExecutionException e) {
 				logger.fatal("error in parsing the discography for band: " + this.entity, e);
 			}
@@ -298,12 +298,9 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	 */
 	private final BufferedImage parseBandPhoto(final String photoUrl) {
 		BufferedImage imagePhoto = this.entity.getPhoto();
-		if (imagePhoto == null && this.loadImage && this.html.contains("class=\"band_img\"")) {
-			String possiblePhotoURL = this.html.substring(this.html.indexOf("class=\"band_img\"") + 16);
-			possiblePhotoURL = possiblePhotoURL.substring(possiblePhotoURL.indexOf("src=\"") + 5);
-			possiblePhotoURL = possiblePhotoURL.substring(0, possiblePhotoURL.indexOf("\""));
+		if (imagePhoto == null && this.loadImage && photoUrl != null) {
 			try {
-				imagePhoto = Downloader.getImage(possiblePhotoURL);
+				imagePhoto = Downloader.getImage(photoUrl);
 			} catch (ExecutionException e) {
 				logger.error("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entity, e);
 			}
@@ -312,7 +309,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	}
 
 	@Override
-	protected String getSiteURL() {
+	protected final String getSiteURL() {
 		return MetallumURL.assembleBandURL(this.entity.getId());
 	}
 }

@@ -1,58 +1,59 @@
 package de.loki.metallum.core.parser.site.helper.band;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.enums.DiscType;
 
 public final class DiscParser {
-	public final Disc[] parse(final long bandId) throws ExecutionException {
-		final String tmpHtml = Downloader.getHTML(MetallumURL.assembleDiscographyURL(bandId));
-		final String[] discHtml = tmpHtml.substring(tmpHtml.indexOf("<tbody>") + 7, tmpHtml.indexOf("</tbody>")).split("<tr>");
+	private final Document	doc;
 
-		final Disc[] discs = new Disc[discHtml.length - 1];
-		// Don't know what that means?!
-		if (discHtml.length == 1) {
-			return new Disc[0];
-		}
-
-		for (int i = 1; i < discHtml.length; i++) {
-			final Disc disc;
-			final String[] parts = discHtml[i].split("<td");
-
-			disc = new Disc(parseDiscId(parts[1]));
-			disc.setName(parseDiscName(parts[1]));
-			disc.setDiscType(parseDiscType(parts[2]));
-			disc.setReleaseDate(parseDiscDate(parts[3]));
-
-			discs[i - 1] = disc;
-		}
-		return discs;
+	public DiscParser(final long bandId) throws ExecutionException {
+		this.doc = Jsoup.parse(Downloader.getHTML(MetallumURL.assembleDiscographyURL(bandId)));
 	}
 
-	private final String parseDiscDate(final String htmlPart) {
-		final String discDate = htmlPart.substring(htmlPart.indexOf(">") + 1, htmlPart.indexOf("<"));
-		return discDate;
+	public final Disc[] parse() {
+		List<Disc> discography = new LinkedList<Disc>();
+		Elements rows = this.doc.getElementsByTag("tr");
+		for (int i = 1; i < rows.size(); i++) {
+			Element row = rows.get(i);
+			Elements cols = row.getElementsByTag("td");
+			Disc disc = new Disc();
+			disc.setId(parseDiscId(cols.first()));
+			disc.setName(cols.first().text());
+			disc.setDiscType(parseDiscType(cols.get(1)));
+			disc.setReleaseDate(cols.get(2).text());
+			disc.setHasReview(parseReview(cols.get(3)));
+			discography.add(disc);
+		}
+		return discography.toArray(new Disc[discography.size()]);
 	}
 
-	private final long parseDiscId(final String htmlPart) {
-		String id = htmlPart.substring(htmlPart.indexOf("/albums/") + 8);
-		id = id.substring(0, id.indexOf("\" class=\""));
-		id = id.substring(id.lastIndexOf("/") + 1, id.length());
+	private final boolean parseReview(final Element element) {
+		String content = element.text();
+		content = MetallumUtil.trimNoBreakSpaces(content);
+		return !content.isEmpty();
+	}
+
+	private final long parseDiscId(final Element element) {
+		Element linkElem = element.getElementsByTag("a").first();
+		String link = linkElem.attr("href");
+		String id = link.substring(link.lastIndexOf("/") + 1, link.length());
 		return Long.parseLong(id);
 	}
 
-	private final DiscType parseDiscType(final String htmlPart) {
-		final String discType = htmlPart.substring(htmlPart.indexOf(">") + 1, htmlPart.indexOf("<"));
+	private final DiscType parseDiscType(final Element element) {
+		final String discType = element.text();
 		return DiscType.getTypeDiscTypeForString(discType);
-
 	}
-
-	private final String parseDiscName(final String htmlPart) {
-		final String name = htmlPart.substring(htmlPart.indexOf(">", 10) + 1, htmlPart.indexOf("</a>"));
-		return name;
-	}
-
 }

@@ -62,8 +62,8 @@ public final class MetallumUtil {
 	}
 
 	/**
-	 * This method exists because {@link String.trim()} does not remove all whitespaces, we remove
-	 * here so called No Break-Spaces ({@code &nbsp;}) !<br>
+	 * This method exists because {@link String.trim()} does not remove all whitespaces.
+	 * So called No Break-Spaces ({@code &nbsp;})!<br>
 	 * Removes all leading and trailing \\u00A0.<br>
 	 * 
 	 * @see http://www.fileformat.info/info/unicode/char/202f/index.htm<br>

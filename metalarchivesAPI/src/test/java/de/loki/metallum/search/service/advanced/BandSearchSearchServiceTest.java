@@ -52,6 +52,18 @@ public class BandSearchSearchServiceTest {
 		Assert.assertFalse(resultBand.getAddedOn().isEmpty());
 		Assert.assertFalse(resultBand.getModifiedBy().isEmpty());
 		Assert.assertFalse(resultBand.getLastModifiedOn().isEmpty());
+		List<Disc> discs = resultBand.getDiscs();
+		boolean found = false;
+		boolean found2 = false;
+		for (Disc disc : discs) {
+			if (disc.getName().equals("Weeping")) {
+				found = !disc.hasReviews();
+			} else if (disc.getName().equals("The Book of Kings")) {
+				found2 = disc.hasReviews();
+			}
+		}
+		Assert.assertTrue(found);
+		Assert.assertTrue(found2);
 	}
 
 	@Test

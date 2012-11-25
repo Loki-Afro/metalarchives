@@ -30,6 +30,7 @@ public class Disc extends AbstractEntity {
 	private Map<Member, String>	guestMember	= new HashMap<Member, String>();
 
 	private int					discCount	= 1;
+	private boolean				hasReviews	= false;
 
 	public Disc(final long id) {
 		super(id);
@@ -46,6 +47,10 @@ public class Disc extends AbstractEntity {
 		}
 		return k / this.reviewList.size();
 		// calc
+	}
+
+	public final boolean hasReviews() {
+		return this.hasReviews;
 	}
 
 	public int getReviewCount() {
@@ -100,10 +105,11 @@ public class Disc extends AbstractEntity {
 		return this.band.getGenre();
 	}
 
-	public void addReview(final Review... reviews) {
+	public final void addReview(final Review... reviews) {
 		for (final Review review : reviews) {
 			review.setDisc(this);
 			this.reviewList.add(review);
+			this.hasReviews = true;
 		}
 	}
 
@@ -228,6 +234,7 @@ public class Disc extends AbstractEntity {
 
 	public void setReviews(final List<Review> reviewList) {
 		this.reviewList = reviewList;
+		this.hasReviews = !reviewList.isEmpty();
 	}
 
 	public void setSplitBands(final List<Band> splitBands2) {
@@ -248,6 +255,10 @@ public class Disc extends AbstractEntity {
 
 	public void setArtworkURL(final String artworkURL) {
 		this.artworkURL = artworkURL;
+	}
+
+	public final void setHasReview(final boolean hasReviews) {
+		this.hasReviews = hasReviews;
 	}
 
 	/**
