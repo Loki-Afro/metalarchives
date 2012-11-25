@@ -250,4 +250,17 @@ public class Disc extends AbstractEntity {
 		this.artworkURL = artworkURL;
 	}
 
+	/**
+	 * This Method is for convenience only.
+	 * It calls {@link Disc#getLineup()}, {@link Disc#getMiscMember()} and {@link Disc#getGuestMember()} and puts them all together in one map.
+	 * 
+	 * @return a map with all Member, where the value the role at the specific album;
+	 */
+	public Map<Member, String> getMember() {
+		Map<Member, String> comlpeteMemberMap = getLineup();
+		comlpeteMemberMap.putAll(getMiscMember());
+		comlpeteMemberMap.putAll(getGuestMember());
+		return comlpeteMemberMap;
+	}
+
 }

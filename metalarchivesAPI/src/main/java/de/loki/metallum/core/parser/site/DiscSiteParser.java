@@ -116,6 +116,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 		Element labelLink = labelElement.getElementsByTag("dd").first();
 		String labelName = labelLink.text();
 		String labelIdStr = "0";
+//		if there is no link, there is now Label aka unsigned/selfreleased
 		Element link = labelLink.getElementsByTag("a").first();
 		if (link != null) {
 			labelIdStr = link.attr("href");
@@ -130,9 +131,9 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private Disc parseMember(final Disc disc) {
-		final DiscSiteMemberParser parser = new DiscSiteMemberParser();
-		parser.parse(this.html);
-		disc.setLineup(parser.getLineupList());
+		final DiscSiteMemberParser parser = new DiscSiteMemberParser(this.doc);
+		parser.parse();
+		disc.setLineup(parser.getLineup());
 		disc.setGuestLineup(parser.getGuestLineup());
 		disc.setMiscLineup(parser.getOtherLinup());
 		return disc;
