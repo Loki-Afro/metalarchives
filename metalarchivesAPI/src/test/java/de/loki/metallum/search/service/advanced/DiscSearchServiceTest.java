@@ -216,7 +216,7 @@ public class DiscSearchServiceTest {
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Dimmu Borgir", discResult.getSplitBands().get(0).getName());
 		Assert.assertEquals("Dissection", discResult.getSplitBands().get(1).getName());
-		Assert.assertEquals("Live & Plugged vol.2", discResult.getName());
+		Assert.assertEquals("Live & Plugged Vol. 2", discResult.getName());
 		Assert.assertEquals(17, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.SPLIT_VIDEO, discResult.getType());
 		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());

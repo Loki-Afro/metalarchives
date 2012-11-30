@@ -18,7 +18,7 @@ import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.query.BandSearchQuery;
 
-public class BandSearchSearchServiceTest {
+public class BandSearchServiceTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
@@ -387,7 +387,7 @@ public class BandSearchSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Satan, Blasphemy, Heavy Metal Cult");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Heavy Forces Records");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().isEmpty());
+		Assert.assertTrue(resultBand.getInfo().equals("Maltkross Productions"));
 		Assert.assertFalse(resultBand.hasLogo());
 		Assert.assertFalse(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -461,7 +461,7 @@ public class BandSearchSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Satan, Blasphemy, Heavy Metal Cult");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Heavy Forces Records");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().isEmpty());
+		Assert.assertTrue(resultBand.getInfo().equals("Maltkross Productions"));
 		Assert.assertTrue(resultBand.hasLogo());
 		Assert.assertTrue(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
