@@ -328,7 +328,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getLabel().getName(), "Avantgarde Music");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("Herr Suizid "));
-		Assert.assertTrue(resultBand.getInfo().endsWith("performances."));
+		Assert.assertTrue(resultBand.getInfo().endsWith("band."));
 		Assert.assertFalse(resultBand.hasLogo());
 		Assert.assertFalse(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -387,7 +387,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Satan, Blasphemy, Heavy Metal Cult");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Heavy Forces Records");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().equals("Maltkross Productions"));
+		Assert.assertTrue(resultBand.getInfo().isEmpty());
 		Assert.assertFalse(resultBand.hasLogo());
 		Assert.assertFalse(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -461,7 +461,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Satan, Blasphemy, Heavy Metal Cult");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Heavy Forces Records");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().equals("Maltkross Productions"));
+		Assert.assertTrue(resultBand.getInfo().isEmpty());
 		Assert.assertTrue(resultBand.hasLogo());
 		Assert.assertTrue(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
