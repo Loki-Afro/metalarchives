@@ -48,6 +48,10 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 		this.exactBandNameMatch = exactMatch;
 	}
 
+	/**
+	 * 
+	 * @param genre the genre from the band we are searching for
+	 */
 	public void setGenre(final String genre) {
 		this.searchObject.setGenre(genre);
 	}
@@ -64,14 +68,27 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 		this.searchObject.setLyricalThemes(themes);
 	}
 
+	/**
+	 * A Band can have just one status but we can search for more than one at the same time.
+	 * 
+	 * @param possible status from the band we are searching for
+	 */
 	public void addStatus(final BandStatus... stat) {
 		for (final BandStatus bandStatus : stat) {
 			if (bandStatus != null) {
-				this.bandStatus.add(bandStatus);
+				if (!this.bandStatus.contains(bandStatus)) {
+					this.bandStatus.add(bandStatus);
+				}
 			}
 		}
 	}
 
+	/**
+	 * A Band can have just one status but we can search for more than one at the same time.
+	 * 
+	 * @param stat a possible status to search for.
+	 * @return true if the status has been added or is already part of the search query, false otherwise
+	 */
 	public boolean addStatus(final String stat) {
 		final BandStatus bandStatus = BandStatus.getTypeBandStatusForString(stat);
 		if (bandStatus != null) {
