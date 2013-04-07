@@ -79,7 +79,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 1993);
 		Assert.assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
-		Assert.assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Torture, H.P. Lovecraft");
+		Assert.assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Rituals, H.P. Lovecraft");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Nuclear Blast");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("Many people mistake members of Nile as being Egyptia"));
@@ -88,7 +88,7 @@ public class BandSearchServiceTest {
 		Assert.assertFalse(resultBand.hasPhoto());
 		Assert.assertFalse(resultBand.getPhotoUrl().isEmpty());
 		Assert.assertFalse(resultBand.getLogoUrl().isEmpty());
-		checkDefaultDisc(resultBand.getDiscs(), 17, resultBand);
+		checkDefaultDisc(resultBand.getDiscs(), 15, resultBand);
 		Assert.assertFalse(resultBand.getAddedBy().isEmpty());
 		Assert.assertFalse(resultBand.getAddedOn().isEmpty());
 		Assert.assertFalse(resultBand.getModifiedBy().isEmpty());
@@ -161,7 +161,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 2009);
 		Assert.assertEquals(resultBand.getGenre(), "Doom Metal");
-		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing");
+		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("The band name"));
@@ -193,7 +193,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 2009);
 		Assert.assertEquals(resultBand.getGenre(), "Doom Metal");
-		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing");
+		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("The band name"));

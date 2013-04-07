@@ -46,7 +46,7 @@ public abstract class AbstractEntity implements IEntity {
 
 	@Override
 	public String toString() {
-		return ((this.name != null ? this.name : "") + " [" + this.id + "]");
+		return ((this.name != null ? this.name : "") + " [id=" + this.id + "]");
 	}
 
 	@Override

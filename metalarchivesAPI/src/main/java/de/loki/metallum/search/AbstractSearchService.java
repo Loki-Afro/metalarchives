@@ -13,7 +13,7 @@ import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.core.parser.site.AbstractSiteParser;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.AbstractEntity;
-import de.loki.metallum.search.cache.Cache;
+import de.loki.metallum.search.cache.CacheManager;
 
 public abstract class AbstractSearchService<T extends AbstractEntity> {
 
@@ -46,6 +46,20 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 
 	}
 
+	/**
+	 * This method, finally, does the search.<br>
+	 * The specific query will be executed and you will get a result as List<br>
+	 * which contains the specific elements which were found by the query.<br>
+	 * <br>
+	 * If you used the set the id in the query, it will download directly the entity and parse it. <br>
+	 * So you are save traffic.<br>
+	 * <br>
+	 * Note that you can also archive the result as map, just call the Method getResultAsMap.
+	 * 
+	 * @param query the specific query
+	 * @return a List with the entities
+	 * @throws MetallumException if parsing or downloading failed.
+	 */
 	public List<T> performSearch(final AbstractSearchQuery<T> query) throws MetallumException {
 		query.setSpecialFieldsInParser(this.parser);
 		if (query.searchObject.getId() == 0) {
@@ -107,9 +121,10 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 	}
 
 	/**
-	 * This list contains all elements which were parsed.
+	 * This list contains all elements which were parsed.<br>
+	 * This list is equal to the one you can get via the performSearch() method.
 	 * 
-	 * @return the resultList
+	 * @return a List representation of the specific entities.
 	 */
 	public final List<T> getResultAsList() {
 		final List<T> listToReturn = new ArrayList<T>();
@@ -124,7 +139,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 	}
 
 	/**
-	 * @return true if there is more than one result true, false if there is also no result
+	 * @return true if there is more as one result, false if there is also no result
 	 */
 	public final boolean hasMoreAsOneResult() {
 		if (this.resultMap.size() > 1) {
@@ -139,8 +154,9 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 	}
 
 	/**
-	 * @return If there is at least element that is in the List this method will return true,
-	 *         otherwise false.
+	 * To check if the result is empty.
+	 * 
+	 * @return returns true if there is no result, false otherwise.
 	 */
 	public final boolean isResultEmpty() {
 		return this.resultMap.isEmpty();
@@ -176,9 +192,18 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 		this.resultMap = query.enrichParsedEntity(this.resultMap);
 	}
 
+	/**
+	 * ...<br>
+	 * If the entity is already cached, this method will return the cached entity,<br>
+	 * otherwise the specific SiteParser implementation will be used to archive the data.
+	 * 
+	 * 
+	 * @param entity which you want to fill with data.
+	 * @return the entity from the cache or a new one.
+	 * @throws MetallumException if the parsing failed.
+	 */
 	protected final T getParsedEntity(final T entity) throws MetallumException {
 		final T newEntitiy;
-
 		final T entityFromCache = getEntityFromCache(entity);
 		if (entityFromCache != null && hasAllInformation(entityFromCache)) {
 			newEntitiy = entityFromCache;
@@ -186,15 +211,14 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 			// final T newEntitiy = useSiteParser((entityFromCache != null ? (T) entityFromCache :
 			// entity));
 			newEntitiy = useSiteParser(entity);
-			Cache.getInstance().put(newEntitiy);
+			CacheManager.getInstance().put(newEntitiy);
 		}
 		return newEntitiy;
 	}
 
 	@SuppressWarnings("unchecked")
 	private T getEntityFromCache(final T entity) {
-		final T entityFromCache = (T) Cache.getInstance().getEntity(entity, entity.getClass());
-		// has more information? - merge entity with entityFromCache
+		T entityFromCache = (T) CacheManager.getInstance().getEntity(entity.getId(), entity.getClass());
 		return entityFromCache;
 	}
 

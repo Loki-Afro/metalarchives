@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>metalarchivesAPI</groupId>
 	<artifactId>metalarchivesAPI</artifactId>
-	<version>0.1.2-SNAPSHOT</version>
+	<version>0.2.0-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -18,12 +18,12 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.7.1</version>
+			<version>1.7.2</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.4.3</version>
+			<version>1.4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -76,4 +76,8 @@
 			
 		</plugins>
 	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 </project>

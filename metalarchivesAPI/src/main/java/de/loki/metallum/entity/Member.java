@@ -43,10 +43,6 @@ public class Member extends AbstractEntity {
 		this.realName = realName;
 	}
 
-	protected void addBand(final Band band) {
-		addBand(band);
-	}
-
 	/**
 	 * If we just search for the Member it is not possible to know if these are past Bands.
 	 * 

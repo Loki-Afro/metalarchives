@@ -60,6 +60,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 		band.setSimliarArtists(parseSimilarArtists());
 		band.addLinks(parseLinks());
 		band = parseModfications(band);
+		logger.debug("parsed Entity: " + band);
 		return band;
 	}
 
@@ -256,7 +257,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	private final Link[] parseLinks() {
 		final List<Link> linkLinst = this.entity.getLinks();
 		if (!linkLinst.isEmpty()) {
-			return (Link[]) linkLinst.toArray();
+			return linkLinst.toArray(new Link[linkLinst.size()]);
 		}
 		if (this.loadLinks) {
 			try {

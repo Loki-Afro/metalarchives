@@ -12,6 +12,7 @@ import de.loki.metallum.entity.AbstractEntity;
 
 public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
+	@Deprecated
 	protected final String		html;
 	protected final Document	doc;
 	protected final boolean		loadImage;

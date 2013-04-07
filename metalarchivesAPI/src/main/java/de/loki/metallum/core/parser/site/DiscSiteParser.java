@@ -1,6 +1,7 @@
 package de.loki.metallum.core.parser.site;
 
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -204,7 +205,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 			Band band = new Band(Long.parseLong(bandId), bandElem.text());
 			splitBands[bands.indexOf(bandElem)] = band;
 		}
-		logger.debug("SplitBands: " + splitBands);
+		logger.debug("SplitBands: " + Arrays.toString(splitBands));
 		return splitBands;
 	}
 

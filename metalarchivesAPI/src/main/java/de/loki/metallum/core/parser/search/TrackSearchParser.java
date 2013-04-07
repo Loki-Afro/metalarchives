@@ -35,9 +35,10 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 	}
 
 	@Override
-	protected Track useSpecificSearchParser(final JSONArray hits) throws JSONException {
-		// tracks haben die id der disc
-		Track track = new Track(parseDiscId(hits.getString(1)));
+	protected final Track useSpecificSearchParser(final JSONArray hits) throws JSONException {
+//		Tracks can't have a id here.
+		Track track = new Track();
+		track.getDisc().setId(parseDiscId(hits.getString(1)));
 		track.setDiscName(parseDiscName((hits.getString(1))));
 		track.setDiscType(parseAlbumType(hits.getString(2)));
 		// we have to do this because if we are searching with an DiscType it will not appear in the
@@ -45,6 +46,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 		track.setName(parseTitleName(hits.getString(this.isAbleToParseDiscType ? 3 : 2)));
 		track.getBand().setName(parseBandName(hits.getString(0)));
 		track.getBand().setId(parseBandId(hits.getString(0)));
+		track.setId(parseTrackId(hits.getString(hits.length() - 1)));
 		track = parseOptionalFields(track, hits);
 		return track;
 	}
@@ -52,8 +54,20 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 	private Track parseOptionalFields(final Track track, final JSONArray jArray) throws JSONException {
 		track.setGenre(this.isAbleToParseGenre ? parseGenre(jArray.getString(jArray.length() - 2)) : "");
 		// must be at the last position ever!
-		track.setLyrics(parseLyrics(jArray.getString(jArray.length() - 1)));
+		track.setLyrics(this.loadLyrics ? parseLyrics(track) : "");
 		return track;
+	}
+
+	private final long parseTrackId(final String hit) {
+		// getting the Lyrics Id!
+		if (hit.contains("lyricsLink_")) {
+			String id = hit.substring(hit.indexOf("lyricsLink_") + 11, hit.length());
+			id = id.substring(0, id.indexOf("\" title=\""));
+			return Long.parseLong(id);
+		} else {
+			logger.debug("The current Track, does not have a lyricaLink => Unable to the track-id");
+			return 0L;
+		}
 	}
 
 	/**
@@ -63,22 +77,18 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 	 * @param hit is always the last hit.
 	 * @return the lyrics if existent
 	 */
-	private final String parseLyrics(final String hit) {
-		if (this.loadLyrics) {
-			// getting the Lyrics Id!
-			String id = hit.substring(hit.indexOf("lyricsLink_") + 11, hit.length());
-			id = id.substring(0, id.indexOf("\" title=\""));
-
-			// downloading the Lyrics!
-			try {
-				String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(Long.parseLong(id))).trim();
+	private final String parseLyrics(final Track track) {
+		// downloading the Lyrics!
+		try {
+			if (this.loadLyrics) {
+				String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(track.getId())).trim();
 				// making it nice and if there are no lyrics there should be nothing to return!
 				lyricsHtml = MetallumUtil.parseHtmlWithLineSeperators(lyricsHtml);
 				final String lyrics = lyricsHtml.replaceAll("\\(lyrics not available\\)", "");
 				return lyrics;
-			} catch (final ExecutionException e) {
-				logger.error("unanble to get the Lyrics from \"" + hit, e);
 			}
+		} catch (final ExecutionException e) {
+			logger.error("Unanble to get the Lyrics from \"" + track, e);
 		}
 		return "";
 	}

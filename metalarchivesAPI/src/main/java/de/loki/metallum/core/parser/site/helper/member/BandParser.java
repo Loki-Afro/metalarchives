@@ -35,6 +35,8 @@ public class BandParser {
 			case LIVE:
 				htmlPart = html.substring(html.indexOf("<div id=\"artist_tab_live") + 24);
 				break;
+			default:
+				throw new IllegalStateException("Not a valid Mode!");
 		}
 		int indexOfDeath = htmlPart.indexOf("<div id=\"artist_tab_");
 		if (indexOfDeath == -1) {

@@ -4,7 +4,7 @@ import de.loki.metallum.enums.DiscType;
 
 public class Track extends AbstractEntity {
 
-	private Disc	discFromTrack;
+	private Disc	discFromTrack	= new Disc();
 	private boolean	instrumental	= false;
 
 	private String	lyrics			= "";
@@ -23,12 +23,10 @@ public class Track extends AbstractEntity {
 	 */
 	public Track(final long id) {
 		super(id);
-		this.discFromTrack = new Disc(id);
 	}
 
 	public Track() {
 		super(0);
-		this.discFromTrack = new Disc(0);
 	}
 
 	public void setDiscName(final String discName) {

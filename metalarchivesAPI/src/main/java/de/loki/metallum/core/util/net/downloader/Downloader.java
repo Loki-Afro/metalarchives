@@ -3,9 +3,13 @@ package de.loki.metallum.core.util.net.downloader;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.log4j.Logger;
+
 import de.loki.metallum.core.util.net.downloader.interfaces.IContentDownloader;
 
 public class Downloader {
+
+	private static Logger	logger	= Logger.getLogger(Downloader.class);
 
 	public static BufferedImage getImage(final String urlString) throws ExecutionException {
 		return get(urlString, new ImageDownloader(urlString));
@@ -20,6 +24,7 @@ public class Downloader {
 			return ThreadExecuter.getInstance().submit(downloader).get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+			logger.error("Failed to download: " + request, e);
 		}
 		return null;
 	}

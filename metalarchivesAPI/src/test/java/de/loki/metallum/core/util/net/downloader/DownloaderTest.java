@@ -11,6 +11,7 @@ import org.apache.log4j.Level;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import de.loki.metallum.core.util.MetallumLogger;
@@ -22,6 +23,7 @@ public class DownloaderTest {
 		MetallumLogger.setLogLevel(Level.INFO);
 	}
 
+	@Ignore
 	@Test
 	public void downloadImage() throws IOException, ExecutionException {
 		final BufferedImage testImage = Downloader.getImage("http://i.imgur.com/4Hkmk.png");

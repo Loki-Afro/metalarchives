@@ -1,10 +1,14 @@
 package de.loki.metallum.core.util;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
@@ -20,6 +24,7 @@ public final class MetallumUtil {
 			"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 			// 30 31
 			"th", "st"								};
+	private static Logger			logger			= Logger.getLogger(MetallumUtil.class);
 
 	public final static String getDayOfMonthSuffix(final int day) {
 		return daySuffixes[day];
@@ -112,6 +117,23 @@ public final class MetallumUtil {
 		return false;
 	}
 
+	public static boolean isEncyclopediaMetallumOnline() {
+		try {
+			URL u = new URL("http://www.metal-archives.com/");
+			HttpURLConnection huc = (HttpURLConnection) u.openConnection();
+			huc.setRequestMethod("GET");
+			huc.connect();
+			int code = huc.getResponseCode();
+			if (code == 200) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		return false;
+	}
 	// :(( not possible because we cannot make a generic Array see
 	// http://stackoverflow.com/questions/2927391/whats-the-reason-i-cant-create-generic-array-types-in-java
 	// private static <E> E[] asArray(List<E> list) {

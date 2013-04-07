@@ -2,7 +2,7 @@ package de.loki.metallum.search;
 
 public final class SearchRelevance implements Comparable<SearchRelevance> {
 
-	private final Double	doubleIntern;
+	private final double	doubleIntern;
 
 	public SearchRelevance(final Double doubleValue) {
 		this.doubleIntern = doubleValue;
@@ -16,12 +16,14 @@ public final class SearchRelevance implements Comparable<SearchRelevance> {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.doubleIntern == null) ? 0 : this.doubleIntern.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(this.doubleIntern);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -32,11 +34,7 @@ public final class SearchRelevance implements Comparable<SearchRelevance> {
 			return false;
 		}
 		SearchRelevance other = (SearchRelevance) obj;
-		if (this.doubleIntern == null) {
-			if (other.doubleIntern != null) {
-				return false;
-			}
-		} else if (!this.doubleIntern.equals(other.doubleIntern)) {
+		if (Double.doubleToLongBits(this.doubleIntern) != Double.doubleToLongBits(other.doubleIntern)) {
 			return false;
 		}
 		return true;
@@ -48,7 +46,7 @@ public final class SearchRelevance implements Comparable<SearchRelevance> {
 	}
 
 	@Override
-	public int compareTo(SearchRelevance o) {
+	public int compareTo(final SearchRelevance o) {
 		// a negative integer, zero, or a positive integer as this object is less than, equal to, or
 		// greater than the specified object.
 		if (this.doubleIntern < o.doubleIntern) {
