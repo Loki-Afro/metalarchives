@@ -1,25 +1,29 @@
 package de.loki.metallum.enums;
 
+import org.apache.log4j.Logger;
+
 public enum DiscType {
-	FULL_LENGTH("Full-length", 1, false), LIVE_ALBUM("Live album", 2, false), DEMO("Demo", 3, false), SINGLE("Single", 4, false), EP("EP", 5, false), DVD("DVD", 6, false), BOXED_SET("Boxed Set", 7,
-			false), SPLIT("Split", 8, true), VHS("Video/VHS", 9, false), COMPILATION("Compilation", 10, false), SPLIT_VIDEO("Split DVD/video", 12, true);
+	FULL_LENGTH("Full-length", 1, false), LIVE_ALBUM("Live album", 2, false), DEMO("Demo", 3, false), SINGLE("Single", 4, false), EP("EP", 5, false), DVD("DVD", 6, false), BOXED_SET("Boxed Set", 7, false), SPLIT("Split", 8, true), VHS("Video/VHS", 9, false), COMPILATION("Compilation", 10, false), SPLIT_VIDEO("Split DVD/video", 12, true);
 
 	private final String	realName;
 	private final int		searchNumber;
 	private final boolean	isSplit;
+	private static Logger	logger	= Logger.getLogger(DiscType.class);
 
-	private DiscType(String realName, int searchNumber, boolean isSplitType) {
+	private DiscType(final String realName, final int searchNumber, final boolean isSplitType) {
 		this.realName = realName;
 		this.searchNumber = searchNumber;
 		this.isSplit = isSplitType;
 	}
 
-	public static DiscType getTypeDiscTypeForString(final String possibleDiscType) {
+	public static DiscType getTypeDiscTypeForString(String possibleDiscType) {
+		possibleDiscType = possibleDiscType.trim();
 		for (DiscType type : values()) {
 			if (type.realName.equalsIgnoreCase(possibleDiscType)) {
 				return type;
 			}
 		}
+		logger.error("Unrecognized DiscType: " + possibleDiscType);
 		return null;
 	}
 

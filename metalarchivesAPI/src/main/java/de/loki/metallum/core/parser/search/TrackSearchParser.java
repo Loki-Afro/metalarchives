@@ -40,7 +40,9 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 		Track track = new Track();
 		track.getDisc().setId(parseDiscId(hits.getString(1)));
 		track.setDiscName(parseDiscName((hits.getString(1))));
-		track.setDiscType(parseAlbumType(hits.getString(2)));
+		if (this.isAbleToParseDiscType) {
+			track.setDiscType(parseAlbumType(hits.getString(2)));
+		}
 		// we have to do this because if we are searching with an DiscType it will not appear in the
 		// JSONArray. So the position will change
 		track.setName(parseTitleName(hits.getString(this.isAbleToParseDiscType ? 3 : 2)));

@@ -22,10 +22,12 @@ import org.apache.log4j.Logger;
 public abstract class AbstractDownloader {
 	private final String					urlString;
 	protected volatile static HttpClient	HTTP_CLIENT;
-	protected final static Charset			HTML_CHARSET	= Charset.forName("UTF-8");
-	private final static int				PORT			= 80;
-	private final static String				PROTOCOL		= "http";
-	private static Logger					logger			= Logger.getLogger(AbstractDownloader.class);
+	protected final static Charset			HTML_CHARSET		= Charset.forName("UTF-8");
+	private final static int				PORT				= 80;
+	private final static String				PROTOCOL			= "http";
+	private static Logger					logger				= Logger.getLogger(AbstractDownloader.class);
+
+	private static final String				USER_AGENT_PROPERTY	= "de.loki.metallum.useragent";
 
 	static {
 		final CacheConfig cacheConfig = new CacheConfig();
@@ -46,11 +48,13 @@ public abstract class AbstractDownloader {
 	protected final HttpEntity getDownloadEntity() throws Exception {
 		logger.info("downloaded Content from " + this.urlString + " ...");
 		final HttpGet request = new HttpGet(this.urlString);
-		// TODO set the header
-		// request.setHeader("User-Agent", getUserAgent());
-		// request.setHeader(header)
+		request.addHeader("User-Agent", getUserAgent());
 		final HttpResponse response = HTTP_CLIENT.execute(request);
 		logger.info("... download finished");
 		return response.getEntity();
+	}
+
+	private final String getUserAgent() {
+		return System.getProperty(AbstractDownloader.USER_AGENT_PROPERTY, "");
 	}
 }

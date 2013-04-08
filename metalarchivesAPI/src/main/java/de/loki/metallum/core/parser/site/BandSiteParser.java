@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.loki.metallum.core.parser.site.helper.ReviewParser;
 import de.loki.metallum.core.parser.site.helper.band.BandLinkParser;
@@ -83,12 +83,13 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	}
 
 	private final Band parseSecondHtmlPart(final Band band) {
-		final String newhtml = this.html.substring(this.html.indexOf("</dl>") + 5);
-		final String[] secondPart = newhtml.substring(0, newhtml.indexOf("</dl>")).split("<dd>");
-
-		band.setGenre(parseGenre(secondPart[1]));
-		band.setLyricalThemes(parseLyricalThemes(secondPart[2]));
-		band.setLabel(parseCurrentLabel(secondPart[3]));
+		Element secondPart = this.doc.select("dl[class]").get(1);
+		if (secondPart.hasClass("float_right")) {
+			Elements valueElements = secondPart.getElementsByTag("dd");
+			band.setGenre(valueElements.get(0).text().trim());
+			band.setLyricalThemes(valueElements.get(1).text().trim());
+			band.setLabel(parseCurrentLabel(valueElements.get(2)));
+		}
 		return band;
 	}
 
@@ -99,16 +100,15 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	 * @return
 	 */
 	private final Band parseFirstHtmlPart(final Band band) {
-		final String[] firstPart = this.html.substring(0, this.html.indexOf("</dl>")).split("<dd");
-		band.setCountry(parseCountry(firstPart[1]));
-		band.setProvince(parseBandProvince(firstPart[2]));
-		band.setStatus(parseStatus(firstPart[3]));
-		band.setYearFormedIn(parseYearOfCreation(firstPart[4]));
+		Element secondPart = this.doc.select("dl[class]").get(0);
+		if (secondPart.hasClass("float_left")) {
+			Elements valueElements = secondPart.getElementsByTag("dd");
+			band.setCountry(Country.getRightCountryForString(valueElements.get(0).text()));
+			band.setProvince(valueElements.get(1).text().trim());
+			band.setStatus(BandStatus.getTypeBandStatusForString(valueElements.get(2).text()));
+			band.setYearFormedIn(parseYearOfCreation(valueElements.get(3).text()));
+		}
 		return band;
-	}
-
-	private final String parseBandProvince(final String firstParthtml) {
-		return firstParthtml.substring(1, firstParthtml.indexOf("</dd>"));
 	}
 
 	private final String parseBandName() {
@@ -116,40 +116,19 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 		return bandNameElement.text();
 	}
 
-	private final Country parseCountry(final String firstParthtml) {
-		String possibleCountry = firstParthtml.substring(firstParthtml.indexOf(">") + 1, firstParthtml.indexOf("</dd>"));
-		possibleCountry = possibleCountry.substring(possibleCountry.indexOf("\">") + 2, possibleCountry.indexOf("</a>"));
-		return Country.getRightCountryForString(possibleCountry);
-	}
-
-	private BandStatus parseStatus(final String firstParthtml) {
-		final String possibleStatus = firstParthtml.substring(firstParthtml.indexOf(">") + 1, firstParthtml.indexOf("</dd>"));
-		return BandStatus.getTypeBandStatusForString(possibleStatus);
-	}
-
 	private final int parseYearOfCreation(final String firstParthtml) {
-		String possibleYear = firstParthtml.substring(firstParthtml.indexOf(">") + 1, firstParthtml.indexOf("</dd>"));
-		if (possibleYear.contains("N/A")) {
+		if (firstParthtml.contains("N/A")) {
 			return 0;
 		}
-		return Integer.parseInt(possibleYear);
+		return Integer.parseInt(firstParthtml);
 	}
 
-	private final String parseGenre(final String secondHtmlPart) {
-		String possibleGenre = secondHtmlPart.substring(0, secondHtmlPart.indexOf("</dd>"));
-		return possibleGenre.trim();
-	}
-
-	private final String parseLyricalThemes(final String secondHtmlPart) {
-		final String possibleThemes = secondHtmlPart.substring(0, secondHtmlPart.indexOf("</dd>"));
-		return possibleThemes;
-	}
-
-	private final Label parseCurrentLabel(final String secondHtmlPart) {
+	private final Label parseCurrentLabel(final Element labelElement) {
 		// id
 		String labelId;
-		if (!secondHtmlPart.contains("Unsigned/independent")) {
-			labelId = secondHtmlPart.substring(secondHtmlPart.indexOf("/labels/") + 8);
+		String labelElementText = labelElement.html();
+		if (!labelElement.text().contains("Unsigned/independent")) {
+			labelId = labelElementText.substring(labelElementText.indexOf("/labels/") + 8);
 			labelId = labelId.substring(labelId.indexOf("/") + 1, labelId.indexOf("\">"));
 		} else {
 			labelId = "0";
@@ -157,8 +136,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 		final Label label = new Label(Long.parseLong(labelId));
 
 		// name
-		final String labelName = secondHtmlPart.substring(0, secondHtmlPart.indexOf("</dd>"));
-		label.setName(Jsoup.parse(labelName).text());
+		label.setName(labelElement.text().trim());
 		return label;
 
 	}

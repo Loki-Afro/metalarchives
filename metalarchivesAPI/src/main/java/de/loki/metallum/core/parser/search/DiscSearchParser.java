@@ -28,7 +28,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	private boolean	isAbleToParseProvince;
 
 	@Override
-	protected Disc useSpecificSearchParser(JSONArray hit) throws JSONException {
+	protected Disc useSpecificSearchParser(final JSONArray hit) throws JSONException {
 		Disc disc = new Disc(parseDiscId(hit.getString(1)));
 		disc.setName(parseDiscName(hit.getString(1)));
 		disc.setBandName(parseBandName(hit.getString(0)));
@@ -64,10 +64,10 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	 * @return the disc with optional values
 	 * @throws JSONException will be thrown if a Field is not at the right place
 	 */
-	private Disc parseOptionalFields(Disc disc, JSONArray hit) throws JSONException {
+	private Disc parseOptionalFields(final Disc disc, final JSONArray hit) throws JSONException {
 		int index = 2;
-		disc.setGenre((this.isAbleToParseGenre ? parseGenre(hit.getString(index++)) : ""));
 		disc.setDiscType((this.isAbleToParseDiscType ? parseDiscType(hit.getString(index++)) : null));
+		disc.setGenre((this.isAbleToParseGenre ? parseGenre(hit.getString(index++)) : ""));
 		disc.getBand().setCountry(this.isAbleToParseCountry ? parseCountry(hit.getString(index++)) : "");
 		disc.getBand().setProvince(this.isAbleToParseProvince ? parseBandProvince(hit.getString(index++)) : "");
 		disc.setReleaseDate((this.isAbleToParseDate ? parseDate(hit.getString(index++)) : ""));
@@ -147,7 +147,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	 * @param hit the JSon hit.
 	 * @return The parsed date.
 	 */
-	private String parseDate(String hit) {
+	private String parseDate(final String hit) {
 		// sampleString: "November 4th, 2006 <!-- 2006-11-04 -->"
 		String date = hit.replaceAll(".*?<!--\\s", "").replaceAll("\\s-->", "");
 		return date;

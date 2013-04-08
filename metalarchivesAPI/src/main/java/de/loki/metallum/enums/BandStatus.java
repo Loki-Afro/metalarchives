@@ -1,12 +1,15 @@
 package de.loki.metallum.enums;
 
+import org.apache.log4j.Logger;
+
 public enum BandStatus {
 	ACTIV(1, "Active"), ON_HOLD(2, "On hold"), SPLIT_UP(3, "Split-up"), UNKNOWN(4, "Unknown"), CHANGED_NAME(5, "Changed name");
 
 	private final int		searchNumber;
 	private final String	asString;
+	private static Logger	logger	= Logger.getLogger(BandStatus.class);
 
-	private BandStatus(int searchNumber, String asString) {
+	private BandStatus(final int searchNumber, final String asString) {
 		this.searchNumber = searchNumber;
 		this.asString = asString;
 	}
@@ -16,12 +19,14 @@ public enum BandStatus {
 	}
 
 	public static BandStatus getTypeBandStatusForString(String possibleStatus) {
+		possibleStatus = possibleStatus.trim();
 		for (BandStatus type : values()) {
 			if (type.asString.equalsIgnoreCase(possibleStatus)) {
 				return type;
 			}
 		}
-		System.err.println("PossibleBandStatus: " + possibleStatus);
+		logger.error("Unrecognized BandStatus: " + possibleStatus);
+
 		return null;
 	}
 

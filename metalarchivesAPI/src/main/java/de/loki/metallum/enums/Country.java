@@ -1,5 +1,7 @@
 package de.loki.metallum.enums;
 
+import org.apache.log4j.Logger;
+
 /**
  * As stupid as it seems to be but metal-archives seems not to use a common way to store the Country?!
  * So you have to use this enum.
@@ -35,6 +37,8 @@ public enum Country {
 	private final String	fullName;
 	private final String	shortForm;
 
+	private static Logger	logger	= Logger.getLogger(Country.class);
+
 	private Country(final String shortForm, final String fullName) {
 		this.shortForm = shortForm;
 		this.fullName = fullName;
@@ -48,12 +52,14 @@ public enum Country {
 		return this.shortForm;
 	}
 
-	public static Country getRightCountryForString(final String possiblecountry) {
+	public static Country getRightCountryForString(String possiblecountry) {
+		possiblecountry = possiblecountry.trim();
 		for (final Country country : values()) {
 			if (country.fullName.equalsIgnoreCase(possiblecountry)) {
 				return country;
 			}
 		}
+		logger.warn("Unrecognized Country: " + possiblecountry);
 		return Country.ANY;
 	}
 
