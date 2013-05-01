@@ -81,8 +81,8 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private Track[] parseTracks(final Disc disc) {
-		DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc);
-		Track[] tracks = trackParser.parse(disc.isSplit(), this.loadLyrics);
+		DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc, disc.isSplit(), this.loadLyrics);
+		Track[] tracks = trackParser.parse();
 		for (final Track track : tracks) {
 			track.setDisc(disc);
 		}

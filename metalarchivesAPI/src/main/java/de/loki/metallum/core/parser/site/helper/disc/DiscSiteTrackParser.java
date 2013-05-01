@@ -2,7 +2,9 @@ package de.loki.metallum.core.parser.site.helper.disc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
@@ -15,10 +17,15 @@ import de.loki.metallum.entity.Track;
 
 public class DiscSiteTrackParser {
 	private static Logger	logger	= Logger.getLogger(DiscSiteTrackParser.class);
+	private CountDownLatch	doneSignal;
 	private final Document	doc;
+	private final boolean	isSplit;
+	private final boolean	loadLyrics;
 
-	public DiscSiteTrackParser(final Document doc) {
+	public DiscSiteTrackParser(final Document doc, final boolean isSplit, final boolean loadLyrics) {
 		this.doc = doc;
+		this.isSplit = isSplit;
+		this.loadLyrics = loadLyrics;
 	}
 
 	private boolean parseIsInstrumental(final Element row) {
@@ -30,18 +37,50 @@ public class DiscSiteTrackParser {
 		}
 	}
 
-	private String parseLyrics(final Element row, final long trackId) {
-		if (row.getElementById("lyricsButton" + trackId) == null) {
-			return "";
+	/**
+	 * if doneSignal is not initialized this method will initialize it with the given count of threads,
+	 * 
+	 * @param trackCount count of tracks to parse
+	 */
+	private void lazyInitLache(final int trackCount) {
+		if (this.doneSignal == null) {
+			this.doneSignal = new CountDownLatch(trackCount);
 		}
-		try {
-			String lyricsHTML = Downloader.getHTML(MetallumURL.assembleLyricsURL(trackId));
-			lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
-			return lyricsHTML.trim();
-		} catch (ExecutionException e) {
-			logger.error("unanble to get lyrics from \"" + trackId + "\"", e);
+	}
+
+	private void parseLyrics2(final Element row, final long trackId, final Track trackToModify) {
+		Runnable runable = new DownloadLyricsRunnable(trackToModify, trackId);
+		new Thread(runable).start();
+	}
+
+	private final class DownloadLyricsRunnable implements Runnable {
+
+		private final Track	trackToModify;
+		private final long	trackId;
+
+		public DownloadLyricsRunnable(final Track trackToModify, final long trackId) {
+			this.trackToModify = trackToModify;
+			this.trackId = trackId;
 		}
-		return "";
+
+		@Override
+		public void run() {
+			try {
+				String lyricsHTML = Downloader.getHTML(MetallumURL.assembleLyricsURL(this.trackId));
+				lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
+				this.trackToModify.setLyrics(lyricsHTML.trim());
+			} catch (ExecutionException e) {
+				logger.error("unanble to get lyrics from \"" + this.trackId + "\"", e);
+			} finally {
+				signalDoneCountDown();
+			}
+		}
+	}
+
+	private void signalDoneCountDown() {
+		if (this.doneSignal != null) {
+			DiscSiteTrackParser.this.doneSignal.countDown();
+		}
 	}
 
 	/*
@@ -58,7 +97,7 @@ public class DiscSiteTrackParser {
 		return Integer.parseInt(trackNo.replaceAll("\\.", ""));
 	}
 
-	public Track[] parse(final boolean isSplit, final boolean loadLyrics) {
+	public Track[] parse() {
 		Element tabeElement = this.doc.select("table[class$=table_lyrics]").first();
 //		final int discCount = tabeElement.select("td[colspan=4]").size();
 		int counter = 1;
@@ -68,7 +107,7 @@ public class DiscSiteTrackParser {
 		for (Element row : rows) {
 			long trackId = parseTrackId(row);
 			Track track = new Track(trackId);
-			track.setName(parseTrackTitle(row, isSplit));
+			track.setName(parseTrackTitle(row, this.isSplit));
 			track.setPlayTime(parsePlayTime(row));
 			int trackNumber = parseTrackNumber(row);
 			track.setTrackNumber(trackNumber);
@@ -79,17 +118,32 @@ public class DiscSiteTrackParser {
 			}
 			track.setDiscNumber(counter);
 //			because otherwise the bandname is always the same
-			if (isSplit) {
+			if (this.isSplit) {
 				track.setBandName(parseBandName(row));
 			}
 			track.setInstrumental(parseIsInstrumental(row));
-			if (loadLyrics) {
-				track.setLyrics(parseLyrics(row, trackId));
+			if (this.loadLyrics && row.getElementById("lyricsButton" + trackId) != null) {
+				lazyInitLache(rows.size());
+				parseLyrics2(row, trackId, track);
+			} else {
+				signalDoneCountDown();
 			}
 			trackList.add(track);
 
 		}
+		waitEverythingIsDone(rows.size());
 		return trackList.toArray(new Track[trackList.size()]);
+	}
+
+	private void waitEverythingIsDone(final int trackCount) {
+		if (this.loadLyrics && this.doneSignal != null) {
+			try {
+//				as fallback we wait here 6 seconds for each track if that fails smth went wrong
+				this.doneSignal.await(trackCount * 6, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				logger.fatal("Please, please report this error: Thread Lock failed while downloading lyrics", e);
+			}
+		}
 	}
 
 	private long parseTrackId(final Element row) {
