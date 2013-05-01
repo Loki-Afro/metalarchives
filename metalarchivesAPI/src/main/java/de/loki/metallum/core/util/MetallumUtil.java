@@ -26,6 +26,10 @@ public final class MetallumUtil {
 			"th", "st"								};
 	private static Logger			logger			= Logger.getLogger(MetallumUtil.class);
 
+	private MetallumUtil() {
+
+	}
+
 	public final static String getDayOfMonthSuffix(final int day) {
 		return daySuffixes[day];
 	}
