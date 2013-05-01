@@ -135,7 +135,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals(13, discResult.getTrackListOnDisc(1).size());
 		Assert.assertEquals(11, discResult.getTrackListOnDisc(2).size());
 		Assert.assertEquals(DiscType.LIVE_ALBUM, discResult.getType());
-		Assert.assertEquals("Steamhammer Records", discResult.getLabel().getName());
+		Assert.assertEquals("Steamhammer", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());

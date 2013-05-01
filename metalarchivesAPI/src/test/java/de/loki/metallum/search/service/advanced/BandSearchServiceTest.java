@@ -157,7 +157,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getName(), "40 Watt Sun");
 		Assert.assertTrue(resultBand.getId() != 0);
 		Assert.assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
-		Assert.assertEquals(resultBand.getProvince(), "London");
+		Assert.assertEquals(resultBand.getProvince(), "London, England");
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 2009);
 		Assert.assertEquals(resultBand.getGenre(), "Doom Metal");
@@ -189,7 +189,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getName(), "40 Watt Sun");
 		Assert.assertTrue(resultBand.getId() != 0);
 		Assert.assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
-		Assert.assertEquals(resultBand.getProvince(), "London");
+		Assert.assertEquals(resultBand.getProvince(), "London, England");
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 2009);
 		Assert.assertEquals(resultBand.getGenre(), "Doom Metal");

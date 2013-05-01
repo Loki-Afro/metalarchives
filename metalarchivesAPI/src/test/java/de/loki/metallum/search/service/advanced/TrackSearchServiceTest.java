@@ -177,8 +177,8 @@ public class TrackSearchServiceTest {
 		Assert.assertNotSame(0, resultTrack.getDisc().getId());
 		Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
 		Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
-		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is War" + System.getProperty("line.separator")));
-		Assert.assertTrue(resultTrack.getLyrics().endsWith(System.getProperty("line.separator") + "War"));
+		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is war"));
+		Assert.assertTrue(resultTrack.getLyrics().endsWith("War"));
 	}
 
 	@Test
@@ -197,8 +197,8 @@ public class TrackSearchServiceTest {
 		Assert.assertNotSame(0, resultTrack.getDisc().getId());
 		Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
 		Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
-		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is War" + System.getProperty("line.separator")));
-		Assert.assertTrue(resultTrack.getLyrics().endsWith(System.getProperty("line.separator") + "War"));
+		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is war"));
+		Assert.assertTrue(resultTrack.getLyrics().endsWith("War"));
 	}
 
 	@Test
