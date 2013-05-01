@@ -4,65 +4,85 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Review;
 
-public class ReviewParser {
-	private final String	html;
+public final class ReviewParser {
+	private final Document	doc;
 
 	public ReviewParser(final long discId) throws ExecutionException {
-		this.html = Downloader.getHTML(MetallumURL.assembleReviewsURL(discId));
+		String html = Downloader.getHTML(MetallumURL.assembleReviewsURL(discId));
+		this.doc = Jsoup.parse(html);
 	}
 
 	public List<Review> parse() {
-		final String[] reviewHtmlArray = this.html.split("class=\"reviewBox\"");
 		final List<Review> reviews = new ArrayList<Review>();
-		for (int i = 1; i < reviewHtmlArray.length; i++) {
+		Elements elements = this.doc.select("div[class=reviewBox]");
+		for (Element element : elements) {
 			final Review review = new Review();
-			review.setName(parseTitle(reviewHtmlArray[i]));
-			review.setPercent(parseRecentage(reviewHtmlArray[i]));
-			review.setContent(parseBody(reviewHtmlArray[i]));
-			review.setAuthor(parseAuthor(reviewHtmlArray[i]));
-			review.setDate(parseDate(reviewHtmlArray[i]));
+			review.setName(parseTitle(element));
+			review.setPercent(parseRecentage(element));
+			review.setContent(parseBody(element));
+			review.setAuthor(parseAuthor(element));
+			review.setDate(parseDate(element));
 			reviews.add(review);
 		}
 		return reviews;
 	}
 
-	private String parseDate(final String html) {
-		String date = html.substring(html.indexOf("class=\"profileMenu\""));
-		date = date.substring(date.indexOf("</a>, ") + 6, date.indexOf("</div>") - 1);
+	private String parseDate(final Element elem) {
+		String html = elem.html();
+		String date = html.substring(html.lastIndexOf("</a>, ") + 6);
 		return MetallumUtil.getMetallumDate(date).toString();
 	}
 
-	private String parseTitle(final String html) {
-		String title = html.substring(html.indexOf("<h3 class=\"reviewTitle\">") + 24);
-		title = title.substring(0, title.indexOf("</h3>")).trim();
-		title = title.substring(0, title.lastIndexOf("-") - 1);
-		return title;
+	private String parseTitle(final Element elem) {
+		String title = parseTitleIntern(elem);
+		int lastIndexOfHyphen = title.lastIndexOf("-");
+		if (lastIndexOfHyphen > 1) {
+			title = title.substring(0, lastIndexOfHyphen - 1);
+		}
+		return title.trim();
 	}
 
-	private int parseRecentage(final String html) {
-		String percentage = html.substring(html.indexOf("<h3 class=\"reviewTitle\">") + 24);
-		percentage = percentage.substring(0, percentage.indexOf("</h3>")).trim();
-		percentage = percentage.substring(percentage.lastIndexOf("-") + 2);
-		percentage = percentage.substring(0, percentage.length() - 1);
-		return Integer.parseInt(percentage);
+	private String parseTitleIntern(final Element elem) {
+		Elements elements = elem.getElementsByAttributeValue("class", "reviewTitle");
+		if (!elements.isEmpty()) {
+			String title = elements.get(0).text();
+			return title;
+		}
+		return "";
 	}
 
-	private String parseBody(final String html) {
-		String body = html.substring(html.indexOf("<p id=\"reviewText"));
-		body = body.substring(body.indexOf(">") + 1, body.indexOf("</p>")).trim();
-		body = MetallumUtil.parseHtmlWithLineSeperators(body);
-		return body;
+	private int parseRecentage(final Element elem) {
+		String title = parseTitleIntern(elem);
+		int lastIndexOfHyphen = title.lastIndexOf("-");
+		if (lastIndexOfHyphen > 1) {
+//			last sign is always a percent sign
+			title = title.substring(lastIndexOfHyphen + 2, title.length() - 1).trim();
+		}
+		return Integer.parseInt(title);
 	}
 
-	private String parseAuthor(final String html) {
-		String user = html.substring(html.indexOf("class=\"profileMenu\""));
-		user = user.substring(user.indexOf(">") + 1, user.indexOf("</a>"));
-		return user;
+	private String parseBody(final Element elem) {
+		Element bodyElem = elem.getElementById(elem.id().replaceAll("reviewBox", "reviewText"));
+		return MetallumUtil.parseHtmlWithLineSeperators(bodyElem.html());
+	}
+
+	private String parseAuthor(final Element elem) {
+		Elements elements = elem.getElementsByAttributeValue("class", "profileMenu");
+		if (!elements.isEmpty()) {
+			String author = elements.get(0).text();
+			return author;
+		}
+		return "";
 
 	}
 }
