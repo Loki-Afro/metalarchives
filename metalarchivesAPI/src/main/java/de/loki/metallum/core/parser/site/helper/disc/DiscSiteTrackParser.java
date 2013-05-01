@@ -15,7 +15,7 @@ import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Track;
 
-public class DiscSiteTrackParser {
+public final class DiscSiteTrackParser {
 	private static Logger	logger	= Logger.getLogger(DiscSiteTrackParser.class);
 	private CountDownLatch	doneSignal;
 	private final Document	doc;
@@ -131,11 +131,11 @@ public class DiscSiteTrackParser {
 			trackList.add(track);
 
 		}
-		waitEverythingIsDone(rows.size());
+		waitUntilEverythingIsDone(rows.size());
 		return trackList.toArray(new Track[trackList.size()]);
 	}
 
-	private void waitEverythingIsDone(final int trackCount) {
+	private void waitUntilEverythingIsDone(final int trackCount) {
 		if (this.loadLyrics && this.doneSignal != null) {
 			try {
 //				as fallback we wait here 6 seconds for each track if that fails smth went wrong
