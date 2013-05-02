@@ -19,6 +19,8 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 	protected final boolean		loadLinks;
 	protected final T			entity;
 
+	private static String		imageCssQuery	= "img[src~=(?i)\\.(png|jpe?g|gif)]";
+
 	public AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
 		this.entity = entity;
 		this.loadImage = loadImage;
@@ -69,7 +71,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 		String imageURL = null;
 		Elements elements = this.doc.getElementsByClass(cssClass);
 		if (!elements.isEmpty()) {
-			Element imgElement = elements.first().select("img[src~=(?i)\\.(png|jpe?g|gif)]").first();
+			Element imgElement = elements.first().select(imageCssQuery).first();
 			imageURL = imgElement.attr("src");
 		}
 		return imageURL;
