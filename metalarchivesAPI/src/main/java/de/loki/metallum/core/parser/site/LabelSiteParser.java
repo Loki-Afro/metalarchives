@@ -79,7 +79,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	 * <b>The last 3 parameter...</b><br>
 	 * 
 	 * currentRooser, pastRooster and releases are PARSE_STYLES.<br>
-	 * They can change the behavier how metal-archives present their data.<br>
+	 * They can change the behaviour how metal-archives present their data.<br>
 	 * You should use PARSE_STYLE.BAND_SEARCH_MODE if care about the data and don't understand the
 	 * documentation. <br>
 	 * By default the 3 Fields are disabled (PARSE_STYLE.NONE)
