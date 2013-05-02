@@ -27,6 +27,7 @@ public final class ReviewParser {
 		Elements elements = this.doc.select("div[class=reviewBox]");
 		for (Element element : elements) {
 			final Review review = new Review();
+			review.setId(parseReviewId(element));
 			review.setName(parseTitle(element));
 			review.setPercent(parseRecentage(element));
 			review.setContent(parseBody(element));
@@ -35,6 +36,12 @@ public final class ReviewParser {
 			reviews.add(review);
 		}
 		return reviews;
+	}
+
+	private long parseReviewId(final Element elem) {
+		String idStr = elem.id();
+		idStr = idStr.substring(idStr.lastIndexOf("_") + 1);
+		return Long.parseLong(idStr);
 	}
 
 	private String parseDate(final Element elem) {

@@ -511,7 +511,7 @@ public class BandSearchServiceTest {
 		Assert.assertFalse(review.getAuthor().isEmpty());
 		Assert.assertFalse(review.getContet().isEmpty());
 		Assert.assertFalse(review.getDate().isEmpty());
-		Assert.assertTrue(review.getId() == 0);
+		Assert.assertTrue(review.getId() != 0);
 		Assert.assertFalse(review.getName().isEmpty());
 		Assert.assertTrue(review.getPercent() != 0);
 		// final Disc reviewDisc = review.getDisc();

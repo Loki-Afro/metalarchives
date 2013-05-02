@@ -8,6 +8,10 @@ public class Review extends AbstractEntity {
 	private String	date			= "";
 	private Disc	discFromReview	= new Disc();
 
+	public Review(final long id) {
+		super(id);
+	}
+
 	public Review() {
 		super(0);
 	}

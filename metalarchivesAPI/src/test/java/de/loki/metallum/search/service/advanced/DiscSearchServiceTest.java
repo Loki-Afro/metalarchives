@@ -603,7 +603,7 @@ public class DiscSearchServiceTest {
 			Assert.assertFalse(resultReview.getName().isEmpty());
 			Assert.assertFalse(resultReview.getDate().isEmpty());
 			Assert.assertTrue(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100);
-			Assert.assertTrue(resultReview.getId() == 0);
+			Assert.assertTrue(resultReview.getId() != 0);
 			Assert.assertSame(resultReview.getDisc(), discResult);
 		}
 		Assert.assertEquals("Cannibal Corpse", discResult.getBandName());
@@ -633,7 +633,7 @@ public class DiscSearchServiceTest {
 			Assert.assertFalse(resultReview.getName().isEmpty());
 			Assert.assertFalse(resultReview.getDate().isEmpty());
 			Assert.assertTrue(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100);
-			Assert.assertTrue(resultReview.getId() == 0);
+			Assert.assertTrue(resultReview.getId() != 0);
 			Assert.assertSame(resultReview.getDisc(), discResult);
 		}
 		Assert.assertEquals("Cannibal Corpse", discResult.getBandName());
