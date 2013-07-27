@@ -523,6 +523,7 @@ public class DiscSearchServiceTest {
 
 	@Test
 	public void cachedArtworkTest() throws MetallumException {
+		artworkTest();
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setBandName("Belphegor", false);
@@ -621,6 +622,7 @@ public class DiscSearchServiceTest {
 
 	@Test
 	public void cachedReviewsTest() throws MetallumException {
+		reviewsTest();
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setBandName("Cannibal Corpse", false);
@@ -694,7 +696,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Effigy of the Forgotten", discResult.getName());
 		Assert.assertEquals(9, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Roadrunner Records", discResult.getLabel().getName());
+		Assert.assertEquals("R/C Records", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
