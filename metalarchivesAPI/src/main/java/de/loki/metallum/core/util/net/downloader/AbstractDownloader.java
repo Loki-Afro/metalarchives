@@ -19,7 +19,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.log4j.Logger;
 
-public abstract class AbstractDownloader {
+abstract class AbstractDownloader {
 	private final String					urlString;
 	protected volatile static HttpClient	HTTP_CLIENT;
 	protected final static Charset			HTML_CHARSET		= Charset.forName("UTF-8");

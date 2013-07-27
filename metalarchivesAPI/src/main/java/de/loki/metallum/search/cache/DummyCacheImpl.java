@@ -4,7 +4,7 @@ import java.util.Map.Entry;
 
 import de.loki.metallum.entity.IEntity;
 
-public class DummyCacheImpl implements ICache {
+class DummyCacheImpl implements ICache {
 
 	@Override
 	public <E extends IEntity> E getEntity(final IEntity entity, final Class<E> clazz) {

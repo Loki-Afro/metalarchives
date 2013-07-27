@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 
 import de.loki.metallum.entity.IEntity;
 
-public final class CacheImpl implements ICache {
+final class CacheImpl implements ICache {
 	private final Map<Long, IEntity>	entityCacheMap	= new ConcurrentHashMap<Long, IEntity>();
 	private final int					maxEntityEntrys	= 5000;
 	private static Logger				logger			= Logger.getLogger(CacheImpl.class);
