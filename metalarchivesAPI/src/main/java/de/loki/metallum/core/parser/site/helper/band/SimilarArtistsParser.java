@@ -7,6 +7,9 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
@@ -14,28 +17,39 @@ import de.loki.metallum.entity.Band;
 import de.loki.metallum.enums.Country;
 
 public class SimilarArtistsParser {
-	private final String	html;
+	private final Document	document;
 
 	public SimilarArtistsParser(final long id) throws ExecutionException {
-		this.html = Downloader.getHTML(MetallumURL.assembleBandRecommendationsURL(id, 1));
+		String html = Downloader.getHTML(MetallumURL.assembleBandRecommendationsURL(id, 1));
+		this.document = Jsoup.parse(html);
 	}
 
 	public Map<Integer, List<Band>> parse() {
-		final Map<Integer, List<Band>> returnMap = new TreeMap<Integer, List<Band>>();
-		final String[] bandStringArray = this.html.split("<tr id=\"recRow_");
-		for (int i = 1; i < bandStringArray.length; i++) {
-			final String[] bandInformationStringArray = bandStringArray[i].split("<td>");
-			int index = 1;
-			final Band band = new Band(parseBandId(bandInformationStringArray[index]));
-			band.setName(parseBandName(bandInformationStringArray[index++]));
-			band.setCountry(parseCountry(bandInformationStringArray[index++]));
-			band.setGenre(parseGenre(bandInformationStringArray[index++]));
-			addToMap(returnMap, parseScore(bandInformationStringArray[index]), band);
+//		multimap: key is score, multiple bands can have the same score
+		final Map<Integer, List<Band>> out = new TreeMap<Integer, List<Band>>();
+		Element tableElem = this.document.getElementById("artist_list");
+		Elements trElements = tableElem.getElementsByTag("tr");
+//		removing the tableheader
+		trElements.remove(0);
+		trElements.remove(trElements.size() - 1);
+		for (Element tr : trElements) {
+			Elements tdElemnts = tr.getElementsByTag("td");
+			Band band = parseBand(tdElemnts);
+			addToMap(out, Integer.parseInt(tdElemnts.last().text()), band);
 		}
-		return returnMap;
+		return out;
 	}
 
-	private static Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> themap, final int key, final Band value) {
+	private Band parseBand(final Elements tdElemnts) {
+		Band band = new Band();
+		band.setName((tdElemnts.get(0).text()));
+		band.setId(parseBandId((tdElemnts.get(0).html())));
+		band.setCountry(Country.getRightCountryForString(tdElemnts.get(1).text()));
+		band.setGenre(tdElemnts.get(2).text());
+		return band;
+	}
+
+	private Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> themap, final int key, final Band value) {
 		List<Band> bandListFromMap = themap.get(key);
 		if (bandListFromMap == null) {
 			bandListFromMap = new ArrayList<Band>();
@@ -51,28 +65,5 @@ public class SimilarArtistsParser {
 		String strId = htmlPart.substring(0, htmlPart.lastIndexOf("\">"));
 		strId = strId.substring(strId.lastIndexOf("/") + 1, strId.length());
 		return Long.parseLong(strId);
-	}
-
-	private String parseBandName(final String htmlPart) {
-		String bandName = Jsoup.parse(htmlPart).text();
-		return bandName;
-	}
-
-	private Country parseCountry(final String htmlPart) {
-		String strCounty = Jsoup.parse(htmlPart).text();
-		return Country.getRightCountryForString(strCounty);
-	}
-
-	private String parseGenre(final String htmlPart) {
-		String genre = Jsoup.parse(htmlPart).text();
-		return genre;
-	}
-
-	private int parseScore(final String htmlPart) {
-		String strScore = Jsoup.parse(htmlPart).text();
-		if (strScore.length() > 3) {
-			strScore = strScore.substring(0, strScore.indexOf(" "));
-		}
-		return Integer.parseInt(strScore);
 	}
 }
