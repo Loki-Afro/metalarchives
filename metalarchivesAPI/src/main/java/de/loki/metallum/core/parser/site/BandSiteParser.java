@@ -142,19 +142,17 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	}
 
 	private final String parseInfo() {
-		final String newHtml = this.html.substring(this.html.indexOf("</dl>") + 5);
-		String info = newHtml.substring(newHtml.indexOf("<div class=\"band_comment"));
-		info = info.substring(info.indexOf(">") + 1);
-		if (info.contains("class=\"tool_strip")) {
-			info = info.substring(0, info.indexOf("class=\"tool_strip"));
-			info = info.substring(0, info.lastIndexOf("<"));
-		} else {
-			info = info.substring(0, info.indexOf("</div>"));
+		Element bandCommentElem = this.doc.getElementsByClass("band_comment").first();
+		String info = MetallumUtil.parseHtmlWithLineSeperators(bandCommentElem.html()).trim();
+		String suffix = "Read more";
+		if (info.endsWith(suffix)) {
+			info = info.substring(0, info.length() - suffix.length()).trim();
 		}
-		info = MetallumUtil.parseHtmlWithLineSeperators(info);
+
+//		if more content was loaded previously skip downloading it again and use it.
 		if (this.entity.getInfo().length() > info.length()) {
 			return this.entity.getInfo();
-		} else if (this.loadReadMore && this.html.contains("btn_read_more")) {
+		} else if (this.loadReadMore && !this.doc.getElementsByClass("btn_read_more").isEmpty()) {
 			try {
 				final String downloadedReadMore = Downloader.getHTML(MetallumURL.assembleMoreInfoURL(this.entity.getId()));
 				return MetallumUtil.parseHtmlWithLineSeperators(downloadedReadMore);
