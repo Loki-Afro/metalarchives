@@ -100,7 +100,7 @@ public class MemberSearchTest {
 		for (final Member member : memberToTest) {
 			Assert.assertNotSame(0L, member.getId());
 			Assert.assertFalse(member.getName().isEmpty());
-			Assert.assertFalse(member.getRealName().isEmpty());
+			Assert.assertFalse(member.getRealName() == null);
 			Assert.assertNotSame(Country.ANY, member.getCountry());
 		}
 	}
