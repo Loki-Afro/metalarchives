@@ -308,6 +308,7 @@ public class BandSearchServiceTest {
 		Assert.assertFalse(resultBand.getAddedOn().isEmpty());
 		Assert.assertFalse(resultBand.getModifiedBy().isEmpty());
 		Assert.assertFalse(resultBand.getLastModifiedOn().isEmpty());
+		Assert.assertFalse(resultBand.getCurrentLineup().isEmpty());
 	}
 
 	@Test

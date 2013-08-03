@@ -5,16 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.Jsoup;
+import org.apache.log4j.Logger;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Member;
 
 public class MemberParser {
+
 	private enum MemberCategory {
 		LAST_KNOWN("Last known lineup"), PAST("Past members"), CURRENT("current lineup"), LIVE("Live musicians");
-		private final String[]	asString;
+		private static final Logger	logger	= Logger.getLogger(MemberCategory.class);
+		private final String[]		asString;
 
 		private MemberCategory(final String... asString) {
 			this.asString = asString;
@@ -26,7 +31,7 @@ public class MemberParser {
 					return cat;
 				}
 			}
-			System.err.println("MemberCategory: " + possibleMemberCategory);
+			logger.error("MemberCategory: " + possibleMemberCategory);
 			return null;
 		}
 
@@ -37,39 +42,52 @@ public class MemberParser {
 	private final Map<Member, String>	liveLineupList		= new HashMap<Member, String>();
 	private final Map<Member, String>	lastKnownLineupList	= new HashMap<Member, String>();
 
-	public final void parse(final String html) {
-		final List<Member> members = new ArrayList<Member>();
-		if (!html.contains("id=\"band_members\"")) {
+	public final void parse(final Document doc) {
+		Element bandMembersElem = doc.getElementById("band_members");
+		if (bandMembersElem == null) {
 			return;
 		}
-		final String[] cats = html.split("href=\"#band_tab_members_");
-		for (int x = 1; x < cats.length; x++) {
+		Elements categoryElements = doc.select("[id~=band_tab_members_.*]");
+		for (Element catElem : categoryElements) {
+			final String catId = catElem.id();
+			if (!catId.endsWith("all")) {
+				Elements lineUpRows = catElem.getElementsByClass("lineupRow");
+				for (Element lineUpRow : lineUpRows) {
+					Member member = new Member();
+					member.setId(parseMemberId(lineUpRow));
+					member.setName(lineUpRow.getElementsByClass("bold").first().text());
+					final String role = parseMemberRole(lineUpRow);
+					final String cat = parseMemberCategory(catElem);
 
-			final String cat = cats[x].substring(cats[x].indexOf(">") + 1, cats[x].indexOf("</a>"));
-			if (!cat.contains("Complete lineup")) {
-
-				final String catID = cats[x].substring(0, cats[x].indexOf("\""));
-				String catHtml = html.substring(html.indexOf("id=\"band_tab_members_" + catID + "\""));
-
-				if (catHtml.contains("<!--")) {
-					catHtml = catHtml.substring(0, catHtml.indexOf("<!--"));
-				}
-
-				final String[] membersArray = catHtml.split("class=\"lineupTab\">");
-				for (int i = 1; i < membersArray.length; i++) {
-					final String[] memInfo = membersArray[i].split("</td>");
-					final Member member = new Member(parseMemberId(memInfo[0]));
-					member.setName(parseMemberName(memInfo[0]));
-					final String role = parseMemberRole(memInfo[1]);
-					if (memInfo.length > 2) {
-						member.setUncategorizedBands(parseMemberBands(memInfo[2]));
+//					then we have bands to parse too
+					Element possibleLineupBandsRow = lineUpRow.nextElementSibling();
+					if (possibleLineupBandsRow != null && possibleLineupBandsRow.className().equals("lineupBandsRow")) {
+						List<Band> bands = parseAdditionalMemberBands(possibleLineupBandsRow);
+						member.setUncategorizedBands(bands);
 					}
 					addToMemberList(member, role, cat);
-					members.add(member);
 				}
 			}
-
 		}
+	}
+
+	private List<Band> parseAdditionalMemberBands(final Element lineUpBandsRow) {
+		ArrayList<Band> bandList = new ArrayList<Band>();
+		for (Element linkElem : lineUpBandsRow.getElementsByTag("a")) {
+			Band band = new Band();
+			band.setName(linkElem.text());
+			String url = linkElem.attr("href");
+			String id = url.substring(url.lastIndexOf("/") + 1, url.length());
+			band.setId(Long.parseLong(id));
+		}
+		return bandList;
+	}
+
+	private String parseMemberCategory(final Element catElem) {
+		String catId = catElem.id();
+		Document doc = catElem.ownerDocument();
+		Element realCatElem = doc.select("a[href=#" + catId + "]").first();
+		return realCatElem.text();
 	}
 
 	public final void addToMemberList(final Member memberToAdd, final String role, final String category) {
@@ -92,42 +110,15 @@ public class MemberParser {
 		}
 	}
 
-	private String parseMemberRole(final String htmlPart) {
-		String role = htmlPart.substring(htmlPart.indexOf(">") + 1);
-		role = role.trim().replaceAll("\\s+", " ");
-		return role;
+	private String parseMemberRole(final Element memberRow) {
+		Element lastTdTag = memberRow.getElementsByTag("td").last();
+		return lastTdTag.text();
 	}
 
-	private long parseMemberId(String htmlPart) {
-		htmlPart = htmlPart.substring(htmlPart.indexOf("<a"), htmlPart.indexOf("</a>"));
-		String idStr = htmlPart.substring(0, htmlPart.indexOf("\" style"));
-		idStr = idStr.substring(idStr.lastIndexOf("/") + 1, idStr.length());
-		return Long.parseLong(idStr);
-	}
-
-	private String parseMemberName(final String htmlPart) {
-		return Jsoup.parse(htmlPart).text();
-	}
-
-	private final List<Band> parseMemberBands(final String htmlPart) {
-		final List<Band> mbands = new ArrayList<Band>();
-		if (!htmlPart.contains("See also:")) {
-			return mbands;
-		}
-
-		final String[] bands = htmlPart.split("<a");
-		for (int i = 1; i < bands.length; i++) {
-			final Band band = new Band(0);
-			band.setName(bands[i].substring(bands[i].indexOf(">") + 1, bands[i].indexOf("</a>")));
-
-			String idStr = bands[i].substring(bands[i].indexOf("/bands/") + 7);
-			idStr = idStr.substring(idStr.indexOf("/") + 1, idStr.indexOf("\">"));
-			band.setId(Long.parseLong(idStr));
-
-			mbands.add(band);
-		}
-
-		return mbands;
+	private long parseMemberId(final Element memberRow) {
+		String hrefElem = memberRow.getElementsByAttribute("href").first().attr("href");
+		hrefElem = hrefElem.substring(hrefElem.lastIndexOf("/") + 1, hrefElem.length());
+		return Long.parseLong(hrefElem);
 	}
 
 	public final Map<Member, String> getCurrentLineup() {
