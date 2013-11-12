@@ -45,8 +45,8 @@ public final class ReviewParser {
 	}
 
 	private String parseDate(final Element elem) {
-		String html = elem.html();
-		String date = html.substring(html.lastIndexOf("</a>, ") + 6);
+		String date = elem.getElementsByClass("reviewTitle").first().nextElementSibling().text();
+		date = date.substring(date.indexOf(", ") + 2);
 		return MetallumUtil.getMetallumDate(date).toString();
 	}
 

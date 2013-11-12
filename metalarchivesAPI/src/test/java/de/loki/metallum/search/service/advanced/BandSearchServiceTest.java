@@ -131,7 +131,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getStatus(), BandStatus.SPLIT_UP);
 		Assert.assertEquals(resultBand.getYearFormedIn(), 1994);
 		Assert.assertEquals(resultBand.getGenre(), "Doom Metal");
-		Assert.assertEquals(resultBand.getLyricalThemes(), "Horror (early), depression, relationships");
+		Assert.assertEquals(resultBand.getLyricalThemes(), "Horror (early), Depression, Relationships");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("Warning were formed by Patrick"));
@@ -164,7 +164,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().startsWith("The band name"));
+		Assert.assertTrue(resultBand.getInfo().startsWith("Patrick Walker took the band name"));
 		Assert.assertTrue(resultBand.getInfo().endsWith("\"Emerald Lies\"."));
 		Assert.assertFalse(resultBand.hasLogo());
 		Assert.assertFalse(resultBand.hasPhoto());
@@ -196,7 +196,7 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
 		Assert.assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		Assert.assertTrue(resultBand.getLabel().getId() != 0);
-		Assert.assertTrue(resultBand.getInfo().startsWith("The band name"));
+		Assert.assertTrue(resultBand.getInfo().startsWith("Patrick Walker took the band name"));
 		Assert.assertTrue(resultBand.getInfo().endsWith("\"Emerald Lies\"."));
 		Assert.assertFalse(resultBand.hasLogo());
 		Assert.assertFalse(resultBand.hasPhoto());
@@ -264,8 +264,8 @@ public class BandSearchServiceTest {
 		Assert.assertEquals(resultBand.getYearFormedIn(), 1988);
 		Assert.assertEquals(resultBand.getGenre(), "Death Metal");
 		Assert.assertEquals(resultBand.getLyricalThemes(), "Satanism, Occultism, Anti-Christianity, Death");
-		Assert.assertEquals(resultBand.getLabel().getName(), "Century Media Records");
-		Assert.assertTrue(resultBand.getLabel().getId() != 0);
+		Assert.assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
+		Assert.assertTrue(resultBand.getLabel().getId() == 0);
 		Assert.assertTrue(resultBand.getInfo().startsWith("Vital Remains participated"));
 		Assert.assertTrue(resultBand.getInfo().endsWith("A Tribute ..."));
 		Assert.assertFalse(resultBand.hasLogo());
