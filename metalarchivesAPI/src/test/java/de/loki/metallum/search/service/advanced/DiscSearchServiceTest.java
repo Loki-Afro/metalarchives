@@ -67,13 +67,13 @@ public class DiscSearchServiceTest {
 	public void vhsTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setReleaseTypes(DiscType.VHS);
+		query.setReleaseTypes(DiscType.VIDEO);
 		query.setReleaseName("Live Eschaton", false);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Behemoth", discResult.getBandName());
 		Assert.assertEquals("Live Eschaton", discResult.getName());
 		Assert.assertEquals(12, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.VHS, discResult.getType());
+		Assert.assertEquals(DiscType.VIDEO, discResult.getType());
 		Assert.assertEquals("Metal Mind Productions", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
@@ -107,13 +107,13 @@ public class DiscSearchServiceTest {
 	public void dvdTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setReleaseTypes(DiscType.DVD);
+		query.setReleaseTypes(DiscType.VIDEO);
 		query.setReleaseName("Return to Yggdrasill", false);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Enslaved", discResult.getBandName());
 		Assert.assertEquals("Return to Yggdrasill", discResult.getName());
 		Assert.assertEquals(8, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.DVD, discResult.getType());
+		Assert.assertEquals(DiscType.VIDEO, discResult.getType());
 		Assert.assertEquals("Tabu Recordings", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
@@ -448,7 +448,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Practice Sessions", discResult.getName());
 		Assert.assertEquals(4, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.DEMO, discResult.getType());
-		Assert.assertEquals("Self-released/independent", discResult.getLabel().getName());
+		Assert.assertEquals("Independent", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());

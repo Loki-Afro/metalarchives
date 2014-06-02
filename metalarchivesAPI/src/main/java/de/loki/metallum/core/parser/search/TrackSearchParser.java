@@ -46,7 +46,13 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 		// we have to do this because if we are searching with an DiscType it will not appear in the
 		// JSONArray. So the position will change
 		track.setName(parseTitleName(hits.getString(this.isAbleToParseDiscType ? 3 : 2)));
-		track.getBand().setName(parseBandName(hits.getString(0)));
+		final String parsedBandName = parseBandName(hits.getString(0));
+//		if so we can set the band because we do only find the particular band.
+		if (this.isAbleToParseDiscType && DiscType.isSplit(track.getDiscTyp())) {
+			track.setSplitBandName(parsedBandName);
+		} else {
+			track.getBand().setName(parsedBandName);
+		}
 		track.getBand().setId(parseBandId(hits.getString(0)));
 		track.setId(parseTrackId(hits.getString(hits.length() - 1)));
 		track = parseOptionalFields(track, hits);

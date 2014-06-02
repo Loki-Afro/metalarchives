@@ -43,7 +43,12 @@ public class Track extends AbstractEntity {
 
 	// exists because there are also split discs, and we have no chance to determine which track is
 	// from which band
+	@Deprecated
 	public void setBandName(final String bandName) {
+		this.splitBandName = bandName;
+	}
+
+	public void setSplitBandName(final String bandName) {
 		this.splitBandName = bandName;
 	}
 
