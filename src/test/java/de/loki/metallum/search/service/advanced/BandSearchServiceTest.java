@@ -5,12 +5,9 @@ import java.util.Map;
 
 import org.junit.Assert;
 
-import org.apache.log4j.Level;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.loki.metallum.MetallumException;
-import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.entity.Review;
@@ -23,11 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class BandSearchServiceTest {
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Test
 	public void bandNameTest() throws MetallumException {

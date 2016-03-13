@@ -3,15 +3,16 @@ package de.loki.metallum.core.parser.site.helper.member;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
+import org.slf4j.LoggerFactory;
 
 public class BandParser {
 
-	private static Logger	logger	= Logger.getLogger(BandParser.class);
+	private static Logger	logger	= LoggerFactory.getLogger(BandParser.class);
 
 	public enum Mode {
 		ACTIVE, GUEST, PAST, MISC, LIVE

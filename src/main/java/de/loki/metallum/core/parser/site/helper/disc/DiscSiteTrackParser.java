@@ -6,7 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -14,9 +14,10 @@ import org.jsoup.select.Elements;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Track;
+import org.slf4j.LoggerFactory;
 
 public final class DiscSiteTrackParser {
-	private static Logger	logger	= Logger.getLogger(DiscSiteTrackParser.class);
+	private static Logger	logger	= LoggerFactory.getLogger(DiscSiteTrackParser.class);
 	private CountDownLatch	doneSignal;
 	private final Document	doc;
 	private final boolean	isSplit;
@@ -30,11 +31,7 @@ public final class DiscSiteTrackParser {
 
 	private boolean parseIsInstrumental(final Element row) {
 		Element lastTd = row.getElementsByTag("td").last();
-		if (lastTd.text().contains("instrumental")) {
-			return true;
-		} else {
-			return false;
-		}
+		return lastTd.text().contains("instrumental");
 	}
 
 	/**
@@ -142,7 +139,7 @@ public final class DiscSiteTrackParser {
 //				as fallback we wait here 6 seconds for each track if that fails smth went wrong
 				this.doneSignal.await(trackCount * 6, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
-				logger.fatal("Please, please report this error: Thread Lock failed while downloading lyrics", e);
+				logger.error("Please, please report this error: Thread Lock failed while downloading lyrics", e);
 			}
 		}
 	}

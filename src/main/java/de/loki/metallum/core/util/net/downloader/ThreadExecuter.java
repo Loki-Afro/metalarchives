@@ -6,11 +6,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ThreadExecuter extends ThreadPoolExecutor {
 	private final static ThreadExecuter	instance	= new ThreadExecuter(4, 10);
-	private static Logger				logger		= Logger.getLogger(ThreadExecuter.class);
+	private static Logger				logger		= LoggerFactory.getLogger(ThreadExecuter.class);
 
 	private ThreadExecuter(final int corePoolSize, final int maximumPoolSize) {
 		super(corePoolSize, maximumPoolSize, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());

@@ -3,13 +3,10 @@ package de.loki.metallum.search.service.advanced;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Level;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.loki.metallum.MetallumException;
-import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.entity.Review;
@@ -19,11 +16,6 @@ import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.query.DiscSearchQuery;
 
 public class DiscSearchServiceTest {
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Test
 	public void objectToLoadTest() throws MetallumException {

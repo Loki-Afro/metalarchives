@@ -3,7 +3,7 @@ package de.loki.metallum.core.parser.search;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -16,6 +16,7 @@ import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.SearchRelevance;
+import org.slf4j.LoggerFactory;
 
 /**
  * Parses the data which was gained by the search
@@ -25,7 +26,7 @@ import de.loki.metallum.search.SearchRelevance;
  */
 public class MemberSearchParser extends AbstractSearchParser<Member> {
 
-	private static Logger	logger	= Logger.getLogger(MemberSearchParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberSearchParser.class);
 
 	@Override
 	protected Member useSpecificSearchParser(final JSONArray hits) throws JSONException {
@@ -55,7 +56,7 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
 	}
 
 	private List<Band> parseBands(final String hit) {
-		logger.debug("new hit: " + hit);
+		LOGGER.debug("new hit: " + hit);
 		List<Band> bandList = new ArrayList<Band>();
 		Document doc = Jsoup.parse(hit);
 		Elements links = doc.getElementsByAttribute("href");
@@ -67,14 +68,14 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
 			if (!bandId.isEmpty()) {
 				Band band = new Band(Long.parseLong(bandId));
 				band.setName(MetallumUtil.trimNoBreakSpaces(link.text()));
-				logger.debug("adding new Band to Member: " + band);
+				LOGGER.debug("adding new Band to Member: " + band);
 				bandList.add(band);
 			}
 		}
 //		String[] bandSplit = hit.split(", ");
 //		for (int i = 0; i < bandSplit.length; i++) {
 //			if (!bandSplit[i].contains("etc.")) {
-//				logger.info(bandSplit[i]);
+//				LOGGER.info(bandSplit[i]);
 //				String bandId = bandSplit[i].substring(0, bandSplit[i].indexOf("\">"));
 //				bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
 ////				because there are Members which do not have any band O.o 

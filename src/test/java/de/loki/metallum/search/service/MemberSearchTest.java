@@ -4,12 +4,10 @@ import java.util.List;
 
 import org.junit.Assert;
 
-import org.apache.log4j.Level;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.loki.metallum.MetallumException;
-import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.enums.Country;
@@ -18,11 +16,6 @@ import de.loki.metallum.search.query.MemberSearchQuery;
 
 public class MemberSearchTest {
 	// TODO to test: -objectToLoad
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Test
 	public void noMemberNameTest() {

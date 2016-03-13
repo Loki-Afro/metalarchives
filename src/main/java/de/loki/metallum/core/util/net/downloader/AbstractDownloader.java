@@ -17,7 +17,8 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 abstract class AbstractDownloader {
 	private final String					urlString;
@@ -25,7 +26,7 @@ abstract class AbstractDownloader {
 	protected final static Charset			HTML_CHARSET		= Charset.forName("UTF-8");
 	private final static int				PORT				= 80;
 	private final static String				PROTOCOL			= "http";
-	private static Logger					logger				= Logger.getLogger(AbstractDownloader.class);
+	private static Logger					logger				= LoggerFactory.getLogger(AbstractDownloader.class);
 
 	private static final String				USER_AGENT_PROPERTY	= "de.loki.metallum.useragent";
 

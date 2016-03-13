@@ -1,15 +1,16 @@
 package de.loki.metallum.enums;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum BandStatus {
 	ACTIV(1, "Active"), ON_HOLD(2, "On hold"), SPLIT_UP(3, "Split-up"), UNKNOWN(4, "Unknown"), CHANGED_NAME(5, "Changed name");
 
 	private final int		searchNumber;
 	private final String	asString;
-	private static Logger	logger	= Logger.getLogger(BandStatus.class);
+	private static Logger	logger	= LoggerFactory.getLogger(BandStatus.class);
 
-	private BandStatus(final int searchNumber, final String asString) {
+	BandStatus(final int searchNumber, final String asString) {
 		this.searchNumber = searchNumber;
 		this.asString = asString;
 	}

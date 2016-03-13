@@ -2,7 +2,7 @@ package de.loki.metallum.core.parser.search;
 
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -12,6 +12,7 @@ import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Track;
 import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.SearchRelevance;
+import org.slf4j.LoggerFactory;
 
 /**
  * Parses the data which was gained by the search
@@ -21,7 +22,7 @@ import de.loki.metallum.search.SearchRelevance;
  */
 public class TrackSearchParser extends AbstractSearchParser<Track> {
 
-	private static Logger	logger					= Logger.getLogger(TrackSearchParser.class);
+	private static Logger	logger					= LoggerFactory.getLogger(TrackSearchParser.class);
 	private boolean			isAbleToParseGenre		= false;
 	private boolean			isAbleToParseDiscType	= false;
 	private boolean			loadLyrics				= false;

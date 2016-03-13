@@ -8,10 +8,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.slf4j.LoggerFactory;
 
 public final class MetallumUtil {
 	private final static String		lineSeperator	= System.getProperty("line.separator");
@@ -24,7 +25,7 @@ public final class MetallumUtil {
 			"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 			// 30 31
 			"th", "st"								};
-	private static Logger			logger			= Logger.getLogger(MetallumUtil.class);
+	private static Logger			logger			= LoggerFactory.getLogger(MetallumUtil.class);
 
 	private MetallumUtil() {
 
@@ -128,13 +129,9 @@ public final class MetallumUtil {
 			huc.setRequestMethod("GET");
 			huc.connect();
 			int code = huc.getResponseCode();
-			if (code == 200) {
-				return true;
-			} else {
-				return false;
-			}
+			return code == 200;
 		} catch (IOException e) {
-			logger.error(e);
+			logger.error("Metalarchives is not accessable", e);
 		}
 		return false;
 	}

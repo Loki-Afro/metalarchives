@@ -1,6 +1,7 @@
 package de.loki.metallum.enums;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ===REQUIRES REFACTORING===
@@ -21,9 +22,9 @@ public enum DiscType {
 	private final String	realName;
 	private final int		searchNumber;
 	private final boolean	isSplit;
-	private static Logger	logger	= Logger.getLogger(DiscType.class);
+	private static Logger	logger	= LoggerFactory.getLogger(DiscType.class);
 
-	private DiscType(final String realName, final int searchNumber, final boolean isSplitType) {
+	DiscType(final String realName, final int searchNumber, final boolean isSplitType) {
 		this.realName = realName;
 		this.searchNumber = searchNumber;
 		this.isSplit = isSplitType;

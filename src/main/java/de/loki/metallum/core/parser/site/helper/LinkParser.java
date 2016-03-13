@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.Jsoup;
 
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.enums.LinkCategory;
+import org.slf4j.LoggerFactory;
 
 public class LinkParser {
 
-	private static Logger	logger			= Logger.getLogger(LinkParser.class);
+	private static Logger	logger			= LoggerFactory.getLogger(LinkParser.class);
 	public final static int	LABEL_PARSER	= 0;
 	public final static int	MEMBER_PARSER	= 1;
 	private final String	html;

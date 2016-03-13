@@ -2,26 +2,16 @@ package de.loki.metallum.search.service;
 
 import java.util.List;
 
-
-
-import org.apache.log4j.Level;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.loki.metallum.MetallumException;
-import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.query.LyricalThemesSearchQuery;
 
 public class LyricalThemesSearchTest {
 	// TODO to test: -objectToLoad
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Test
 	public void noThemesest() {

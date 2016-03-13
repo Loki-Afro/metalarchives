@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.Jsoup;
 
 import de.loki.metallum.core.parser.site.helper.LinkParser;
@@ -23,10 +23,11 @@ import de.loki.metallum.entity.Label;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.enums.LabelStatus;
+import org.slf4j.LoggerFactory;
 
 public class LabelSiteParser extends AbstractSiteParser<Label> {
 
-	private static Logger	logger	= Logger.getLogger(LabelSiteParser.class);
+	private static Logger	logger	= LoggerFactory.getLogger(LabelSiteParser.class);
 
 	/**
 	 * There are ways to sort the return values of the rooster and release parsers.<br>
@@ -55,7 +56,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
 		private final int	searchNumber;
 
-		private PARSE_STYLE(final int searchNumber) {
+		PARSE_STYLE(final int searchNumber) {
 			this.searchNumber = searchNumber;
 		}
 
@@ -230,10 +231,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
 	private boolean parseHasOnlineShopping(final String upperRightPart) {
 		String value = Jsoup.parse(upperRightPart).text();
-		if (value.equalsIgnoreCase("Yes")) {
-			return true;
-		}
-		return false;
+		return value.equalsIgnoreCase("Yes");
 	}
 
 	/**

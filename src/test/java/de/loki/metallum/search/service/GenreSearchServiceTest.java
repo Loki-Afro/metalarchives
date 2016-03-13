@@ -4,22 +4,16 @@ import java.util.List;
 
 
 
-import org.apache.log4j.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.loki.metallum.MetallumException;
-import de.loki.metallum.core.util.MetallumLogger;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.query.GenreSearchQuery;
 
 public class GenreSearchServiceTest {
 	// TODO to test: -objectToLoad
-
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Test
 	public void noGenreTest() {

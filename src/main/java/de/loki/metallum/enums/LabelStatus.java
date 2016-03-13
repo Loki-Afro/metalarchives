@@ -1,14 +1,15 @@
 package de.loki.metallum.enums;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public enum LabelStatus {
 	ANY(""), ACTIVE("active"), UNKNOWN("unknown"), CLOSED("closed"), CHANGED_NAME("changed name");
 	private final String	asString;
 
-	private static Logger	logger	= Logger.getLogger(LabelStatus.class);
+	private static Logger	logger	= LoggerFactory.getLogger(LabelStatus.class);
 
-	private LabelStatus(final String asString) {
+	LabelStatus(final String asString) {
 		this.asString = asString;
 	}
 

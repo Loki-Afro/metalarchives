@@ -1,6 +1,7 @@
 package de.loki.metallum.enums;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * As stupid as it seems to be but metal-archives seems not to use a common way to store the Country?!
@@ -37,9 +38,9 @@ public enum Country {
 	private final String	fullName;
 	private final String	shortForm;
 
-	private static Logger	logger	= Logger.getLogger(Country.class);
+	private static Logger	logger	= LoggerFactory.getLogger(Country.class);
 
-	private Country(final String shortForm, final String fullName) {
+	Country(final String shortForm, final String fullName) {
 		this.shortForm = shortForm;
 		this.fullName = fullName;
 	}

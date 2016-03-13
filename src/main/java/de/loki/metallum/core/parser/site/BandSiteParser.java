@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -26,12 +26,13 @@ import de.loki.metallum.entity.Link;
 import de.loki.metallum.entity.Review;
 import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
+import org.slf4j.LoggerFactory;
 
 public class BandSiteParser extends AbstractSiteParser<Band> {
 	private boolean			loadReviews			= false;
 	private boolean			loadSimilarArtists	= false;
 	private boolean			loadReadMore		= false;
-	private static Logger	logger				= Logger.getLogger(BandSiteParser.class);
+	private static Logger	logger				= LoggerFactory.getLogger(BandSiteParser.class);
 
 	public BandSiteParser(final Band band, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) throws ExecutionException {
 		super(band, loadImages, loadLinks);
@@ -173,7 +174,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 				final DiscParser bsdp = new DiscParser(this.entity.getId());
 				return bsdp.parse();
 			} catch (final ExecutionException e) {
-				logger.fatal("error in parsing the discography for band: " + this.entity, e);
+				logger.error("error in parsing the discography for band: " + this.entity, e);
 			}
 		}
 		final Disc[] discArray = new Disc[discs.size()];

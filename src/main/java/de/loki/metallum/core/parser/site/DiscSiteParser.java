@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -21,16 +20,18 @@ import de.loki.metallum.entity.Label;
 import de.loki.metallum.entity.Review;
 import de.loki.metallum.entity.Track;
 import de.loki.metallum.enums.DiscType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
 	private boolean			loadReviews	= false;
 	private boolean			loadLyrics	= false;
-	private static Logger	logger		= Logger.getLogger(DiscSiteParser.class);
+	private static Logger logger = LoggerFactory.getLogger(DiscSiteParser.class);
 
 	/**
 	 * Creates a new DiscParser, just call parse
-	 * 
+	 *
 	 * @param disc
 	 * @param loadImages
 	 * @param loadReviews
@@ -91,7 +92,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
 	/**
 	 * Parses the DiscType from the left float thing.
-	 * 
+	 *
 	 * @return the parsed DiscType.
 	 */
 	private DiscType parseDiscType() {
@@ -102,7 +103,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
 	/**
 	 * Parses the release date, as String, from the left float thing.
-	 * 
+	 *
 	 * @return the parsed release date as String.
 	 */
 	private String parseReleaseDate() {
@@ -115,7 +116,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	 * Tries to parse the label.
 	 * If there is none or unsigned/selfreleased,
 	 * a new Label will be created with id = 0 and name unsigned/selfreleased.
-	 * 
+	 *
 	 * @return the Label of the Disc if there is one.
 	 */
 	private Label parseLabel() {
@@ -175,7 +176,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	 * If the previous entity, may from cache, has already the band artwork,
 	 * this method will return the BufferedImage of the entity, otherwise if loadImage is true
 	 * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-	 * 
+	 *
 	 * @return null if loadImage is false or if there is no artwork
 	 */
 	private final BufferedImage parseDiscArtwork(final String artworkURL) {

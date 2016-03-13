@@ -7,21 +7,12 @@ import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.log4j.Level;
 import org.jsoup.Jsoup;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import de.loki.metallum.core.util.MetallumLogger;
-
 public class DownloaderTest {
-
-	@BeforeClass
-	public static void setUpBeforeClass() {
-		MetallumLogger.setLogLevel(Level.INFO);
-	}
 
 	@Ignore
 	@Test
