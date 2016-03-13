@@ -1,13 +1,9 @@
 package de.loki.metallum.search.service.advanced;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.log4j.Level;
 import org.junit.BeforeClass;
@@ -21,6 +17,10 @@ import de.loki.metallum.entity.Review;
 import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.query.BandSearchQuery;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BandSearchServiceTest {
 
@@ -116,7 +116,7 @@ public class BandSearchServiceTest {
 			if (percentAverage) {
 				assertTrue(disc.getReviewPercentAverage() != 0);
 			} else {
-				assertEquals(disc.getReviewPercentAverage(), Float.NaN);
+                assertTrue(Double.isNaN(disc.getReviewPercentAverage()));
 			}
 		}
 	}

@@ -1,9 +1,5 @@
 package de.loki.metallum.entity;
 
-import java.io.File;
-
-import com.thoughtworks.xstream.XStream;
-
 public abstract class AbstractEntity implements IEntity {
 
 	protected String				name;
@@ -12,7 +8,6 @@ public abstract class AbstractEntity implements IEntity {
 	protected String				modifiedBy		= "";
 	protected String				addedOn			= "";
 	protected String				lastModifiedOn	= "";
-	protected static final XStream	XSTREAM			= new XStream();
 
 	public AbstractEntity(final long id, final String name) {
 		this.id = id;
@@ -47,23 +42,6 @@ public abstract class AbstractEntity implements IEntity {
 	@Override
 	public String toString() {
 		return ((this.name != null ? this.name : "") + " [id=" + this.id + "]");
-	}
-
-	@Override
-	public Object clone() throws CloneNotSupportedException {
-		return XSTREAM.fromXML(toXml());
-	}
-
-	public String toXml() {
-		return toXml(new String[0]);
-	}
-
-	@Override
-	public final String toXml(final String... omitFields) {
-		for (final String fieldName : omitFields) {
-			XSTREAM.omitField(this.getClass(), fieldName);
-		}
-		return XSTREAM.toXML(this);
 	}
 
 	/*
@@ -108,14 +86,6 @@ public abstract class AbstractEntity implements IEntity {
 			return false;
 		}
 		return true;
-	}
-
-	public static Object fromXml(final String xml) {
-		return XSTREAM.fromXML(xml);
-	}
-
-	public static Object fromXml(final File xmlFile) {
-		return XSTREAM.fromXML(xmlFile);
 	}
 
 	/**

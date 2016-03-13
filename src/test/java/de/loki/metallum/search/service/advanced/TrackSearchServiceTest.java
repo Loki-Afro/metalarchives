@@ -2,9 +2,8 @@ package de.loki.metallum.search.service.advanced;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.log4j.Level;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
