@@ -98,26 +98,4 @@ public class DiscSearchService extends AbstractSearchService<Disc> {
 		super.setObjectsToLoad(objectToLoad);
 	}
 
-	@Override
-	protected final boolean hasAllInformation(final Disc entityFromCache) {
-		if (this.loadImages && !entityFromCache.hasArtwork()) {
-			return false;
-		}
-
-		if (this.loadReviews && entityFromCache.getReviews().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadLyrics) {
-			for (final Track track : entityFromCache.getTrackList()) {
-				if (!track.getLyrics().isEmpty()) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		return true;
-	}
-
 }

@@ -55,32 +55,6 @@ public class LabelSearchService extends AbstractSearchService<Label> {
 	}
 
 	@Override
-	protected final boolean hasAllInformation(final Label entityFromCache) {
-		if (this.loadImages && !entityFromCache.hasLogo()) {
-			return false;
-		}
-
-		if (this.loadLinks && entityFromCache.getLinks().isEmpty()) {
-			return false;
-		}
-
-		// TODO PARSE Style accessable from LabelSearchService to use the Cache.
-		if (this.loadCurrentRooster != LabelSiteParser.PARSE_STYLE.NONE && entityFromCache.getCurrentRoser().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadPastRooster != LabelSiteParser.PARSE_STYLE.NONE && entityFromCache.getReleases().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadReleases != LabelSiteParser.PARSE_STYLE.NONE && entityFromCache.getPastRoster().isEmpty()) {
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
 	public void setObjectsToLoad(final int objectToLoad) {
 		super.setObjectsToLoad(objectToLoad);
 	}

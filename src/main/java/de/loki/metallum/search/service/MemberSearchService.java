@@ -100,20 +100,4 @@ public class MemberSearchService extends AbstractSearchService<Member> {
 		this.loadDetails = loadDetails;
 	}
 
-	@Override
-	protected boolean hasAllInformation(Member entityFromCache) {
-		if (this.loadImages && !entityFromCache.hasPhoto()) {
-			return false;
-		}
-
-		if (this.loadLinks && entityFromCache.getLinks().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadDetails && entityFromCache.getDetails().isEmpty()) {
-			return false;
-		}
-		return true;
-	}
-
 }

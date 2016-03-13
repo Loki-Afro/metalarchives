@@ -137,7 +137,7 @@ public class TrackSearchServiceTest {
 		final Track resultTrack = service.performSearch(query).get(0);
 		Assert.assertEquals("Drudkh", resultTrack.getBandName());
 		Assert.assertEquals("Відчуженість (Estrangement)", resultTrack.getDiscName());
-		Assert.assertEquals("Самiтня Нескiнченна Тропа (Solitary Endless Path)", resultTrack.getName());
+		Assert.assertEquals("Самітня нескінченна тропа (Solitary Endless Path)", resultTrack.getName());
 		Assert.assertNotSame(0, resultTrack.getBand().getId());
 		Assert.assertNotSame(0, resultTrack.getDisc().getId());
 		Assert.assertNotNull(resultTrack.getDiscTyp());
@@ -164,26 +164,6 @@ public class TrackSearchServiceTest {
 	@Test
 	public void lyricsTest() throws MetallumException {
 		final TrackSearchService service = new TrackSearchService(true);
-		final TrackSearchQuery query = new TrackSearchQuery();
-		query.setSongTitle("War", false);
-		query.setBandName("Burzum", false);
-		query.setReleaseTitle("Burzum", false);
-		query.setDiscType(DiscType.FULL_LENGTH);
-		final Track resultTrack = service.performSearch(query).get(0);
-		Assert.assertEquals("Burzum", resultTrack.getBandName());
-		Assert.assertEquals("Burzum", resultTrack.getDiscName());
-		Assert.assertEquals("War", resultTrack.getName());
-		Assert.assertNotSame(0, resultTrack.getBand().getId());
-		Assert.assertNotSame(0, resultTrack.getDisc().getId());
-		Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
-		Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
-		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is war"));
-		Assert.assertTrue(resultTrack.getLyrics().endsWith("War"));
-	}
-
-	@Test
-	public void cachedLyricsTest() throws MetallumException {
-		final TrackSearchService service = new TrackSearchService();
 		final TrackSearchQuery query = new TrackSearchQuery();
 		query.setSongTitle("War", false);
 		query.setBandName("Burzum", false);

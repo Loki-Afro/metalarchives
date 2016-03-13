@@ -112,7 +112,7 @@ public class DiscSearchServiceTest {
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Enslaved", discResult.getBandName());
 		Assert.assertEquals("Return to Yggdrasill", discResult.getName());
-		Assert.assertEquals(8, discResult.getTrackList().size());
+		Assert.assertEquals(11, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.VIDEO, discResult.getType());
 		Assert.assertEquals("Tabu Recordings", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
@@ -219,7 +219,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Live & Plugged Vol. 2", discResult.getName());
 		Assert.assertEquals(17, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.SPLIT_VIDEO, discResult.getType());
-		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());
+		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
 		Assert.assertTrue(discResult.isSplit());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
@@ -385,7 +385,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Burzum", discResult.getName());
 		Assert.assertEquals(9, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Deathlike Silence", discResult.getLabel().getName());
+		Assert.assertEquals("Deathlike Silence Productions", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
@@ -407,7 +407,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Burzum", discResult.getName());
 		Assert.assertEquals(9, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Deathlike Silence", discResult.getLabel().getName());
+		Assert.assertEquals("Deathlike Silence Productions", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
@@ -512,28 +512,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Pestapokalypse VI", discResult.getName());
 		Assert.assertEquals(9, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());
-		Assert.assertNotNull(discResult.getArtwork());
-		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
-		Assert.assertFalse(discResult.getAddedBy().isEmpty());
-		Assert.assertFalse(discResult.getAddedOn().isEmpty());
-		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
-		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
-	}
-
-	@Test
-	public void cachedArtworkTest() throws MetallumException {
-		artworkTest();
-		final DiscSearchService service = new DiscSearchService();
-		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setBandName("Belphegor", false);
-		query.setReleaseName("Pestapokalypse VI", false);
-		final Disc discResult = service.performSearch(query).get(0);
-		Assert.assertEquals("Belphegor", discResult.getBandName());
-		Assert.assertEquals("Pestapokalypse VI", discResult.getName());
-		Assert.assertEquals(9, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());
+		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
 		Assert.assertNotNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
@@ -546,29 +525,6 @@ public class DiscSearchServiceTest {
 	public void lyricsTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService();
 		service.setloadLyrics(true);
-		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setBandName("Cannibal Corpse", false);
-		query.setReleaseName("Eaten Back to Life", false);
-		final Disc discResult = service.performSearch(query).get(0);
-		for (final Track resultTrack : discResult.getTrackList()) {
-			Assert.assertFalse(resultTrack.getLyrics().isEmpty());
-		}
-		Assert.assertEquals("Cannibal Corpse", discResult.getBandName());
-		Assert.assertEquals("Eaten Back to Life", discResult.getName());
-		Assert.assertEquals(11, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Metal Blade Records", discResult.getLabel().getName());
-		Assert.assertNull(discResult.getArtwork());
-		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
-		Assert.assertFalse(discResult.getAddedBy().isEmpty());
-		Assert.assertFalse(discResult.getAddedOn().isEmpty());
-		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
-		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
-	}
-
-	@Test
-	public void cachedLyricsTest() throws MetallumException {
-		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setBandName("Cannibal Corpse", false);
 		query.setReleaseName("Eaten Back to Life", false);
@@ -621,37 +577,6 @@ public class DiscSearchServiceTest {
 	}
 
 	@Test
-	public void cachedReviewsTest() throws MetallumException {
-		reviewsTest();
-		final DiscSearchService service = new DiscSearchService();
-		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setBandName("Cannibal Corpse", false);
-		query.setReleaseName("The Wretched Spawn", false);
-		final Disc discResult = service.performSearch(query).get(0);
-		Assert.assertFalse(discResult.getReviews().isEmpty());
-		for (final Review resultReview : discResult.getReviews()) {
-			Assert.assertFalse(resultReview.getAuthor().isEmpty());
-			Assert.assertFalse(resultReview.getContet().isEmpty());
-			Assert.assertFalse(resultReview.getName().isEmpty());
-			Assert.assertFalse(resultReview.getDate().isEmpty());
-			Assert.assertTrue(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100);
-			Assert.assertTrue(resultReview.getId() != 0);
-			Assert.assertSame(resultReview.getDisc(), discResult);
-		}
-		Assert.assertEquals("Cannibal Corpse", discResult.getBandName());
-		Assert.assertEquals("The Wretched Spawn", discResult.getName());
-		Assert.assertEquals(13, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Metal Blade Records", discResult.getLabel().getName());
-		Assert.assertNull(discResult.getArtwork());
-		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
-		Assert.assertFalse(discResult.getAddedBy().isEmpty());
-		Assert.assertFalse(discResult.getAddedOn().isEmpty());
-		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
-		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
-	}
-
-	@Test
 	public void unreleasedAlbumTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService(1, false, false, true);
 		final DiscSearchQuery query = new DiscSearchQuery();
@@ -664,7 +589,7 @@ public class DiscSearchServiceTest {
 			Assert.assertFalse(track.getPlayTime().isEmpty());
 		}
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());
+		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
@@ -712,11 +637,11 @@ public class DiscSearchServiceTest {
 		query.setReleaseName("Vikingligr Veldi", false);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Enslaved", discResult.getBandName());
-		Assert.assertEquals("Vikingligr Veldi", discResult.getName());
+		Assert.assertEquals("Vikingligr veldi", discResult.getName());
 		List<Track> trackList = discResult.getTrackList();
 		Assert.assertEquals(5, trackList.size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Deathlike Silence", discResult.getLabel().getName());
+		Assert.assertEquals("Deathlike Silence Productions", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());

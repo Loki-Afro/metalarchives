@@ -67,16 +67,4 @@ public class TrackSearchService extends AbstractSearchService<Track> {
 		this.loadLyrics = loadLyrics;
 	}
 
-	@Override
-	protected boolean hasAllInformation(final Track entityFromCache) {
-		if (!entityFromCache.getLyrics().isEmpty()) {
-			return true;
-		}
-		DiscType discTypeFromTrack = entityFromCache.getDiscTyp();
-		if (discTypeFromTrack != null) {
-			return true;
-		}
-		return false;
-	}
-
 }

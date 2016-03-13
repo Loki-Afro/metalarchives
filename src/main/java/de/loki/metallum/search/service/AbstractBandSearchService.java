@@ -43,25 +43,6 @@ public abstract class AbstractBandSearchService extends AbstractSearchService<Ba
 	}
 
 	@Override
-	protected final boolean hasAllInformation(final Band bandCache) {
-		if (this.loadImages && !bandCache.hasPhoto() && !bandCache.hasLogo()) {
-			return false;
-		}
-		if (this.loadReviews && bandCache.getReviews().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadSimilar && bandCache.getSimilarArtists().isEmpty()) {
-			return false;
-		}
-
-		if (this.loadLinks && bandCache.getLinks().isEmpty()) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	protected final BandSiteParser getSiteParser(final Band band) throws ExecutionException {
 		return new BandSiteParser(band, this.loadImages, this.loadReviews, this.loadSimilar, this.loadLinks, this.loadReadMore);
 	}

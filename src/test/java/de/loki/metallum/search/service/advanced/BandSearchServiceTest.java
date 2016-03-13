@@ -42,7 +42,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		assertEquals(resultBand.getYearFormedIn(), 1993);
 		assertEquals(resultBand.getGenre(), "Funeral Doom Metal");
-		assertEquals(resultBand.getLyricalThemes(), "Despair, Desolation, Depression");
+		assertEquals("Despair, Desolation, Depression, Mysticism", resultBand.getLyricalThemes());
 		assertEquals(resultBand.getLabel().getName(), "Weird Truth Productions");
 		assertTrue(resultBand.getLabel().getId() != 0);
 		assertTrue(resultBand.getInfo().startsWith("On the Australian and European tour"));
@@ -84,9 +84,9 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getYearFormedIn(), 1993);
 		assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
 		assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Rituals, H.P. Lovecraft");
-		assertEquals(resultBand.getLabel().getName(), "Nuclear Blast");
+		assertEquals("Nuclear Blast Records", resultBand.getLabel().getName());
 		assertTrue(resultBand.getLabel().getId() != 0);
-		assertTrue(resultBand.getInfo().startsWith("Many people mistake members of Nile as being Egyptia"));
+		assertTrue(resultBand.getInfo().startsWith("Despite the odd misconception that"));
 		assertTrue(resultBand.getInfo().endsWith("..."));
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
@@ -131,7 +131,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getName(), "Warning");
 		assertTrue(resultBand.getId() != 0);
 		assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
-		assertEquals(resultBand.getProvince(), "Harlow, Essex");
+		assertEquals("Harlow, Essex, England", resultBand.getProvince());
 		assertEquals(resultBand.getStatus(), BandStatus.SPLIT_UP);
 		assertEquals(resultBand.getYearFormedIn(), 1994);
 		assertEquals(resultBand.getGenre(), "Doom Metal");
@@ -179,34 +179,6 @@ public class BandSearchServiceTest {
 		assertFalse(resultBand.getAddedOn().isEmpty());
 		assertFalse(resultBand.getModifiedBy().isEmpty());
 		assertFalse(resultBand.getLastModifiedOn().isEmpty());
-	}
-
-	@Test
-	public void cacheCommonTest() throws MetallumException {
-		final BandSearchService service = new BandSearchService();
-		// we already searched for this band.
-		service.setObjectsToLoad(0);
-		final BandSearchQuery query = new BandSearchQuery();
-		query.setBandName("40 Watt Sun", false);
-		query.addCountry(Country.UNITED_KINGDOM);
-		final Band resultBand = service.performSearch(query).get(0);
-		assertEquals(resultBand.getName(), "40 Watt Sun");
-		assertTrue(resultBand.getId() != 0);
-		assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
-		assertEquals(resultBand.getProvince(), "London, England");
-		assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
-		assertEquals(resultBand.getYearFormedIn(), 2009);
-		assertEquals(resultBand.getGenre(), "Doom Metal");
-		assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
-		assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
-		assertTrue(resultBand.getLabel().getId() != 0);
-		assertTrue(resultBand.getInfo().startsWith("Patrick Walker took the band name"));
-		assertTrue(resultBand.getInfo().endsWith("\"Emerald Lies\"."));
-		assertFalse(resultBand.hasLogo());
-		assertFalse(resultBand.hasPhoto());
-		assertFalse(resultBand.getPhotoUrl().isEmpty());
-		assertFalse(resultBand.getLogoUrl().isEmpty());
-		checkDefaultDisc(resultBand.getDiscs(), 1, resultBand);
 	}
 
 	@Test
@@ -299,10 +271,9 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getYearFormedIn(), 2008);
 		assertEquals("Gothic/Doom/Death/Black Metal", resultBand.getGenre());
 		assertEquals("Despair, Pain, Depression, Darkness", resultBand.getLyricalThemes());
-		assertEquals(resultBand.getLabel().getName(), "Prowling Death Records");
+		assertEquals("Century Media Records", resultBand.getLabel().getName());
 		assertTrue(resultBand.getLabel().getId() != 0);
 		assertTrue(resultBand.getInfo().startsWith("Formed by Tom G. Warrior after his"));
-		assertTrue(resultBand.getInfo().endsWith("Celtic Frost in May 2008."));
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
 		assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -556,8 +527,8 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getYearFormedIn(), 2005);
 		assertFalse(resultBand.getGenre().isEmpty());
 		assertFalse(resultBand.getLyricalThemes().isEmpty());
-		assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
-		assertTrue(resultBand.getLabel().getId() == 0);
+		assertEquals("Murdher Records", resultBand.getLabel().getName());
+		assertEquals(36846L, resultBand.getLabel().getId());
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
 		assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -594,7 +565,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getName(), "Warning");
 		assertTrue(resultBand.getId() != 0);
 		assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
-		assertEquals(resultBand.getProvince(), "Harlow, Essex");
+		assertEquals("Harlow, Essex, England", resultBand.getProvince());
 		assertEquals(resultBand.getStatus(), BandStatus.SPLIT_UP);
 		assertEquals(resultBand.getYearFormedIn(), 1994);
 		assertFalse(resultBand.getGenre().isEmpty());
@@ -636,7 +607,7 @@ public class BandSearchServiceTest {
 		assertTrue(resultBand.getId() == 666);
 		assertEquals(resultBand.getCountry(), Country.ITALY);
 		assertEquals(resultBand.getProvince(), "Treviso, Veneto");
-		assertEquals(resultBand.getStatus(), BandStatus.SPLIT_UP);
+		assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
 		assertEquals(resultBand.getYearFormedIn(), 1991);
 		assertEquals(resultBand.getGenre(), "Neoclassical/Progressive Metal");
 		assertEquals(resultBand.getLyricalThemes(), "Philosophical and existentialistic themes");
