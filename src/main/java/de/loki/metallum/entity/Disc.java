@@ -3,10 +3,7 @@ package de.loki.metallum.entity;
 import de.loki.metallum.enums.DiscType;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Disc extends AbstractEntity {
 
@@ -126,9 +123,7 @@ public class Disc extends AbstractEntity {
 	}
 
 	public void addTracks(final Track... tracks) {
-		for (final Track track : tracks) {
-			this.trackList.add(track);
-		}
+		Collections.addAll(this.trackList, tracks);
 	}
 
 	public void setArtwork(final BufferedImage artwork) {

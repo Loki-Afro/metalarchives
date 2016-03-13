@@ -11,8 +11,6 @@ import java.util.List;
 
 public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 
-	private final List<Band> mainList = new ArrayList<Band>();
-
 	public CurrentRosterParser(long labelId, byte numberPerPage, boolean alphabetical, LabelSiteParser.PARSE_STYLE sortType) {
 		super(labelId, numberPerPage, alphabetical, sortType);
 	}
@@ -22,7 +20,6 @@ public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 		final Band band = getABand(hits.getString(0));
 		band.setGenre(parseGenre(hits.getString(1)));
 		band.setCountry(parseBandCountry(hits.getString(2)));
-		this.mainList.add(band);
 	}
 
 	@Override

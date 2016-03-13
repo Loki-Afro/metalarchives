@@ -53,8 +53,7 @@ public class SimilarArtistsParser {
 	}
 
 	private String parseBandName(final String htmlPart) {
-		String bandName = Jsoup.parse(htmlPart).text();
-		return bandName;
+		return Jsoup.parse(htmlPart).text();
 	}
 
 	private Country parseCountry(final String htmlPart) {
@@ -63,8 +62,7 @@ public class SimilarArtistsParser {
 	}
 
 	private String parseGenre(final String htmlPart) {
-		String genre = Jsoup.parse(htmlPart).text();
-		return genre;
+		return Jsoup.parse(htmlPart).text();
 	}
 
 	private int parseScore(final String htmlPart) {

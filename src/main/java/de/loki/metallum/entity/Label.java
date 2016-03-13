@@ -4,10 +4,7 @@ import de.loki.metallum.enums.Country;
 import de.loki.metallum.enums.LabelStatus;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Label extends AbstractEntity {
 
@@ -221,9 +218,7 @@ public class Label extends AbstractEntity {
 	}
 
 	public void addLink(final Link... links) {
-		for (Link link : links) {
-			this.links.add(link);
-		}
+		Collections.addAll(this.links, links);
 	}
 
 	public boolean hasLogo() {

@@ -73,12 +73,10 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 	private final void parseSearchResults(final AbstractSearchQuery<T> query) throws MetallumException {
 		try {
 			int startPage = 0;
-			SortedMap<SearchRelevance, List<T>> tempResultMap = new TreeMap<SearchRelevance, List<T>>();
 			while (startPage == 0 || this.parser.getTotalSearchResults() > startPage) {
 				final String searchUrl = query.getQuery(startPage);
 				final String resultHtml = Downloader.getHTML(searchUrl);
-				tempResultMap = this.parser.parseSearchResults(resultHtml);
-				addToResultMap(tempResultMap);
+				addToResultMap(this.parser.parseSearchResults(resultHtml));
 				startPage += 200;
 			}
 		} catch (final ExecutionException e) {

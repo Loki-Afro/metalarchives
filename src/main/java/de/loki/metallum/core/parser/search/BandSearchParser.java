@@ -52,7 +52,7 @@ public class BandSearchParser extends AbstractSearchParser<Band> {
 		band.setProvince((this.isAbleToParseProvince ? parseProvince(hits.getString(index++)) : ""));
 		band.setLyricalThemes((this.isAbleToParseLyricalThemes ? parseLyricalThemes(hits.getString(index++)) : ""));
 		band.setYearFormedIn((this.isAbleToParseYear ? parseYear((hits.getString(index++))) : 0));
-		band.getLabel().setName(this.isAbleToParseLabel ? parseLabel(hits.getString(index++)) : "");
+		band.getLabel().setName(this.isAbleToParseLabel ? parseLabel(hits.getString(index)) : "");
 		return band;
 	}
 

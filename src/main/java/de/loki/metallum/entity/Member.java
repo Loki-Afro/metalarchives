@@ -3,10 +3,7 @@ package de.loki.metallum.entity;
 import de.loki.metallum.enums.Country;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Member extends AbstractEntity {
 	// good Example: http://www.metal-archives.com/artists/Kerry_King/267
@@ -169,9 +166,7 @@ public class Member extends AbstractEntity {
 	}
 
 	public void addLinks(final Link... links) {
-		for (Link link : links) {
-			this.linkList.add(link);
-		}
+		Collections.addAll(this.linkList, links);
 	}
 
 	public List<Link> getLinks() {

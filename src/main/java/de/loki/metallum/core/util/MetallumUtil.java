@@ -15,8 +15,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public final class MetallumUtil {
-	private final static String   lineSeperator = System.getProperty("line.separator");
-	private final static String[] daySuffixes   =
+	private final static String       lineSeperator = System.getProperty("line.separator");
+	private final static String[]     daySuffixes   =
 			// 0 1 2 3 4 5 6 7 8 9
 			{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 					// 10 11 12 13 14 15 16 17 18 19
@@ -25,7 +25,7 @@ public final class MetallumUtil {
 					"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 					// 30 31
 					"th", "st"};
-	private static       Logger   logger        = LoggerFactory.getLogger(MetallumUtil.class);
+	private static       final Logger LOGGER        = LoggerFactory.getLogger(MetallumUtil.class);
 
 	private MetallumUtil() {
 
@@ -48,7 +48,7 @@ public final class MetallumUtil {
 		try {
 			return sdf.parse(possibleDate);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("Unable to parse date " + possibleDate, e);
 		}
 		return null;
 	}
@@ -128,7 +128,7 @@ public final class MetallumUtil {
 			int code = huc.getResponseCode();
 			return code == 200;
 		} catch (IOException e) {
-			logger.error("Metalarchives is not accessable", e);
+			LOGGER.error("Metalarchives is not accessable", e);
 		}
 		return false;
 	}

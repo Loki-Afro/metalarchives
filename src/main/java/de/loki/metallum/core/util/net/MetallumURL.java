@@ -1,5 +1,8 @@
 package de.loki.metallum.core.util.net;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -7,6 +10,8 @@ import java.net.URLEncoder;
  * @author Zarathustra
  */
 public final class MetallumURL {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MetallumURL.class);
 
 	/**
 	 * Default constructor.
@@ -133,7 +138,6 @@ public final class MetallumURL {
 	 * to get an URL to view the discography of a Band example for Bathory:
 	 * http://www.metal-archives.com/band/discography/id/184/tab/all
 	 *
-	 * @param id
 	 * @return the URL
 	 */
 	public static String assembleDiscographyURL(long id) {
@@ -208,17 +212,13 @@ public final class MetallumURL {
 	}
 
 	public static String encodeURIComponent(final String s) {
-		String result = null;
 		try {
-			result = URLEncoder.encode(s, "UTF-8");
+			return URLEncoder.encode(s, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// This exception should never occur.
-			System.err.print("This String was not right encoded: ");
-			System.err.println(s);
-			result = s;
-			e.printStackTrace();
+			LOGGER.error("This String was not right encoded: " + s, e);
+			return s;
 		}
-		return result;
 	}
 
 	public static String assembleLabelURL(final long labelId) {

@@ -61,8 +61,7 @@ public final class ReviewParser {
 	private String parseTitleIntern(final Element elem) {
 		Elements elements = elem.getElementsByAttributeValue("class", "reviewTitle");
 		if (!elements.isEmpty()) {
-			String title = elements.get(0).text();
-			return title;
+			return elements.get(0).text();
 		}
 		return "";
 	}
@@ -85,8 +84,7 @@ public final class ReviewParser {
 	private String parseAuthor(final Element elem) {
 		Elements elements = elem.getElementsByAttributeValue("class", "profileMenu");
 		if (!elements.isEmpty()) {
-			String author = elements.get(0).text();
-			return author;
+			return elements.get(0).text();
 		}
 		return "";
 

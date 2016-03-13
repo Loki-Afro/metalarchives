@@ -4,10 +4,7 @@ import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Band extends AbstractEntity {
 
@@ -230,33 +227,23 @@ public class Band extends AbstractEntity {
 	}
 
 	public void addOfficalLinks(final Link... links) {
-		for (Link link : links) {
-			this.officalLinks.add(link);
-		}
+		Collections.addAll(this.officalLinks, links);
 	}
 
 	public void addOfficalMerchLinks(final Link... links) {
-		for (Link link : links) {
-			this.officalMerchLinks.add(link);
-		}
+		Collections.addAll(this.officalMerchLinks, links);
 	}
 
 	public void addUnofficalLinks(final Link... links) {
-		for (Link link : links) {
-			this.unofficalLinks.add(link);
-		}
+		Collections.addAll(this.unofficalLinks, links);
 	}
 
 	public void addLabelLinks(final Link... links) {
-		for (Link link : links) {
-			this.labelLinks.add(link);
-		}
+		Collections.addAll(this.labelLinks, links);
 	}
 
 	public void addTabulatureLinks(final Link... links) {
-		for (Link link : links) {
-			this.tabulatureLinks.add(link);
-		}
+		Collections.addAll(this.tabulatureLinks, links);
 	}
 
 	public void addSimliarArtists(final Band band, final int score) {

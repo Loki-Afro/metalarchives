@@ -110,7 +110,7 @@ public final class DiscSiteTrackParser {
 			track.setTrackNumber(trackNumber);
 			if (foundFirstFirstTrack && trackNumber == 1) {
 				counter++;
-			} else if (trackNumber == 1 && !foundFirstFirstTrack) {
+			} else if (trackNumber == 1) {
 				foundFirstFirstTrack = true;
 			}
 			track.setDiscNumber(counter);
@@ -145,10 +145,9 @@ public final class DiscSiteTrackParser {
 
 	private String parseTrackId(final Element row) {
 //		<a name="5767" class="anchor"> </a>
-		String idStr = row.select("a[name~=\\d.*]").first().attr("name");
 		// if it is a tape with 2 sides, like side A, A is attached to the id of the track
 		// searching for lyrics however is still possible without the attached A
-		return idStr;
+		return row.select("a[name~=\\d.*]").first().attr("name");
 	}
 
 	private String parseTrackTitle(final Element row, final boolean isSplit) {

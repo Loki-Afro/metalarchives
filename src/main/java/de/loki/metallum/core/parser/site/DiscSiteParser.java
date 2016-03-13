@@ -103,8 +103,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	 */
 	private String parseReleaseDate() {
 		Element leftThing = this.doc.select("dl[class=float_left]").first();
-		String date = leftThing.getElementsByTag("dd").get(1).text();
-		return date;
+		return leftThing.getElementsByTag("dd").get(1).text();
 	}
 
 	/**
@@ -129,8 +128,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 				labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
 			}
 		}
-		Label label = new Label(Long.parseLong(labelIdStr), labelName);
-		return label;
+		return new Label(Long.parseLong(labelIdStr), labelName);
 	}
 
 	private Disc parseMember(final Disc disc) {
@@ -186,8 +184,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 				logger.error("Exception while downloading an image from \"" + artworkURL + "\" ," + this.entity, e);
 			}
 		}
-		// with other words null
-		return previouslyParsedArtwork;
+		return null;
 	}
 
 	private final Band[] parseSplitBands() {
@@ -206,8 +203,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 	}
 
 	private Band parseBand() {
-		Band band = new Band(parseBandId(), parseBandName());
-		return band;
+		return new Band(parseBandId(), parseBandName());
 	}
 
 	private String parseBandName() {

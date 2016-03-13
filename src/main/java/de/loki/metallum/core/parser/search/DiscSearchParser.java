@@ -57,7 +57,6 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	 * <p/>
 	 * So it gives the disc optional values, Genre, ReleaseDate and Label
 	 *
-	 * @param disc
 	 * @param hit  the JSONArray with contains the potential data
 	 * @return the disc with optional values
 	 * @throws JSONException will be thrown if a Field is not at the right place
@@ -69,7 +68,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 		disc.getBand().setCountry(this.isAbleToParseCountry ? parseCountry(hit.getString(index++)) : "");
 		disc.getBand().setProvince(this.isAbleToParseProvince ? parseBandProvince(hit.getString(index++)) : "");
 		disc.setReleaseDate((this.isAbleToParseDate ? parseDate(hit.getString(index++)) : ""));
-		disc.setLabel(this.isAbleToParseLabel ? parseLabel(hit.getString(index++)) : new Label(0));
+		disc.setLabel(this.isAbleToParseLabel ? parseLabel(hit.getString(index)) : new Label(0));
 		return disc;
 	}
 

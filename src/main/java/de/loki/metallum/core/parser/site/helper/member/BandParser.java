@@ -69,7 +69,7 @@ public class BandParser {
 
 	private String parseBandName(final String html) {
 		final String titleString = " title=\"";
-		String bandName = null;
+		String bandName;
 		if (html.contains(titleString)) {
 			bandName = html.substring(html.indexOf(titleString) + titleString.length(), html.length());
 			bandName = bandName.substring(0, bandName.indexOf("\">"));
@@ -83,7 +83,7 @@ public class BandParser {
 	private long parseBandId(final String html) {
 //		It is possible that this band isn't in the metal archives
 		try {
-			String bandId = "";
+			String bandId;
 			if (html.contains("memberInBand_l_")) {
 				bandId = html.substring(html.indexOf("memberInBand_l_") + 15, html.indexOf("\">"));
 			} else {

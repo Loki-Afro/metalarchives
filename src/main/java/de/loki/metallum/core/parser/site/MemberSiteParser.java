@@ -49,8 +49,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 	}
 
 	private final String parseName() {
-		String name = this.html.substring(this.html.indexOf("<h1 class=\"band_member_name\">") + 29, this.html.indexOf("</h1>"));
-		return name;
+		return this.html.substring(this.html.indexOf("<h1 class=\"band_member_name\">") + 29, this.html.indexOf("</h1>"));
 	}
 
 	private final String parseRealName() {
@@ -98,8 +97,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 	private final String parseGender() {
 		String details = this.html.substring(this.html.indexOf("<dl class=\"float_right\""));
 		String[] memberDetails = details.split("<dd>");
-		String gender = memberDetails[2].substring(0, memberDetails[2].indexOf("</dd>"));
-		return gender;
+		return memberDetails[2].substring(0, memberDetails[2].indexOf("</dd>"));
 	}
 
 	private Map<Band, Map<Disc, String>> parseActiveBands() {

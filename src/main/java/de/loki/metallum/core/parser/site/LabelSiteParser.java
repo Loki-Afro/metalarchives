@@ -180,8 +180,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	}
 
 	private String parsePhoneNumber(final String upperLeftPart) {
-		String number = upperLeftPart.substring(upperLeftPart.indexOf("> ") + 2, upperLeftPart.indexOf("</dd>")).trim();
-		return number;
+		return upperLeftPart.substring(upperLeftPart.indexOf("> ") + 2, upperLeftPart.indexOf("</dd>")).trim();
 	}
 
 	private LabelStatus parseLabelStatus(final String upperRightPart) {
@@ -190,13 +189,11 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	}
 
 	private String parseSpecialisedIn(final String upperRightPart) {
-		String spec = upperRightPart.substring(1, upperRightPart.indexOf(" </dd>"));
-		return spec;
+		return upperRightPart.substring(1, upperRightPart.indexOf(" </dd>"));
 	}
 
 	private String parseFoundingDate(final String upperRightPart) {
-		String date = upperRightPart.substring(1, upperRightPart.indexOf(" </dd>"));
-		return date;
+		return upperRightPart.substring(1, upperRightPart.indexOf(" </dd>"));
 	}
 
 	private Label parseParentLabel(final String upperRightPart) {
@@ -213,9 +210,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			return labelList;
 		}
 		final String[] labellinks = upperRightPart.split(",");
-		for (int i = 0; i < labellinks.length; i++) {
+		for (String labellink : labellinks) {
 			// prepare, to remove Online Shopping if it appears
-			String parseAbleString = labellinks[i].replaceAll("(?imx)</dd>.*", "").trim();
+			String parseAbleString = labellink.replaceAll("(?imx)</dd>.*", "").trim();
 			// name
 			String labelName = Jsoup.parse(parseAbleString).text();
 			// id
