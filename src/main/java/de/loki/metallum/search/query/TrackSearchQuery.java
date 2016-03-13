@@ -1,6 +1,7 @@
 package de.loki.metallum.search.query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -41,7 +42,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 
 	public void setSongTitle(final String titleName, final boolean exactMatch) {
 		this.searchObject.setName(titleName);
-		this.exactTitleNameMatch = false;
+		this.exactTitleNameMatch = exactMatch;
 	}
 
 	public void setBandName(final String string, final boolean exactMatch) {
@@ -79,18 +80,16 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 	}
 
 	public void setDiscTypes(final DiscType... releaseTypes) {
-		for (final DiscType discType : releaseTypes) {
-			this.discTypes.add(discType);
-		}
+		Collections.addAll(this.discTypes, releaseTypes);
 	}
 
 	private final String asPair(String attribut, String toAdd) {
-		this.isAValidQuery = (this.isAValidQuery ? true : !toAdd.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !toAdd.isEmpty());
 		return attribut + "=" + MetallumURL.asURLString(toAdd);
 	}
 
 	private final String getDiscTypes() {
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 		for (final DiscType type : this.discTypes) {
 			this.isAValidQuery = true;
 			buf.append("releaseType[]=" + type.asSearchNumber() + "&");
@@ -100,7 +99,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 
 	@Override
 	protected final String assembleSearchQuery(final int startPage) {
-		final StringBuffer searchQueryBuf = new StringBuffer();
+		final StringBuilder searchQueryBuf = new StringBuilder();
 		searchQueryBuf.append(asPair("bandName", this.searchObject.getBandName()));
 		searchQueryBuf.append(asPair("songTitle", this.searchObject.getName()));
 		searchQueryBuf.append(asPair("releaseTitle", this.searchObject.getDiscName()));

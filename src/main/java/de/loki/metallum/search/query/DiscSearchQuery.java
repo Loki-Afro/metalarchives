@@ -94,7 +94,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously
 	 * 
-	 * @param the country to add to the query
+	 * @param country to add to the query
 	 */
 	public boolean setCountry(final String country) {
 		final Country c = Country.getRightCountryForString(country);
@@ -109,7 +109,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously
 	 * 
-	 * @param the countrys to add to the query
+	 * @param countrys to add to the query
 	 */
 	public void setCountrys(final Country... countrys) {
 		for (final Country country : countrys) {
@@ -169,18 +169,18 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	private final String getBandName() {
 		final String bandName = this.searchObject.getBandName();
-		this.isAValidQuery = (this.isAValidQuery ? true : !bandName.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !bandName.isEmpty());
 		return "bandName=" + MetallumURL.asURLString(bandName);
 	}
 
 	private final String getReleaseTitle() {
 		final String title = this.searchObject.getName();
-		this.isAValidQuery = (this.isAValidQuery ? true : !title.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !title.isEmpty());
 		return "releaseTitle=" + MetallumURL.asURLString(title);
 	}
 
 	private final String getYearMonth() {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		if (this.fromYear != 0 || this.toMonth != 0) {
 			this.isAValidQuery = true;
 			buf.append("releaseYearFrom=" + getStringForTime(this.fromYear) + "&");
@@ -192,7 +192,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 	}
 
 	private final String getCountrys() {
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 		if (!this.countrys.isEmpty()) {
 			this.isAValidQuery = true;
 			for (final Country country : this.countrys) {
@@ -204,24 +204,24 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	private final String getReleaseLabelName() {
 		final String releaseLabelName = this.searchObject.getLabel().getName();
-		this.isAValidQuery = (this.isAValidQuery ? true : !releaseLabelName.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !releaseLabelName.isEmpty());
 		return "releaseLabelName=" + MetallumURL.asURLString(releaseLabelName);
 	}
 
 	private final String getGenre() {
 		final String genre = this.searchObject.getGenre();
-		this.isAValidQuery = (this.isAValidQuery ? true : !genre.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !genre.isEmpty());
 		return "genre=" + MetallumURL.asURLString(genre);
 	}
 
 	private final String getLocation() {
 		final String location = this.searchObject.getBand().getProvince();
-		this.isAValidQuery = (this.isAValidQuery ? true : !location.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !location.isEmpty());
 		return "location=" + MetallumURL.asURLString(location);
 	}
 
 	private final String getDiscTypes() {
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 		for (final DiscType type : this.discTypes) {
 			this.isAValidQuery = true;
 			buf.append("releaseType[]=" + type.asSearchNumber() + "&");
@@ -231,7 +231,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	@Override
 	protected final String assembleSearchQuery(final int startPage) {
-		final StringBuffer searchQueryBuf = new StringBuffer();
+		final StringBuilder searchQueryBuf = new StringBuilder();
 		searchQueryBuf.append(getBandName());
 		searchQueryBuf.append(getReleaseTitle());
 		searchQueryBuf.append("exactReleaseMatch=" + (this.exactDiscNameMatch ? 1 : 0) + "&");
