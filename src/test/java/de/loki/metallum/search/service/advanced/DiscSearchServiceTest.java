@@ -67,13 +67,13 @@ public class DiscSearchServiceTest {
 	public void vhsTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setReleaseTypes(DiscType.VIDEO);
-		query.setReleaseName("Live Eschaton", false);
+		query.setReleaseTypes(DiscType.LIVE_ALBUM);
+		query.setReleaseName("Live ΕΣΧΑΤΟΝ - The Art of Rebellion", false);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Behemoth", discResult.getBandName());
-		Assert.assertEquals("Live Eschaton", discResult.getName());
+		Assert.assertEquals("Live ΕΣΧΑΤΟΝ - The Art of Rebellion", discResult.getName());
 		Assert.assertEquals(12, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.VIDEO, discResult.getType());
+		Assert.assertEquals(DiscType.LIVE_ALBUM, discResult.getType());
 		Assert.assertEquals("Metal Mind Productions", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
