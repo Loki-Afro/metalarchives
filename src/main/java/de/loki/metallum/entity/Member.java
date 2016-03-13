@@ -1,31 +1,31 @@
 package de.loki.metallum.entity;
 
+import de.loki.metallum.enums.Country;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.loki.metallum.enums.Country;
-
 public class Member extends AbstractEntity {
 	// good Example: http://www.metal-archives.com/artists/Kerry_King/267
 
-	private Country							country;
-	private String							realName;
-	private List<Band>						uncategorizedBands	= new ArrayList<Band>();
-	private int								age					= 0;
-	private String							province			= "";
-	private String							gender				= "";
-	private BufferedImage					photo				= null;
-	private String							alternativName		= "";
-	private Map<Band, Map<Disc, String>>	guestSessionBands	= new LinkedHashMap<Band, Map<Disc, String>>();
-	private Map<Band, Map<Disc, String>>	activeInBands		= new LinkedHashMap<Band, Map<Disc, String>>();
-	private Map<Band, Map<Disc, String>>	pastBands			= new LinkedHashMap<Band, Map<Disc, String>>();
-	private Map<Band, Map<Disc, String>>	miscBands			= new LinkedHashMap<Band, Map<Disc, String>>();
-	private final List<Link>				linkList			= new ArrayList<Link>();
-	private String							details				= "";
-	private String							photoUrl			= "";
+	private Country country;
+	private String  realName;
+	private       List<Band>                   uncategorizedBands = new ArrayList<Band>();
+	private       int                          age                = 0;
+	private       String                       province           = "";
+	private       String                       gender             = "";
+	private       BufferedImage                photo              = null;
+	private       String                       alternativName     = "";
+	private       Map<Band, Map<Disc, String>> guestSessionBands  = new LinkedHashMap<Band, Map<Disc, String>>();
+	private       Map<Band, Map<Disc, String>> activeInBands      = new LinkedHashMap<Band, Map<Disc, String>>();
+	private       Map<Band, Map<Disc, String>> pastBands          = new LinkedHashMap<Band, Map<Disc, String>>();
+	private       Map<Band, Map<Disc, String>> miscBands          = new LinkedHashMap<Band, Map<Disc, String>>();
+	private final List<Link>                   linkList           = new ArrayList<Link>();
+	private       String                       details            = "";
+	private       String                       photoUrl           = "";
 
 	public Member(final long id) {
 		super(id);
@@ -45,8 +45,6 @@ public class Member extends AbstractEntity {
 
 	/**
 	 * If we just search for the Member it is not possible to know if these are past Bands.
-	 * 
-	 * @return
 	 */
 	public final List<Band> getUncategorizedBands() {
 		return this.uncategorizedBands;
@@ -181,10 +179,7 @@ public class Member extends AbstractEntity {
 	}
 
 	public boolean hasPhoto() {
-		if (this.photo != null) {
-			return true;
-		}
-		return false;
+		return this.photo != null;
 	}
 
 	public final void setPhotoUrl(final String photoUrl) {

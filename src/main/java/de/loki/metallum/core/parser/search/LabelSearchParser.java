@@ -1,18 +1,16 @@
 package de.loki.metallum.core.parser.search;
 
+import de.loki.metallum.entity.Label;
+import de.loki.metallum.enums.Country;
+import de.loki.metallum.search.SearchRelevance;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
 
-import de.loki.metallum.entity.Label;
-import de.loki.metallum.enums.Country;
-import de.loki.metallum.search.SearchRelevance;
-
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class LabelSearchParser extends AbstractSearchParser<Label> {
 

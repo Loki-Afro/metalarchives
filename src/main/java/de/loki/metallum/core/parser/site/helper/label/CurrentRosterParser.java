@@ -1,18 +1,17 @@
 package de.loki.metallum.core.parser.site.helper.label;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import de.loki.metallum.core.parser.site.LabelSiteParser;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.entity.Band;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 
-	private final List<Band>	mainList	= new ArrayList<Band>();
+	private final List<Band> mainList = new ArrayList<Band>();
 
 	public CurrentRosterParser(long labelId, byte numberPerPage, boolean alphabetical, LabelSiteParser.PARSE_STYLE sortType) {
 		super(labelId, numberPerPage, alphabetical, sortType);

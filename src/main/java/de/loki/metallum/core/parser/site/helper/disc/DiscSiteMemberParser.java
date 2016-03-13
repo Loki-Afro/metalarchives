@@ -1,27 +1,26 @@
 package de.loki.metallum.core.parser.site.helper.disc;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
+import de.loki.metallum.core.util.MetallumUtil;
+import de.loki.metallum.entity.Member;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import de.loki.metallum.core.util.MetallumUtil;
-import de.loki.metallum.entity.Member;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DiscSiteMemberParser {
-	private final Map<Member, String>	albumLineupList	= new HashMap<Member, String>();
-	private final Map<Member, String>	guestLineupList	= new HashMap<Member, String>();
-	private final Map<Member, String>	otherMemberList	= new HashMap<Member, String>();
-	private final Document				doc;
-	private static Logger				logger			= LoggerFactory.getLogger(DiscSiteMemberParser.class);
+	private final Map<Member, String> albumLineupList = new HashMap<Member, String>();
+	private final Map<Member, String> guestLineupList = new HashMap<Member, String>();
+	private final Map<Member, String> otherMemberList = new HashMap<Member, String>();
+	private final Document doc;
+	private static Logger logger = LoggerFactory.getLogger(DiscSiteMemberParser.class);
 
 	private enum MemberCategory {
 		ALBUM_LINEUP("Band members"), ALBUM_GUEST("Guest/session musicians", "Guest/Session"), ALBUM_OTHER("Other staff", "Misc. staff", "Miscellaneous staff");
-		private final String[]	asString;
+		private final String[] asString;
 
 		MemberCategory(final String... asString) {
 			this.asString = asString;

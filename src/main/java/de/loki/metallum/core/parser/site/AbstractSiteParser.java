@@ -1,25 +1,24 @@
 package de.loki.metallum.core.parser.site;
 
-import java.util.concurrent.ExecutionException;
-
+import de.loki.metallum.core.util.net.downloader.Downloader;
+import de.loki.metallum.entity.AbstractEntity;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.AbstractEntity;
+import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
 	@Deprecated
-	protected final String		html;
-	protected final Document	doc;
-	protected final boolean		loadImage;
-	protected final boolean		loadLinks;
-	protected final T			entity;
+	protected final String   html;
+	protected final Document doc;
+	protected final boolean  loadImage;
+	protected final boolean  loadLinks;
+	protected final T        entity;
 
-	private static final String		imageCssQuery	= "img[src~=(?i)\\.(png|jpe?g|gif)]";
+	private static final String imageCssQuery = "img[src~=(?i)\\.(png|jpe?g|gif)]";
 
 	public AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
 		this.entity = entity;
@@ -34,7 +33,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
 	/**
 	 * To download the Specific Site as HTML content, only used in the Abstract Constructor.
-	 * 
+	 *
 	 * @return the URL for the specific site
 	 */
 	protected abstract String getSiteURL();
@@ -50,8 +49,6 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 	}
 
 	/**
-	 * 
-	 * @param element
 	 * @return the parsed element behind the ":", N/A and (Unknown User) is also possible
 	 */
 	private final String modificationElementToString(final Element element) {
@@ -62,10 +59,9 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
 	/**
 	 * Convenience Method to extract an image URL from html.
-	 * 
-	 * @param element the wrapping Element.
+	 *
+	 * @param element  the wrapping Element.
 	 * @param cssClass where the image link is in.
-	 * @return
 	 */
 	protected final String parseImageURL(final Element element, final String cssClass) {
 		String imageURL = null;

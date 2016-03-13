@@ -4,9 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 /**
- * 
  * @author Zarathustra
- * 
  */
 public final class MetallumURL {
 
@@ -20,14 +18,14 @@ public final class MetallumURL {
 	/**
 	 * The metal-archives Base-URL.
 	 */
-	private static final String	BASEURL	= "http://www.metal-archives.com/";
+	private static final String BASEURL = "http://www.metal-archives.com/";
 
 	public enum SearchTyp {
 		BAND("bands"), TRACK("songs"), DISC("albums");
 
-		private String	searchString;
+		private String searchString;
 
-		private SearchTyp(String searchString) {
+		SearchTyp(String searchString) {
 			this.searchString = searchString;
 		}
 
@@ -39,9 +37,8 @@ public final class MetallumURL {
 	/**
 	 * This method gives you an URL String for example: I love you ->
 	 * I+love+you.
-	 * 
-	 * @param notURLString
-	 *            The URLString to convert
+	 *
+	 * @param notURLString The URLString to convert
 	 * @return the URL String
 	 */
 	public static String asURLString(final String notURLString) {
@@ -49,7 +46,7 @@ public final class MetallumURL {
 		if (notURLString == null || notURLString.isEmpty()) {
 			return "&";
 		}
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for (String namePart : notURLString.split("\\s")) {
 			buf.append(namePart);
 			buf.append(tempPlus);
@@ -61,9 +58,9 @@ public final class MetallumURL {
 
 	/**
 	 * To get the searchURL for the advanced search Services (bands, albums, tracks).
-	 * 
+	 *
 	 * @param searchTyp band, album or track
-	 * @param query the specific queryString which contains the parameters for the HTTP Get
+	 * @param query     the specific queryString which contains the parameters for the HTTP Get
 	 * @param startPage
 	 * @return the assembledURL
 	 */
@@ -135,7 +132,7 @@ public final class MetallumURL {
 	/**
 	 * to get an URL to view the discography of a Band example for Bathory:
 	 * http://www.metal-archives.com/band/discography/id/184/tab/all
-	 * 
+	 *
 	 * @param id
 	 * @return the URL
 	 */
@@ -149,9 +146,8 @@ public final class MetallumURL {
 
 	/**
 	 * To assemble a URL to search for that Member/artist whatever
-	 * 
-	 * @param name
-	 *            of the member/artist whatever
+	 *
+	 * @param name of the member/artist whatever
 	 * @return the searchURL for the member/artist whatever
 	 */
 	public static String assembleMemberSearchURL(String name, int startPage) {
@@ -161,7 +157,7 @@ public final class MetallumURL {
 
 	/**
 	 * To assemble a URL to parse the Reviews of a Disc.
-	 * 
+	 *
 	 * @param discId the id from the disc to get the reviews
 	 * @return will return a URL like this: http://www.metal-archives.com/reviews/_/_/207
 	 */
@@ -170,17 +166,14 @@ public final class MetallumURL {
 	}
 
 	/**
-	 * 
 	 * Assembles a URL where you can get JSon from. It will contain the
 	 * <b>current</b> bands from the label.
-	 * 
-	 * @see http://www.metal-archives.com/labels/Metal_Blade_Records/3
-	 * 
+	 *
 	 * @param numberPerPage how many results do you want.
-	 * @param alphabetical true if you want the result alphabetical
-	 *            otherwise you'll get it in reverse order.
-	 * @param sortType you can sort per Band, Genre or per Country.
-	 * @return
+	 * @param alphabetical  true if you want the result alphabetical
+	 *                      otherwise you'll get it in reverse order.
+	 * @param sortType      you can sort per Band, Genre or per Country.
+	 * @see http://www.metal-archives.com/labels/Metal_Blade_Records/3
 	 */
 	public static String assembleLabelCurrentRoster(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType) {
 		return BASEURL + "label/ajax-bands/nbrPerPage/" + numberPerPage + "/id/" + labelId
@@ -189,20 +182,14 @@ public final class MetallumURL {
 	}
 
 	/**
-	 * 
 	 * Assembles a URL where you can get JSon from. It will contain the
 	 * <b>past</b> bands from the label
-	 * 
+	 *
+	 * @param numberPerPage how many results do you want
+	 * @param alphabetical  true if you want the result alphabetical otherwise you'll get
+	 *                      it in reverse order
+	 * @param sortType      you can sort per Band, Genre or per Country
 	 * @see http://www.metal-archives.com/labels/Metal_Blade_Records/3
-	 * 
-	 * @param numberPerPage
-	 *            how many results do you want
-	 * @param alphabetical
-	 *            true if you want the result alphabetical otherwise you'll get
-	 *            it in reverse order
-	 * @param sortType
-	 *            you can sort per Band, Genre or per Country
-	 * @return
 	 */
 	public static String assembleLabelPastRoster(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType) {
 		return BASEURL + "label/ajax-bands-past/nbrPerPage/" + numberPerPage + "/id/" + labelId

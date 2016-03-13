@@ -1,16 +1,5 @@
 package de.loki.metallum.core.parser.site;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import org.slf4j.Logger;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.loki.metallum.core.parser.site.helper.ReviewParser;
 import de.loki.metallum.core.parser.site.helper.band.BandLinkParser;
 import de.loki.metallum.core.parser.site.helper.band.DiscParser;
@@ -19,20 +8,26 @@ import de.loki.metallum.core.parser.site.helper.band.SimilarArtistsParser;
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.entity.Disc;
-import de.loki.metallum.entity.Label;
-import de.loki.metallum.entity.Link;
-import de.loki.metallum.entity.Review;
+import de.loki.metallum.entity.*;
 import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
 public class BandSiteParser extends AbstractSiteParser<Band> {
-	private boolean			loadReviews			= false;
-	private boolean			loadSimilarArtists	= false;
-	private boolean			loadReadMore		= false;
-	private static Logger	logger				= LoggerFactory.getLogger(BandSiteParser.class);
+	private              boolean loadReviews        = false;
+	private              boolean loadSimilarArtists = false;
+	private              boolean loadReadMore       = false;
+	private static final Logger  logger             = LoggerFactory.getLogger(BandSiteParser.class);
 
 	public BandSiteParser(final Band band, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) throws ExecutionException {
 		super(band, loadImages, loadLinks);
@@ -96,9 +91,6 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
 	/**
 	 * This Method set the Country Province, Status and the year.
-	 * 
-	 * @param band
-	 * @return
 	 */
 	private final Band parseFirstHtmlPart(final Band band) {
 		Element secondPart = this.doc.select("dl[class]").get(0);
@@ -253,7 +245,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	 * If the previous entity, may from cache, has already the band logo,
 	 * this method will return the BufferedImage of the entity, otherwise if loadImage is true
 	 * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-	 * 
+	 *
 	 * @return null if loadImage is false or if there is no logo.
 	 */
 	private final BufferedImage parseBandLogo(final String imageUrl) {
@@ -273,7 +265,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 	 * If the previous entity, may from cache, has already the band photo,
 	 * this method will return the BufferedImage of the entity, otherwise if loadImage is true
 	 * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-	 * 
+	 *
 	 * @return null if loadImage is false or if there is no photo.
 	 */
 	private final BufferedImage parseBandPhoto(final String photoUrl) {

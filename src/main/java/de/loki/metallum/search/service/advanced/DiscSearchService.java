@@ -1,39 +1,34 @@
 package de.loki.metallum.search.service.advanced;
 
-import java.util.concurrent.ExecutionException;
-
 import de.loki.metallum.core.parser.search.DiscSearchParser;
 import de.loki.metallum.core.parser.site.DiscSiteParser;
 import de.loki.metallum.entity.Disc;
-import de.loki.metallum.entity.Track;
 import de.loki.metallum.search.AbstractSearchService;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents the advanced search for bands Here we'll search and try to parse the Result of our
  * Search.
- * 
+ * <p/>
  * How to use this: Setup a DiscSearchQuery and just call performSearch(DiscSearchQuery query)
- * 
+ * <p/>
  * This will also call the Parser to finally get a clear result. <br>
  * <br>
  * <b>What this class does not do:</b> It does not fill the resultList with the whole data what you
  * can get from the metal-archives<br>
  * <br>
- * 
+ * <p/>
  * <b>Actually it does just search!</b>
- * 
- * 
- * @see http://www.metal-archives.com/search/advanced/#albums
- * 
- * 
+ *
  * @author Zarathustra
- * 
+ * @see http://www.metal-archives.com/search/advanced/#albums
  */
 public class DiscSearchService extends AbstractSearchService<Disc> {
 
-	private boolean	loadImages	= false;
-	private boolean	loadReviews	= false;
-	private boolean	loadLyrics	= false;
+	private boolean loadImages  = false;
+	private boolean loadReviews = false;
+	private boolean loadLyrics  = false;
 
 	/**
 	 * Constructs a default DiscSearchService.
@@ -49,7 +44,7 @@ public class DiscSearchService extends AbstractSearchService<Disc> {
 	 * Constructs a DiscSearchService, where<br>
 	 * - object to load = 5<br>
 	 * and load Reviews as false
-	 * 
+	 *
 	 * @param loadImages see {@code setLoadImages}
 	 */
 	public DiscSearchService(final boolean loadImages) {
@@ -59,10 +54,10 @@ public class DiscSearchService extends AbstractSearchService<Disc> {
 	/**
 	 * Constructs a DiscSearchService.<br>
 	 * <br>
-	 * 
+	 *
 	 * @param objectToLoad see {@code setObjectsToLoad}
-	 * @param loadImages see {@code setLoadImages}
-	 * @param loadReviews see {@code setLoadReviews}
+	 * @param loadImages   see {@code setLoadImages}
+	 * @param loadReviews  see {@code setLoadReviews}
 	 */
 	public DiscSearchService(final int objectToLoad, final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
 		this.objectToLoad = objectToLoad;

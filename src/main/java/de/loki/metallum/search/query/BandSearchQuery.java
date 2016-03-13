@@ -1,9 +1,5 @@
 package de.loki.metallum.search.query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-
 import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.core.parser.search.BandSearchParser;
 import de.loki.metallum.core.util.net.MetallumURL;
@@ -14,6 +10,10 @@ import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.AbstractSearchQuery;
 import de.loki.metallum.search.SearchRelevance;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+
 /*
  * 
  * @see http://www.metal-archives.com/content/help?index=3#tab_db
@@ -23,12 +23,12 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	/**
 	 * the Band we are searching for
 	 */
-	private boolean					exactBandNameMatch	= false;
-	private int						fromYear;
-	private int						toYear;
-	private boolean					indieLabel			= false;
-	private final List<Country>		countrys			= new ArrayList<Country>();
-	private final List<BandStatus>	bandStatus			= new ArrayList<BandStatus>();
+	private boolean exactBandNameMatch = false;
+	private int fromYear;
+	private int toYear;
+	private       boolean          indieLabel = false;
+	private final List<Country>    countrys   = new ArrayList<Country>();
+	private final List<BandStatus> bandStatus = new ArrayList<BandStatus>();
 
 	public BandSearchQuery() {
 		super(new Band());
@@ -39,8 +39,6 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	/**
-	 * 
-	 * @param bandName
 	 * @param exactMatch if the bandName is equal to the band we are searching for
 	 */
 	public void setBandName(final String bandName, final boolean exactMatch) {
@@ -49,7 +47,6 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	/**
-	 * 
 	 * @param genre the genre from the band we are searching for
 	 */
 	public void setGenre(final String genre) {
@@ -70,8 +67,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	/**
 	 * A Band can have just one status but we can search for more than one at the same time.
-	 * 
-	 * @param possible status from the band we are searching for
+	 *
+	 * @param stat status from the band we are searching for
 	 */
 	public void addStatus(final BandStatus... stat) {
 		for (final BandStatus bandStatus : stat) {
@@ -85,7 +82,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	/**
 	 * A Band can have just one status but we can search for more than one at the same time.
-	 * 
+	 *
 	 * @param stat a possible status to search for.
 	 * @return true if the status has been added or is already part of the search query, false otherwise
 	 */
@@ -100,9 +97,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously.
-	 * 
-	 * @param country
-	 *            the country to add to the query
+	 *
+	 * @param country the country to add to the query
 	 * @return true if the Country was added to the list
 	 */
 	public final boolean addCountry(final String country) {
@@ -117,9 +113,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously.
-	 * 
-	 * @param countrys
-	 *            the country's to add to the query
+	 *
+	 * @param countrys the country's to add to the query
 	 */
 	public final void addCountry(final Country... countrys) {
 		for (Country country : countrys) {
@@ -130,11 +125,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	/**
-	 * 
-	 * @param country
-	 *            the possible country of the band
-	 * @param province
-	 *            the possible province, city or state
+	 * @param country  the possible country of the band
+	 * @param province the possible province, city or state
 	 * @return if addCountry was successfully
 	 */
 	public final boolean setProvince(final String country, final String province) {
@@ -157,20 +149,20 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	private final String getBandName() {
 		final String bandName = this.searchObject.getName();
-		this.isAValidQuery = (this.isAValidQuery ? true : !bandName.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !bandName.isEmpty());
 		return "bandName=" + MetallumURL.asURLString(bandName).replaceAll("%2B", "+");
 	}
 
 	private final String getGenre() {
 		final String genre = this.searchObject.getGenre();
-		this.isAValidQuery = (this.isAValidQuery ? true : !genre.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !genre.isEmpty());
 		return "genre=" + MetallumURL.asURLString(genre);
 	}
 
 	private final String getCountrys() {
-		this.isAValidQuery = (this.isAValidQuery ? true : !this.countrys.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !this.countrys.isEmpty());
 		if (!this.countrys.isEmpty()) {
-			final StringBuffer buf = new StringBuffer();
+			final StringBuilder buf = new StringBuilder();
 			// &country[]=DM&country[]=EG&country[]=DE
 			// is there a maximum?
 			if (this.countrys.size() == 1) {
@@ -187,7 +179,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	private final String getFromYear() {
-		this.isAValidQuery = (this.isAValidQuery ? true : this.fromYear != 0);
+		this.isAValidQuery = (this.isAValidQuery || this.fromYear != 0);
 		if (this.fromYear != 0) {
 			return "yearCreationFrom=" + this.fromYear + "&";
 		} else {
@@ -196,7 +188,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	private final String getToYear() {
-		this.isAValidQuery = (this.isAValidQuery ? true : this.toYear != 0);
+		this.isAValidQuery = (this.isAValidQuery || this.toYear != 0);
 		if (this.toYear != 0) {
 			return "yearCreationTo=" + this.toYear + "&";
 		} else {
@@ -205,9 +197,9 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 	}
 
 	private final String getBandStatus() {
-		this.isAValidQuery = (this.isAValidQuery ? true : !this.bandStatus.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !this.bandStatus.isEmpty());
 		if (!this.bandStatus.isEmpty()) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			for (BandStatus stat : this.bandStatus) {
 				buf.append("status=" + stat.asSearchNumber() + "&");
 			}
@@ -219,25 +211,25 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
 	private final String getLyricalThemes() {
 		final String lyricalThemes = this.searchObject.getLyricalThemes();
-		this.isAValidQuery = (this.isAValidQuery ? true : !lyricalThemes.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !lyricalThemes.isEmpty());
 		return "themes=" + MetallumURL.asURLString(lyricalThemes).replaceAll("%2B", "+");
 	}
 
 	private final String getLocation() {
 		final String location = this.searchObject.getProvince();
-		this.isAValidQuery = (this.isAValidQuery ? true : !location.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !location.isEmpty());
 		return "location=" + MetallumURL.asURLString(location);
 	}
 
 	private String getLabelName() {
 		final String labelname = this.searchObject.getLabel().getName();
-		this.isAValidQuery = (this.isAValidQuery ? true : !labelname.isEmpty());
+		this.isAValidQuery = (this.isAValidQuery || !labelname.isEmpty());
 		return "bandLabelName=" + MetallumURL.asURLString(labelname);
 	}
 
 	@Override
 	protected final String assembleSearchQuery(final int startPage) {
-		final StringBuffer searchQueryBuf = new StringBuffer();
+		final StringBuilder searchQueryBuf = new StringBuilder();
 		searchQueryBuf.append(getBandName());
 		searchQueryBuf.append("exactBandMatch=" + (this.exactBandNameMatch ? 1 : 0) + "&");
 		searchQueryBuf.append(getGenre());

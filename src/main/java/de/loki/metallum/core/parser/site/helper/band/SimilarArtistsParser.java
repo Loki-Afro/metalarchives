@@ -1,20 +1,19 @@
 package de.loki.metallum.core.parser.site.helper.band;
 
+import de.loki.metallum.core.util.net.MetallumURL;
+import de.loki.metallum.core.util.net.downloader.Downloader;
+import de.loki.metallum.entity.Band;
+import de.loki.metallum.enums.Country;
+import org.jsoup.Jsoup;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
-import org.jsoup.Jsoup;
-
-import de.loki.metallum.core.util.net.MetallumURL;
-import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.enums.Country;
-
 public class SimilarArtistsParser {
-	private final String	html;
+	private final String html;
 
 	public SimilarArtistsParser(final long id) throws ExecutionException {
 		this.html = Downloader.getHTML(MetallumURL.assembleBandRecommendationsURL(id, 1));

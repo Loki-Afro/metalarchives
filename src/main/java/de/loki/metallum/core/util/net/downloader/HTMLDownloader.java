@@ -1,10 +1,10 @@
 package de.loki.metallum.core.util.net.downloader;
 
+import de.loki.metallum.core.util.net.downloader.interfaces.IHTMLDowloader;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import de.loki.metallum.core.util.net.downloader.interfaces.IHTMLDowloader;
 
 public final class HTMLDownloader extends AbstractDownloader implements IHTMLDowloader {
 

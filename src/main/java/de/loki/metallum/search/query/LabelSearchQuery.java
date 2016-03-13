@@ -1,13 +1,13 @@
 package de.loki.metallum.search.query;
 
-import java.util.List;
-import java.util.SortedMap;
-
 import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.entity.Label;
 import de.loki.metallum.search.AbstractSearchQuery;
 import de.loki.metallum.search.SearchRelevance;
+
+import java.util.List;
+import java.util.SortedMap;
 
 public class LabelSearchQuery extends AbstractSearchQuery<Label> {
 

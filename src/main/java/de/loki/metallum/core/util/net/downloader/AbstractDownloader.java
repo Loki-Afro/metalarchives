@@ -1,7 +1,5 @@
 package de.loki.metallum.core.util.net.downloader;
 
-import java.nio.charset.Charset;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -20,15 +18,17 @@ import org.apache.http.params.HttpProtocolParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class AbstractDownloader {
-	private final String					urlString;
-	protected volatile static HttpClient	HTTP_CLIENT;
-	protected final static Charset			HTML_CHARSET		= Charset.forName("UTF-8");
-	private final static int				PORT				= 80;
-	private final static String				PROTOCOL			= "http";
-	private static Logger					logger				= LoggerFactory.getLogger(AbstractDownloader.class);
+import java.nio.charset.Charset;
 
-	private static final String				USER_AGENT_PROPERTY	= "de.loki.metallum.useragent";
+abstract class AbstractDownloader {
+	private final             String     urlString;
+	protected volatile static HttpClient HTTP_CLIENT;
+	protected final static Charset HTML_CHARSET = Charset.forName("UTF-8");
+	private final static   int     PORT         = 80;
+	private final static   String  PROTOCOL     = "http";
+	private static         Logger  logger       = LoggerFactory.getLogger(AbstractDownloader.class);
+
+	private static final String USER_AGENT_PROPERTY = "de.loki.metallum.useragent";
 
 	static {
 		final CacheConfig cacheConfig = new CacheConfig();

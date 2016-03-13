@@ -1,16 +1,15 @@
 package de.loki.metallum.core.parser.site.helper.label;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import de.loki.metallum.core.parser.site.LabelSiteParser.PARSE_STYLE;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.enums.DiscType;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
 

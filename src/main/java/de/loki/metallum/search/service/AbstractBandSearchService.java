@@ -1,18 +1,18 @@
 package de.loki.metallum.search.service;
 
-import java.util.concurrent.ExecutionException;
-
 import de.loki.metallum.core.parser.site.BandSiteParser;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.search.AbstractSearchService;
 
+import java.util.concurrent.ExecutionException;
+
 public abstract class AbstractBandSearchService extends AbstractSearchService<Band> {
 
-	protected boolean	loadImages		= false;
-	protected boolean	loadReviews		= false;
-	protected boolean	loadSimilar		= false;
-	protected boolean	loadLinks		= false;
-	protected boolean	loadReadMore	= false;
+	protected boolean loadImages   = false;
+	protected boolean loadReviews  = false;
+	protected boolean loadSimilar  = false;
+	protected boolean loadLinks    = false;
+	protected boolean loadReadMore = false;
 
 	public AbstractBandSearchService(final int objectToLoad, final boolean loadImages, final boolean loadReviews, final boolean loadSimilar, final boolean loadReadMore) {
 		this.objectToLoad = objectToLoad;

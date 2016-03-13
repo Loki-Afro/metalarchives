@@ -2,11 +2,11 @@ package de.loki.metallum.entity;
 
 public class Review extends AbstractEntity {
 
-	private String	author			= "";
-	private int		percent			= 0;
-	private String	content			= "";
-	private String	date			= "";
-	private Disc	discFromReview	= new Disc();
+	private String author         = "";
+	private int    percent        = 0;
+	private String content        = "";
+	private String date           = "";
+	private Disc   discFromReview = new Disc();
 
 	public Review(final long id) {
 		super(id);

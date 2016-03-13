@@ -2,7 +2,7 @@ package de.loki.metallum.search;
 
 public final class SearchRelevance implements Comparable<SearchRelevance> {
 
-	private final double	doubleIntern;
+	private final double doubleIntern;
 
 	public SearchRelevance(final Double doubleValue) {
 		this.doubleIntern = doubleValue;
@@ -34,10 +34,7 @@ public final class SearchRelevance implements Comparable<SearchRelevance> {
 			return false;
 		}
 		SearchRelevance other = (SearchRelevance) obj;
-		if (Double.doubleToLongBits(this.doubleIntern) != Double.doubleToLongBits(other.doubleIntern)) {
-			return false;
-		}
-		return true;
+		return Double.doubleToLongBits(this.doubleIntern) == Double.doubleToLongBits(other.doubleIntern);
 	}
 
 	@Override

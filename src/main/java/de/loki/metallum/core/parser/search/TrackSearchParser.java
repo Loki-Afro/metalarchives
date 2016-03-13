@@ -1,31 +1,29 @@
 package de.loki.metallum.core.parser.search;
 
-import java.util.concurrent.ExecutionException;
-
-import org.slf4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Track;
 import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.SearchRelevance;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class TrackSearchParser extends AbstractSearchParser<Track> {
 
-	private static Logger	logger					= LoggerFactory.getLogger(TrackSearchParser.class);
-	private boolean			isAbleToParseGenre		= false;
-	private boolean			isAbleToParseDiscType	= false;
-	private boolean			loadLyrics				= false;
+	private static Logger  logger                = LoggerFactory.getLogger(TrackSearchParser.class);
+	private        boolean isAbleToParseGenre    = false;
+	private        boolean isAbleToParseDiscType = false;
+	private        boolean loadLyrics            = false;
 
 	public void setIsAbleToParseGenre(final boolean isAbleToParse) {
 		this.isAbleToParseGenre = isAbleToParse;
@@ -82,8 +80,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 	/**
 	 * Parses the lyrics by getting the Id of them. With that Id we'll download the html code and
 	 * parse that again.
-	 * 
-	 * @param hit is always the last hit.
+	 *
 	 * @return the lyrics if existent
 	 */
 	private final String parseLyrics(final Track track) {
@@ -93,8 +90,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 				String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(track.getId())).trim();
 				// making it nice and if there are no lyrics there should be nothing to return!
 				lyricsHtml = MetallumUtil.parseHtmlWithLineSeperators(lyricsHtml);
-				final String lyrics = lyricsHtml.replaceAll("\\(lyrics not available\\)", "");
-				return lyrics;
+				return lyricsHtml.replaceAll("\\(lyrics not available\\)", "");
 			}
 		} catch (final ExecutionException e) {
 			logger.error("Unanble to get the Lyrics from \"" + track, e);

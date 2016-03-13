@@ -1,28 +1,26 @@
 package de.loki.metallum.core.parser.search;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
+import de.loki.metallum.core.util.MetallumUtil;
+import de.loki.metallum.entity.Band;
+import de.loki.metallum.entity.Member;
+import de.loki.metallum.enums.Country;
+import de.loki.metallum.search.SearchRelevance;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import de.loki.metallum.core.util.MetallumUtil;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.entity.Member;
-import de.loki.metallum.enums.Country;
-import de.loki.metallum.search.SearchRelevance;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class MemberSearchParser extends AbstractSearchParser<Member> {
 
@@ -104,7 +102,7 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
 	 * put in <a href="http://www.metal-archives.com/artists/%2232%22_Kondo/182832">"32" Kondo</a>
 	 * (a.k.a. <em>32</em>)
 	 * and you'll get: "32" Kondo
-	 * 
+	 *
 	 * @param hit the link
 	 * @return the name name of the link without the alternative name
 	 */

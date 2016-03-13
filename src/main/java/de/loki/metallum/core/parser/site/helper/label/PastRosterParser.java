@@ -1,11 +1,10 @@
 package de.loki.metallum.core.parser.site.helper.label;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import de.loki.metallum.core.parser.site.LabelSiteParser.PARSE_STYLE;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.entity.Band;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class PastRosterParser extends AbstractRosterParser<Band, Integer> {
 

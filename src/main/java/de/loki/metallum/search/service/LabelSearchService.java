@@ -1,19 +1,19 @@
 package de.loki.metallum.search.service;
 
-import java.util.concurrent.ExecutionException;
-
 import de.loki.metallum.core.parser.search.LabelSearchParser;
 import de.loki.metallum.core.parser.site.LabelSiteParser;
 import de.loki.metallum.entity.Label;
 import de.loki.metallum.search.AbstractSearchService;
 
+import java.util.concurrent.ExecutionException;
+
 public class LabelSearchService extends AbstractSearchService<Label> {
 
-	private boolean						loadImages			= false;
-	private LabelSiteParser.PARSE_STYLE	loadCurrentRooster	= LabelSiteParser.PARSE_STYLE.NONE;
-	private LabelSiteParser.PARSE_STYLE	loadPastRooster		= LabelSiteParser.PARSE_STYLE.NONE;
-	private LabelSiteParser.PARSE_STYLE	loadReleases		= LabelSiteParser.PARSE_STYLE.NONE;
-	private boolean						loadLinks			= false;
+	private boolean                     loadImages         = false;
+	private LabelSiteParser.PARSE_STYLE loadCurrentRooster = LabelSiteParser.PARSE_STYLE.NONE;
+	private LabelSiteParser.PARSE_STYLE loadPastRooster    = LabelSiteParser.PARSE_STYLE.NONE;
+	private LabelSiteParser.PARSE_STYLE loadReleases       = LabelSiteParser.PARSE_STYLE.NONE;
+	private boolean                     loadLinks          = false;
 
 	public LabelSearchService() {
 		this(0, false);

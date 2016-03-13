@@ -1,15 +1,5 @@
 package de.loki.metallum.core.parser.site;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import org.slf4j.Logger;
-import org.jsoup.Jsoup;
-
 import de.loki.metallum.core.parser.site.helper.LinkParser;
 import de.loki.metallum.core.parser.site.helper.label.CurrentRosterParser;
 import de.loki.metallum.core.parser.site.helper.label.PastRosterParser;
@@ -23,18 +13,26 @@ import de.loki.metallum.entity.Label;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.enums.LabelStatus;
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class LabelSiteParser extends AbstractSiteParser<Label> {
 
-	private static Logger	logger	= LoggerFactory.getLogger(LabelSiteParser.class);
+	private static Logger logger = LoggerFactory.getLogger(LabelSiteParser.class);
 
 	/**
 	 * There are ways to sort the return values of the rooster and release parsers.<br>
 	 * This Enumeration gives you an Idea how you can Sort that data.
-	 * 
+	 *
 	 * @author Zarathustra
-	 * 
 	 */
 	public enum PARSE_STYLE {
 		/**
@@ -54,7 +52,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 		 */
 		COUNTRY_SEARCH_MODE(2);
 
-		private final int	searchNumber;
+		private final int searchNumber;
 
 		PARSE_STYLE(final int searchNumber) {
 			this.searchNumber = searchNumber;
@@ -65,9 +63,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 		}
 	}
 
-	private final PARSE_STYLE	loadCurrentRooster;
-	private final PARSE_STYLE	loadPastRooster;
-	private final PARSE_STYLE	loadReleases;
+	private final PARSE_STYLE loadCurrentRooster;
+	private final PARSE_STYLE loadPastRooster;
+	private final PARSE_STYLE loadReleases;
 
 	/**
 	 * The SiteParser for the Label!<br>
@@ -75,21 +73,20 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	 * A good example for a Label with all tags and so on: <br>
 	 * {@link http://www.metal-archives.com/labels/Metal_Blade_Records/3}.<br>
 	 * <br>
-	 * 
-	 * 
+	 * <p/>
+	 * <p/>
 	 * <b>The last 3 parameter...</b><br>
-	 * 
+	 * <p/>
 	 * currentRooser, pastRooster and releases are PARSE_STYLES.<br>
 	 * They can change the behaviour how metal-archives present their data.<br>
 	 * You should use PARSE_STYLE.BAND_SEARCH_MODE if care about the data and don't understand the
 	 * documentation. <br>
 	 * By default the 3 Fields are disabled (PARSE_STYLE.NONE)
-	 * 
-	 * @param id the ID of the Label to parse for.
-	 * @param loadImages if you want are interested in the Label-logo.
+	 *
+	 * @param loadImages     if you want are interested in the Label-logo.
 	 * @param currentRooster If you care about the current Bands that are used by this Label.
-	 * @param pastRooster If you care about the past Bands that were used by this Label.
-	 * @param releases If you care about the releases that this Label published.
+	 * @param pastRooster    If you care about the past Bands that were used by this Label.
+	 * @param releases       If you care about the releases that this Label published.
 	 * @throws ExecutionException
 	 */
 	public LabelSiteParser(final Label label, final boolean loadImages, final boolean loadLinks, final PARSE_STYLE currentRooster, final PARSE_STYLE pastRooster, final PARSE_STYLE releases) throws ExecutionException {
@@ -237,9 +234,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	/**
 	 * Here you'll get all Bands which are currently used by this Label.<br>
 	 * <br>
-	 * 
+	 * <p/>
 	 * <b>ONLY if option is set<b>
-	 * 
+	 *
 	 * @return a List of Bands, if there are none, you'll get a empty List.
 	 */
 	private List<Band> parseCurrentRoster() {
@@ -263,11 +260,11 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	 * You'll get this when the Label also releases a SplitDisc., in the List<Disc> of that band,<br>
 	 * which is the SplitDisc you'll get the real Bands.<br>
 	 * <br>
-	 * 
+	 * <p/>
 	 * <b>ONLY if option is set<b>
-	 * 
+	 *
 	 * @return the Map with Band as Key and Integer as Value representing the quantum of releases<br>
-	 *         If there are none you'll get a empty HashMap.
+	 * If there are none you'll get a empty HashMap.
 	 */
 	private Map<Band, Integer> parsePastRoster() {
 		final Map<Band, Integer> pastRoster = this.entity.getPastRoster();
@@ -291,9 +288,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 	 * Label<br>
 	 * mapped to the specific Band<br>
 	 * <br>
-	 * 
+	 * <p/>
 	 * <b>ONLY if option is set<b>
-	 * 
+	 *
 	 * @return a Map with Band as Key and a List with Discs.
 	 */
 	private Map<Band, List<Disc>> parseReleases() {
@@ -349,7 +346,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
 	/**
 	 * Parses the specific HTML part for the email of the Label.
-	 * 
+	 *
 	 * @param htmlPart the specific HTML part from the Contact section
 	 * @return the email of the Label if available otherwise an empty String.
 	 */
@@ -381,7 +378,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
 	/**
 	 * If loadImage is true this method tries to download the Label logo.
-	 * 
+	 *
 	 * @return null if loadImage is false or if there is no artwork.
 	 */
 	private final BufferedImage parseLabelLogo(final String logoUrl) {

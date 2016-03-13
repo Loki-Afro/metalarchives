@@ -1,5 +1,11 @@
 package de.loki.metallum.core.util;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,24 +14,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Node;
-import org.slf4j.LoggerFactory;
-
 public final class MetallumUtil {
-	private final static String		lineSeperator	= System.getProperty("line.separator");
-	private final static String[]	daySuffixes		=
-													// 0 1 2 3 4 5 6 7 8 9
-													{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-													// 10 11 12 13 14 15 16 17 18 19
-			"th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
-			// 20 21 22 23 24 25 26 27 28 29
-			"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
-			// 30 31
-			"th", "st"								};
-	private static Logger			logger			= LoggerFactory.getLogger(MetallumUtil.class);
+	private final static String   lineSeperator = System.getProperty("line.separator");
+	private final static String[] daySuffixes   =
+			// 0 1 2 3 4 5 6 7 8 9
+			{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
+					// 10 11 12 13 14 15 16 17 18 19
+					"th", "th", "th", "th", "th", "th", "th", "th", "th", "th",
+					// 20 21 22 23 24 25 26 27 28 29
+					"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
+					// 30 31
+					"th", "st"};
+	private static       Logger   logger        = LoggerFactory.getLogger(MetallumUtil.class);
 
 	private MetallumUtil() {
 
@@ -60,7 +60,7 @@ public final class MetallumUtil {
 	}
 
 	private final static void removeComments(final Node node) {
-		for (int i = 0; i < node.childNodes().size();) {
+		for (int i = 0; i < node.childNodes().size(); ) {
 			Node child = node.childNode(i);
 			if (child.nodeName().equals("#comment")) {
 				child.remove();
@@ -75,13 +75,11 @@ public final class MetallumUtil {
 	 * This method exists because {@link String.trim()} does not remove all whitespaces.
 	 * So called No Break-Spaces ({@code &nbsp;})!<br>
 	 * Removes all leading and trailing \\u00A0.<br>
-	 * 
-	 * @see http://www.fileformat.info/info/unicode/char/202f/index.htm<br>
-	 * @see http://www.vineetmanohar.com/2009/06/how-to-trim-no-break-space-when-parsing-html/<br>
-	 * 
-	 * 
+	 *
 	 * @param stringWithWhiteSpaces with \\u00A0 Characters
 	 * @return the clean String
+	 * @see http://www.fileformat.info/info/unicode/char/202f/index.htm<br>
+	 * @see http://www.vineetmanohar.com/2009/06/how-to-trim-no-break-space-when-parsing-html/<br>
 	 */
 	public static String trimNoBreakSpaces(final String stringWithWhiteSpaces) {
 		// (\\.|!|\\?)+(\\s|\\z)
@@ -98,12 +96,11 @@ public final class MetallumUtil {
 	}
 
 	/**
-	 * 
 	 * @param html the HTML String with tags
 	 * @return a HTML clean String (parsed), but with line separators
 	 */
 	public static String parseHtmlWithLineSeperators(final String html) {
-		final StringBuffer strBuf = new StringBuffer();
+		final StringBuilder strBuf = new StringBuilder();
 		String cleanHtml = Jsoup.parse(html.replaceAll("(?i)<br[^>]*>", "br2n")).text();
 		for (final String strPart : cleanHtml.split("br2n")) {
 			strBuf.append(strPart.trim());
@@ -114,8 +111,8 @@ public final class MetallumUtil {
 	}
 
 	public static boolean isStringInArray(final String control, final String... test) {
-		for (int i = 0; i < test.length; i++) {
-			if (test[i].equalsIgnoreCase(control)) {
+		for (String aTest : test) {
+			if (aTest.equalsIgnoreCase(control)) {
 				return true;
 			}
 		}

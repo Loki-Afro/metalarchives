@@ -1,22 +1,21 @@
 package de.loki.metallum.core.parser.site.helper.band;
 
+import de.loki.metallum.core.util.MetallumUtil;
+import de.loki.metallum.entity.Band;
+import de.loki.metallum.entity.Member;
+import org.jsoup.Jsoup;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jsoup.Jsoup;
-
-import de.loki.metallum.core.util.MetallumUtil;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.entity.Member;
-
 public class MemberParser {
 	private enum MemberCategory {
 		LAST_KNOWN("Last known lineup"), PAST("Past members"), CURRENT("current lineup"), LIVE("Live musicians");
-		private final String[]	asString;
+		private final String[] asString;
 
-		private MemberCategory(final String... asString) {
+		MemberCategory(final String... asString) {
 			this.asString = asString;
 		}
 
@@ -32,10 +31,10 @@ public class MemberParser {
 
 	}
 
-	private final Map<Member, String>	currentLineupList	= new HashMap<Member, String>();
-	private final Map<Member, String>	pastLineupList		= new HashMap<Member, String>();
-	private final Map<Member, String>	liveLineupList		= new HashMap<Member, String>();
-	private final Map<Member, String>	lastKnownLineupList	= new HashMap<Member, String>();
+	private final Map<Member, String> currentLineupList   = new HashMap<Member, String>();
+	private final Map<Member, String> pastLineupList      = new HashMap<Member, String>();
+	private final Map<Member, String> liveLineupList      = new HashMap<Member, String>();
+	private final Map<Member, String> lastKnownLineupList = new HashMap<Member, String>();
 
 	public final void parse(final String html) {
 		final List<Member> members = new ArrayList<Member>();

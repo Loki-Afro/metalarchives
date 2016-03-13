@@ -1,10 +1,5 @@
 package de.loki.metallum.search.query;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.SortedMap;
-
 import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.core.parser.search.TrackSearchParser;
 import de.loki.metallum.core.util.net.MetallumURL;
@@ -13,24 +8,27 @@ import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.AbstractSearchQuery;
 import de.loki.metallum.search.SearchRelevance;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedMap;
+
 /**
  * Represents the advanced search for tracks. This class is to assemble the Query we are using to
  * get the interesting content
- * 
- * @see http://www.metal-archives.com/search/advanced/?search -> Click Tap "Search songs"
- * 
- *      All methods should have very similar names to the fields at this site
- *      "Song title, exact Match?" -> setSongTitle(String titleName, boolean exactMatch)
- * 
+ *
  * @author Zarathustra
- * 
+ * @see http://www.metal-archives.com/search/advanced/?search -> Click Tap "Search songs"
+ * <p/>
+ * All methods should have very similar names to the fields at this site
+ * "Song title, exact Match?" -> setSongTitle(String titleName, boolean exactMatch)
  */
 public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 
-	private boolean					exactTitleNameMatch		= false;
-	private boolean					exactBandNameMatch		= false;
-	private boolean					exactReleaseNameMatch	= false;
-	private final List<DiscType>	discTypes				= new ArrayList<DiscType>();
+	private       boolean        exactTitleNameMatch   = false;
+	private       boolean        exactBandNameMatch    = false;
+	private       boolean        exactReleaseNameMatch = false;
+	private final List<DiscType> discTypes             = new ArrayList<DiscType>();
 
 	public TrackSearchQuery() {
 		super(new Track());
@@ -52,10 +50,10 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 
 	/**
 	 * To set the album/demo/EP, what ever name
-	 * 
+	 *
 	 * @param releaseName the name where the track could be found
-	 * @param exactMatch if the track's album/demo/EP what ever we are searching for equals the
-	 *            releaseName
+	 * @param exactMatch  if the track's album/demo/EP what ever we are searching for equals the
+	 *                    releaseName
 	 */
 	public void setReleaseTitle(final String releaseName, final boolean exactMatch) {
 		this.searchObject.getDiscOfThisTrack().setName(releaseName);
@@ -64,7 +62,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
 
 	/**
 	 * Settes the lyrics of the track we are searching for
-	 * 
+	 *
 	 * @param lyrics you do not need to know the full lyrics, I think its enough to know some words
 	 */
 	public void setLyrics(final String lyrics) {

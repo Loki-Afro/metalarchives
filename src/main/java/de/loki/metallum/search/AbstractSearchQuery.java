@@ -1,15 +1,15 @@
 package de.loki.metallum.search;
 
-import java.util.List;
-import java.util.SortedMap;
-
 import de.loki.metallum.MetallumException;
 import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.entity.AbstractEntity;
 
+import java.util.List;
+import java.util.SortedMap;
+
 public abstract class AbstractSearchQuery<E extends AbstractEntity> {
-	protected E			searchObject;
-	protected boolean	isAValidQuery	= false;
+	protected E searchObject;
+	protected boolean isAValidQuery = false;
 
 	public AbstractSearchQuery(final E inputGeneric) {
 		this.searchObject = inputGeneric;

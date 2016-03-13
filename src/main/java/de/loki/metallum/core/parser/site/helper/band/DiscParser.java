@@ -1,22 +1,21 @@
 package de.loki.metallum.core.parser.site.helper.band;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.enums.DiscType;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public final class DiscParser {
-	private final Document	doc;
+	private final Document doc;
 
 	public DiscParser(final long bandId) throws ExecutionException {
 		this.doc = Jsoup.parse(Downloader.getHTML(MetallumURL.assembleDiscographyURL(bandId)));

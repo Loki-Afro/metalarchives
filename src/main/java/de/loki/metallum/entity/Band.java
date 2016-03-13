@@ -1,39 +1,39 @@
 package de.loki.metallum.entity;
 
+import de.loki.metallum.enums.BandStatus;
+import de.loki.metallum.enums.Country;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.loki.metallum.enums.BandStatus;
-import de.loki.metallum.enums.Country;
-
 public class Band extends AbstractEntity {
 
-	private String						genre				= "";
-	private Country						country				= Country.ANY;
-	private String						province			= "";
-	private BandStatus					status				= null;
-	private String						lyricalThemes		= "";
-	private Label						label				= new Label(0);
-	private int							yearFormedIn		= 0;
-	private BufferedImage				photo				= null;
-	private BufferedImage				logo				= null;
-	private String						info				= "";
-	private List<Disc>					discs				= new ArrayList<Disc>();
-	private Map<Member, String>			currentMember		= new HashMap<Member, String>();
-	private Map<Member, String>			lastMember			= new HashMap<Member, String>();
-	private Map<Member, String>			liveMember			= new HashMap<Member, String>();
-	private Map<Member, String>			pastMember			= new HashMap<Member, String>();
-	private List<Link>					officalLinks		= new ArrayList<Link>();
-	private List<Link>					officalMerchLinks	= new ArrayList<Link>();
-	private List<Link>					unofficalLinks		= new ArrayList<Link>();
-	private List<Link>					tabulatureLinks		= new ArrayList<Link>();
-	private List<Link>					labelLinks			= new ArrayList<Link>();
-	private Map<Integer, List<Band>>	similarArtist		= new HashMap<Integer, List<Band>>();
-	private String						photoUrl			= null;
-	private String						logoUrl				= null;
+	private String                   genre             = "";
+	private Country                  country           = Country.ANY;
+	private String                   province          = "";
+	private BandStatus               status            = null;
+	private String                   lyricalThemes     = "";
+	private Label                    label             = new Label(0);
+	private int                      yearFormedIn      = 0;
+	private BufferedImage            photo             = null;
+	private BufferedImage            logo              = null;
+	private String                   info              = "";
+	private List<Disc>               discs             = new ArrayList<Disc>();
+	private Map<Member, String>      currentMember     = new HashMap<Member, String>();
+	private Map<Member, String>      lastMember        = new HashMap<Member, String>();
+	private Map<Member, String>      liveMember        = new HashMap<Member, String>();
+	private Map<Member, String>      pastMember        = new HashMap<Member, String>();
+	private List<Link>               officalLinks      = new ArrayList<Link>();
+	private List<Link>               officalMerchLinks = new ArrayList<Link>();
+	private List<Link>               unofficalLinks    = new ArrayList<Link>();
+	private List<Link>               tabulatureLinks   = new ArrayList<Link>();
+	private List<Link>               labelLinks        = new ArrayList<Link>();
+	private Map<Integer, List<Band>> similarArtist     = new HashMap<Integer, List<Band>>();
+	private String                   photoUrl          = null;
+	private String                   logoUrl           = null;
 
 	/**
 	 * DummyBand Constructor
@@ -177,7 +177,7 @@ public class Band extends AbstractEntity {
 
 	/**
 	 * The band photo is mostly a picture of the band members.
-	 * 
+	 *
 	 * @return the bandphoto as Image, could be null if there is none!
 	 */
 	public BufferedImage getPhoto() {
@@ -186,7 +186,7 @@ public class Band extends AbstractEntity {
 
 	/**
 	 * The Band logo is mostly the lettering of the band.
-	 * 
+	 *
 	 * @return the bandlogo as Image, could be null if there is none!
 	 */
 	public BufferedImage getLogo() {
@@ -200,7 +200,7 @@ public class Band extends AbstractEntity {
 	/**
 	 * To add a Link to the Band.
 	 * If there is no suitable Category for the link, the link will not be added to any List.
-	 * 
+	 *
 	 * @param links doesen't matter what you put in for a Link as long as it has a category.
 	 */
 	public void addLinks(final Link... links) {
@@ -352,10 +352,7 @@ public class Band extends AbstractEntity {
 		if (this.id != other.id) {
 			return false;
 		}
-		if (!this.name.equals(other.name)) {
-			return false;
-		}
-		return true;
+		return this.name.equals(other.name);
 	}
 
 	public void setSimliarArtists(final Map<Integer, List<Band>> similarArtists) {
@@ -377,17 +374,11 @@ public class Band extends AbstractEntity {
 	}
 
 	public final boolean hasPhoto() {
-		if (this.photo != null) {
-			return true;
-		}
-		return false;
+		return this.photo != null;
 	}
 
 	public final boolean hasLogo() {
-		if (this.logo != null) {
-			return true;
-		}
-		return false;
+		return this.logo != null;
 	}
 
 	public final void setDiscs(final List<Disc> discList) {

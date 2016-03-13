@@ -2,12 +2,12 @@ package de.loki.metallum.entity;
 
 public abstract class AbstractEntity implements IEntity {
 
-	protected String				name;
-	protected long					id				= 0;
-	protected String				addedBy			= "";
-	protected String				modifiedBy		= "";
-	protected String				addedOn			= "";
-	protected String				lastModifiedOn	= "";
+	protected String name;
+	protected long   id             = 0;
+	protected String addedBy        = "";
+	protected String modifiedBy     = "";
+	protected String addedOn        = "";
+	protected String lastModifiedOn = "";
 
 	public AbstractEntity(final long id, final String name) {
 		this.id = id;

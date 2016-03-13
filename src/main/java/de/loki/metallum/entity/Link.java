@@ -3,9 +3,9 @@ package de.loki.metallum.entity;
 import de.loki.metallum.enums.LinkCategory;
 
 public class Link {
-	private String url = "";
+	private String       url      = "";
 	private LinkCategory category = LinkCategory.ANY;
-	private String name = "";
+	private String       name     = "";
 
 	public Link() {
 	}

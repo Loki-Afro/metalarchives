@@ -1,34 +1,34 @@
 package de.loki.metallum.entity;
 
+import de.loki.metallum.enums.Country;
+import de.loki.metallum.enums.LabelStatus;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.loki.metallum.enums.Country;
-import de.loki.metallum.enums.LabelStatus;
-
 public class Label extends AbstractEntity {
 
-	private String					specialisation	= "";
-	private Country					country			= Country.ANY;
-	private Label					parentLabel		= null;
-	private String					address			= "";
-	private String					phoneNumber		= "";
-	private LabelStatus				status			= LabelStatus.ANY;
-	private String					foundingDate	= "";
-	private List<Label>				subLabels		= new ArrayList<Label>();
-	private boolean					onlineShopping	= false;
-	private Link					websiteURL		= new Link();
-	private String					email			= "";
-	private List<Band>				currentRoser	= new ArrayList<Band>();
-	private Map<Band, List<Disc>>	releases		= new LinkedHashMap<Band, List<Disc>>();
-	private Map<Band, Integer>		pastRoster		= new LinkedHashMap<Band, Integer>();
-	private String					details			= "";
-	private List<Link>				links			= new ArrayList<Link>();
-	private BufferedImage			logo			= null;
-	private String					logoUrl			= null;
+	private String                specialisation = "";
+	private Country               country        = Country.ANY;
+	private Label                 parentLabel    = null;
+	private String                address        = "";
+	private String                phoneNumber    = "";
+	private LabelStatus           status         = LabelStatus.ANY;
+	private String                foundingDate   = "";
+	private List<Label>           subLabels      = new ArrayList<Label>();
+	private boolean               onlineShopping = false;
+	private Link                  websiteURL     = new Link();
+	private String                email          = "";
+	private List<Band>            currentRoser   = new ArrayList<Band>();
+	private Map<Band, List<Disc>> releases       = new LinkedHashMap<Band, List<Disc>>();
+	private Map<Band, Integer>    pastRoster     = new LinkedHashMap<Band, Integer>();
+	private String                details        = "";
+	private List<Link>            links          = new ArrayList<Link>();
+	private BufferedImage         logo           = null;
+	private String                logoUrl        = null;
 
 	public Label(final long id) {
 		super(id);
@@ -227,10 +227,7 @@ public class Label extends AbstractEntity {
 	}
 
 	public boolean hasLogo() {
-		if (this.logo != null) {
-			return true;
-		}
-		return false;
+		return this.logo != null;
 	}
 
 	public final void setLogoUrl(final String logoUrl) {

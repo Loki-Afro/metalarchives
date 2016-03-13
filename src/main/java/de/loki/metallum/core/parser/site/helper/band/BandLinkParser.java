@@ -1,15 +1,15 @@
 package de.loki.metallum.core.parser.site.helper.band;
 
-import java.util.concurrent.ExecutionException;
-
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.enums.LinkCategory;
 
+import java.util.concurrent.ExecutionException;
+
 public class BandLinkParser {
 
-	private final String	html;
+	private final String html;
 
 	public BandLinkParser(final long bandId) throws ExecutionException {
 		this.html = Downloader.getHTML(MetallumURL.assembleBandLinkURL(bandId));

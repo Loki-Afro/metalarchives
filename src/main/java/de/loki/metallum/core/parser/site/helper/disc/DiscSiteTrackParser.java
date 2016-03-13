@@ -1,27 +1,26 @@
 package de.loki.metallum.core.parser.site.helper.disc;
 
+import de.loki.metallum.core.util.net.MetallumURL;
+import de.loki.metallum.core.util.net.downloader.Downloader;
+import de.loki.metallum.entity.Track;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import de.loki.metallum.core.util.net.MetallumURL;
-import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.Track;
-import org.slf4j.LoggerFactory;
-
 public final class DiscSiteTrackParser {
-	private static Logger	logger	= LoggerFactory.getLogger(DiscSiteTrackParser.class);
-	private CountDownLatch	doneSignal;
-	private final Document	doc;
-	private final boolean	isSplit;
-	private final boolean	loadLyrics;
+	private static Logger logger = LoggerFactory.getLogger(DiscSiteTrackParser.class);
+	private       CountDownLatch doneSignal;
+	private final Document       doc;
+	private final boolean        isSplit;
+	private final boolean        loadLyrics;
 
 	public DiscSiteTrackParser(final Document doc, final boolean isSplit, final boolean loadLyrics) {
 		this.doc = doc;
@@ -36,7 +35,7 @@ public final class DiscSiteTrackParser {
 
 	/**
 	 * if doneSignal is not initialized this method will initialize it with the given count of threads,
-	 * 
+	 *
 	 * @param trackCount count of tracks to parse
 	 */
 	private void lazyInitLache(final int trackCount) {
@@ -52,8 +51,8 @@ public final class DiscSiteTrackParser {
 
 	private final class DownloadLyricsRunnable implements Runnable {
 
-		private final Track	trackToModify;
-		private final long	trackId;
+		private final Track trackToModify;
+		private final long  trackId;
 
 		public DownloadLyricsRunnable(final Track trackToModify, final long trackId) {
 			this.trackToModify = trackToModify;
@@ -147,9 +146,9 @@ public final class DiscSiteTrackParser {
 	private String parseTrackId(final Element row) {
 //		<a name="5767" class="anchor"> </a>
 		String idStr = row.select("a[name~=\\d.*]").first().attr("name");
-        // if it is a tape with 2 sides, like side A, A is attached to the id of the track
-        // searching for lyrics however is still possible without the attached A
-        return idStr;
+		// if it is a tape with 2 sides, like side A, A is attached to the id of the track
+		// searching for lyrics however is still possible without the attached A
+		return idStr;
 	}
 
 	private String parseTrackTitle(final Element row, final boolean isSplit) {

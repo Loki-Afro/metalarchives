@@ -1,12 +1,5 @@
 package de.loki.metallum.core.parser.site;
 
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import org.jsoup.Jsoup;
-
 import de.loki.metallum.core.parser.site.helper.LinkParser;
 import de.loki.metallum.core.parser.site.helper.member.BandParser;
 import de.loki.metallum.core.util.MetallumUtil;
@@ -17,10 +10,16 @@ import de.loki.metallum.entity.Disc;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.enums.Country;
+import org.jsoup.Jsoup;
+
+import java.awt.image.BufferedImage;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class MemberSiteParser extends AbstractSiteParser<Member> {
 
-	private final boolean	loadReadMore;
+	private final boolean loadReadMore;
 
 	public MemberSiteParser(final Member member, final boolean loadImages, final boolean loadMemberLinks, final boolean loadReadMore) throws ExecutionException {
 		super(member, loadImages, loadMemberLinks);

@@ -1,23 +1,21 @@
 package de.loki.metallum.core.parser.search;
 
+import de.loki.metallum.entity.Band;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import de.loki.metallum.entity.Band;
-
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class BandSearchParser extends AbstractSearchParser<Band> {
 
-	private boolean	isAbleToParseProvince		= false;
-	private boolean	isAbleToParseLabel			= false;
-	private boolean	isAbleToParseYear			= false;
-	private boolean	isAbleToParseLyricalThemes	= false;
-	private boolean	isAbleToParseCountry		= false;
+	private boolean isAbleToParseProvince      = false;
+	private boolean isAbleToParseLabel         = false;
+	private boolean isAbleToParseYear          = false;
+	private boolean isAbleToParseLyricalThemes = false;
+	private boolean isAbleToParseCountry       = false;
 
 	public void setIsAbleToParseCountry(final boolean isAbleToParse) {
 		this.isAbleToParseCountry = isAbleToParse;

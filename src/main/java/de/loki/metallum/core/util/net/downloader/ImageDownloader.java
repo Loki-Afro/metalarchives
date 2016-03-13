@@ -1,15 +1,13 @@
 package de.loki.metallum.core.util.net.downloader;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
-
+import de.loki.metallum.core.util.net.downloader.interfaces.IImageDownloader;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 
-import de.loki.metallum.core.util.net.downloader.interfaces.IImageDownloader;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public final class ImageDownloader extends AbstractDownloader implements IImageDownloader {
 

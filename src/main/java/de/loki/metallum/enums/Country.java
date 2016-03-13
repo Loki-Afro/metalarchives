@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 /**
  * As stupid as it seems to be but metal-archives seems not to use a common way to store the Country?!
  * So you have to use this enum.
- * 
+ *
  * @author Zarathustra
- * 
  */
 public enum Country {
 
@@ -35,10 +34,10 @@ public enum Country {
 			"U.S. Minor Outlying Islands"), UGANDA("UG", "Uganda"), UKRAINE("UA", "Ukraine"), UNITED_ARAB_EMIRATES("AE", "United Arab Emirates"), UNITED_KINGDOM("GB", "United Kingdom"), UNITED_STATES("US", "United States"), URUGUAY("UY", "Uruguay"), UZBEKISTAN("UZ", "Uzbekistan"), VANUATU("VU", "Vanuatu"), VATICAN_CITY("VA", "Vatican City"), VENEZUELA(
 			"VE", "Venezuela"), VIETNAM("VN", "Vietnam"), VIRGIN_ISLANDS("VI", "Virgin Islands"), WALLIS_AND_FUTUNA_ISLANDS("WF", "Wallis and Futuna Islands"), WESTERN_SAHARA("EH", "Western Sahara"), YEMEN("YE", "Yemen"), ZAMBIA("ZM", "Zambia"), ZIMBABWE("ZW", "Zimbabwe");
 
-	private final String	fullName;
-	private final String	shortForm;
+	private final String fullName;
+	private final String shortForm;
 
-	private static Logger	logger	= LoggerFactory.getLogger(Country.class);
+	private static Logger logger = LoggerFactory.getLogger(Country.class);
 
 	Country(final String shortForm, final String fullName) {
 		this.shortForm = shortForm;

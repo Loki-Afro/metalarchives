@@ -1,33 +1,28 @@
 package de.loki.metallum.core.parser.site;
 
-import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.loki.metallum.core.parser.site.helper.ReviewParser;
 import de.loki.metallum.core.parser.site.helper.disc.DiscSiteMemberParser;
 import de.loki.metallum.core.parser.site.helper.disc.DiscSiteTrackParser;
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.core.util.net.MetallumURL;
 import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.entity.Disc;
-import de.loki.metallum.entity.Label;
-import de.loki.metallum.entity.Review;
-import de.loki.metallum.entity.Track;
+import de.loki.metallum.entity.*;
 import de.loki.metallum.enums.DiscType;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
-	private boolean			loadReviews	= false;
-	private boolean			loadLyrics	= false;
-	private static Logger logger = LoggerFactory.getLogger(DiscSiteParser.class);
+	private        boolean loadReviews = false;
+	private        boolean loadLyrics  = false;
+	private static Logger  logger      = LoggerFactory.getLogger(DiscSiteParser.class);
 
 	/**
 	 * Creates a new DiscParser, just call parse

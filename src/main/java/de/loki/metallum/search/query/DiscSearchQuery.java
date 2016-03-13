@@ -1,9 +1,5 @@
 package de.loki.metallum.search.query;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-
 import de.loki.metallum.core.parser.search.AbstractSearchParser;
 import de.loki.metallum.core.parser.search.DiscSearchParser;
 import de.loki.metallum.core.util.net.MetallumURL;
@@ -14,16 +10,18 @@ import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.AbstractSearchQuery;
 import de.loki.metallum.search.SearchRelevance;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedMap;
+
 /**
  * This class represents the advanced album search
- * 
- * @see http://www.metal-archives.com/search/advanced/ -> Tab Search Albums
- * 
- *      All methods should have very similar names to the fields at this site
- *      "Release title, exact Match?" -> setReleaseTitle(String titleName, boolean exactMatch)
- * 
+ *
  * @author Zarathustra
- * 
+ * @see http://www.metal-archives.com/search/advanced/ -> Tab Search Albums
+ * <p/>
+ * All methods should have very similar names to the fields at this site
+ * "Release title, exact Match?" -> setReleaseTitle(String titleName, boolean exactMatch)
  */
 /*
  * 
@@ -31,15 +29,15 @@ import de.loki.metallum.search.SearchRelevance;
  */
 public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
-	private boolean					exactDiscNameMatch	= false;
-	private boolean					indieLabel			= false;
-	private boolean					exactBandName		= false;
-	private int						fromYear			= 0;
-	private int						toMonth				= 0;
-	private int						toYear				= 0;
-	private int						fromMonth			= 0;
-	private final List<Country>		countrys			= new ArrayList<Country>();
-	private final List<DiscType>	discTypes			= new ArrayList<DiscType>();
+	private       boolean        exactDiscNameMatch = false;
+	private       boolean        indieLabel         = false;
+	private       boolean        exactBandName      = false;
+	private       int            fromYear           = 0;
+	private       int            toMonth            = 0;
+	private       int            toYear             = 0;
+	private       int            fromMonth          = 0;
+	private final List<Country>  countrys           = new ArrayList<Country>();
+	private final List<DiscType> discTypes          = new ArrayList<DiscType>();
 
 	public DiscSearchQuery() {
 		super(new Disc());
@@ -51,8 +49,8 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	/**
 	 * Sets the name of the band from the release we are searching for.
-	 * 
-	 * @param bandName the band that made that release we are searching for!
+	 *
+	 * @param bandName   the band that made that release we are searching for!
 	 * @param exactMatch if it equals the band we are searching for
 	 */
 	public void setBandName(final String bandName, final boolean exactMatch) {
@@ -62,9 +60,9 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	/**
 	 * Sets the name releaseTitle we are searching for
-	 * 
+	 *
 	 * @param releaseTitle the name of the release we are searching for
-	 * @param exactMatch if the name of the release we are searching for equals the releaseTitle
+	 * @param exactMatch   if the name of the release we are searching for equals the releaseTitle
 	 */
 	public void setReleaseName(final String releaseTitle, final boolean exactMatch) {
 		this.searchObject.setName(releaseTitle);
@@ -93,7 +91,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously
-	 * 
+	 *
 	 * @param country to add to the query
 	 */
 	public boolean setCountry(final String country) {
@@ -108,7 +106,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	/**
 	 * metal-archives allows us now to search for more as one country simultaneously
-	 * 
+	 *
 	 * @param countrys to add to the query
 	 */
 	public void setCountrys(final Country... countrys) {
@@ -120,9 +118,8 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 	}
 
 	/**
-	 * 
 	 * @param labelName the labelname of the disc we are searching for
-	 * @param indie actually I don't know what makes a label to a indie label
+	 * @param indie     actually I don't know what makes a label to a indie label
 	 */
 	public void setLabel(final String labelName, final boolean indie) {
 		this.searchObject.getLabel().setName(labelName);
@@ -139,7 +136,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
 
 	/**
 	 * Addes the DiscTypes we are searching for
-	 * 
+	 *
 	 * @param discTypes the types of release we are searching for
 	 */
 	public void setReleaseTypes(final DiscType... discTypes) {

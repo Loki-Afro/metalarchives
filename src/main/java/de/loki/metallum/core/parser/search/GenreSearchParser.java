@@ -1,17 +1,15 @@
 package de.loki.metallum.core.parser.search;
 
+import de.loki.metallum.entity.Band;
+import de.loki.metallum.enums.Country;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
 
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.enums.Country;
-
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class GenreSearchParser extends AbstractSearchParser<Band> {
 

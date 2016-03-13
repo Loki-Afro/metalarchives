@@ -1,36 +1,36 @@
 package de.loki.metallum.entity;
 
+import de.loki.metallum.enums.DiscType;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.loki.metallum.enums.DiscType;
-
 public class Disc extends AbstractEntity {
 
-	private DiscType			type;
-	private List<Track>			trackList	= new ArrayList<Track>();
-	private List<Review>		reviewList	= new ArrayList<Review>();
-	private String				releaseDate;
-	private Band				band		= new Band();
-	private Label				label		= new Label();
-	private BufferedImage		artwork		= null;
-	private String				details		= "";
-	private String				artworkURL	= null;
+	private DiscType type;
+	private List<Track>  trackList  = new ArrayList<Track>();
+	private List<Review> reviewList = new ArrayList<Review>();
+	private String releaseDate;
+	private Band          band       = new Band();
+	private Label         label      = new Label();
+	private BufferedImage artwork    = null;
+	private String        details    = "";
+	private String        artworkURL = null;
 	/**
 	 * Only filled if DiscType.isSplit(type) is true
 	 * Does only contain BandName and Id.
 	 */
-	private List<Band>			splitBands	= new ArrayList<Band>();
+	private List<Band>    splitBands = new ArrayList<Band>();
 
-	private Map<Member, String>	lineup		= new HashMap<Member, String>();
-	private Map<Member, String>	miscMember	= new HashMap<Member, String>();
-	private Map<Member, String>	guestMember	= new HashMap<Member, String>();
+	private Map<Member, String> lineup      = new HashMap<Member, String>();
+	private Map<Member, String> miscMember  = new HashMap<Member, String>();
+	private Map<Member, String> guestMember = new HashMap<Member, String>();
 
-	private int					discCount	= 1;
-	private boolean				hasReviews	= false;
+	private int     discCount  = 1;
+	private boolean hasReviews = false;
 
 	public Disc(final long id) {
 		super(id);
@@ -226,10 +226,7 @@ public class Disc extends AbstractEntity {
 	}
 
 	public final boolean hasArtwork() {
-		if (this.artwork != null) {
-			return true;
-		}
-		return false;
+		return this.artwork != null;
 	}
 
 	public void setReviews(final List<Review> reviewList) {
@@ -264,7 +261,7 @@ public class Disc extends AbstractEntity {
 	/**
 	 * This Method is for convenience only.
 	 * It calls {@link Disc#getLineup()}, {@link Disc#getMiscMember()} and {@link Disc#getGuestMember()} and puts them all together in one map.
-	 * 
+	 *
 	 * @return a map with all Member, where the value the role at the specific album;
 	 */
 	public Map<Member, String> getMember() {

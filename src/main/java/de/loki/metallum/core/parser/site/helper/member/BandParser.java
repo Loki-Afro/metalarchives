@@ -1,25 +1,24 @@
 package de.loki.metallum.core.parser.site.helper.member;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-
 import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BandParser {
 
-	private static Logger	logger	= LoggerFactory.getLogger(BandParser.class);
+	private static Logger logger = LoggerFactory.getLogger(BandParser.class);
 
 	public enum Mode {
 		ACTIVE, GUEST, PAST, MISC, LIVE
 	}
 
 	public Map<Band, Map<Disc, String>> parse(final String html, final Mode mode) {
-		String htmlPart = null;
+		String htmlPart;
 		switch (mode) {
 			case ACTIVE:
 				htmlPart = html.substring(html.indexOf("<div id=\"artist_tab_active") + 25);

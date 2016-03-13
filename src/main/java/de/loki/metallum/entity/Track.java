@@ -4,21 +4,21 @@ import de.loki.metallum.enums.DiscType;
 
 public class Track extends AbstractEntity {
 
-	private Disc	discFromTrack	= new Disc();
-	private boolean	instrumental	= false;
+	private Disc    discFromTrack = new Disc();
+	private boolean instrumental  = false;
 
-	private String	lyrics			= "";
-	private String	playTime;
-	private int		trackNumber;
-	private String	splitBandName	= "";
+	private String lyrics = "";
+	private String playTime;
+	private int    trackNumber;
+	private String splitBandName = "";
 	/**
 	 * 1 by default.
 	 */
-	private int		discNumber		= 1;
+	private int    discNumber    = 1;
 
 	/**
 	 * the Track will always have the id from the Disc!
-	 * 
+	 *
 	 * @param id
 	 */
 	public Track(final long id) {

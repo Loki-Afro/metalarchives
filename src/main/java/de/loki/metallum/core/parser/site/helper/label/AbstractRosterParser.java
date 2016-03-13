@@ -1,30 +1,29 @@
 package de.loki.metallum.core.parser.site.helper.label;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-
 import de.loki.metallum.core.parser.IJSONParser;
 import de.loki.metallum.core.parser.site.LabelSiteParser.PARSE_STYLE;
 import de.loki.metallum.core.util.net.downloader.Downloader;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.enums.Country;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 
-	private final long			labelId;
-	private final byte			numberPerPage;
-	private final boolean		alphabetical;
-	private final PARSE_STYLE	sortType;
+	private final long        labelId;
+	private final byte        numberPerPage;
+	private final boolean     alphabetical;
+	private final PARSE_STYLE sortType;
 
-	private final Band			dummyBand	= new Band(0, "Various Artists");
-	protected final Map<K, V>	mainMap		= new HashMap<K, V>();
+	private final   Band      dummyBand = new Band(0, "Various Artists");
+	protected final Map<K, V> mainMap   = new HashMap<K, V>();
 
 	public AbstractRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE sortType) {
 		this.labelId = labelId;
@@ -48,8 +47,7 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 
 	/**
 	 * parses a JSon Array and fills the {@link AbstractRosterParser#mainMap}
-	 * 
-	 * @param jsonArray
+	 *
 	 * @throws JSONException
 	 */
 	protected abstract void parseSpecific(JSONArray jsonArray) throws JSONException;
@@ -61,7 +59,6 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	}
 
 	/**
-	 * 
 	 * @param hit the hit where the Disc information occurs
 	 * @return A Disc with name and Id
 	 */
@@ -72,7 +69,6 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	}
 
 	/**
-	 * 
 	 * @param hit the hit where the Band information occurs
 	 * @return A Band with name and Id
 	 */

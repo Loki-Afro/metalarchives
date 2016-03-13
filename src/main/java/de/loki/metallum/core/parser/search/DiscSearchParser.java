@@ -1,31 +1,29 @@
 package de.loki.metallum.core.parser.search;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.jsoup.Jsoup;
-
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.entity.Label;
 import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.SearchRelevance;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.jsoup.Jsoup;
 
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
-	private boolean	isAbleToParseDate		= false;
-	private boolean	isAbleToParseLabel		= false;
-	private boolean	isAbleToParseGenre		= false;
+	private boolean isAbleToParseDate  = false;
+	private boolean isAbleToParseLabel = false;
+	private boolean isAbleToParseGenre = false;
 
-	private boolean	possibleSplitDisc		= false;
-	private boolean	isAbleToParseDiscType;
-	private boolean	isAbleToParseCountry	= false;
-	private boolean	isAbleToParseProvince;
+	private boolean possibleSplitDisc = false;
+	private boolean isAbleToParseDiscType;
+	private boolean isAbleToParseCountry = false;
+	private boolean isAbleToParseProvince;
 
 	@Override
 	protected Disc useSpecificSearchParser(final JSONArray hit) throws JSONException {
@@ -56,11 +54,11 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	/**
 	 * Here we do have the method for the optional fields. Optional Fields are fiels which do only
 	 * apper under given circumstances.
-	 * 
+	 * <p/>
 	 * So it gives the disc optional values, Genre, ReleaseDate and Label
-	 * 
+	 *
 	 * @param disc
-	 * @param hit the JSONArray with contains the potential data
+	 * @param hit  the JSONArray with contains the potential data
 	 * @return the disc with optional values
 	 * @throws JSONException will be thrown if a Field is not at the right place
 	 */
@@ -77,7 +75,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the Band province from the JSon hit.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return if this disc is a split, this method will return an empty String.
 	 */
@@ -90,7 +88,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the Country from the JSon hit.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return the parsed Country.
 	 */
@@ -104,7 +102,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the Disc name from the JSon hit.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return the parsed Disc name.
 	 */
@@ -114,7 +112,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the Band name from the JSon hit.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return the parsed Band name.
 	 */
@@ -129,7 +127,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 	/**
 	 * Parse the Country from the JSon hit.<br>
 	 * If this Disc is a Split Disc.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return The parsed genre, if this Disc is a Split Disc this method returns an empty String.
 	 */
@@ -143,19 +141,18 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the date from the JSon hit.<br>
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return The parsed date.
 	 */
 	private String parseDate(final String hit) {
 		// sampleString: "November 4th, 2006 <!-- 2006-11-04 -->"
-		String date = hit.replaceAll(".*?<!--\\s", "").replaceAll("\\s-->", "");
-		return date;
+		return hit.replaceAll(".*?<!--\\s", "").replaceAll("\\s-->", "");
 	}
 
 	/**
 	 * Parse the Label from the JSon hit.<br>
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return The parsed label with id 0.
 	 */
@@ -165,7 +162,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 
 	/**
 	 * Parse the Disc id from the JSon hit.<br>
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return The parsed Disc id.
 	 */
@@ -175,10 +172,6 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
 		return Long.parseLong(id.replaceAll(".*?/", ""));
 	}
 
-	/**
-	 * 
-	 * @param isAbleToParseDate
-	 */
 	public void setIsAbleToParseDate(final boolean isAbleToParseDate) {
 		this.isAbleToParseDate = isAbleToParseDate;
 	}

@@ -1,21 +1,20 @@
 package de.loki.metallum.core.parser.site.helper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
+import de.loki.metallum.core.util.MetallumUtil;
+import de.loki.metallum.core.util.net.MetallumURL;
+import de.loki.metallum.core.util.net.downloader.Downloader;
+import de.loki.metallum.entity.Review;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.loki.metallum.core.util.MetallumUtil;
-import de.loki.metallum.core.util.net.MetallumURL;
-import de.loki.metallum.core.util.net.downloader.Downloader;
-import de.loki.metallum.entity.Review;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public final class ReviewParser {
-	private final Document	doc;
+	private final Document doc;
 
 	public ReviewParser(final long discId) throws ExecutionException {
 		String html = Downloader.getHTML(MetallumURL.assembleReviewsURL(discId));

@@ -1,27 +1,25 @@
 package de.loki.metallum.core.parser.search;
 
+import de.loki.metallum.core.parser.IJSONParser;
+import de.loki.metallum.entity.AbstractEntity;
+import de.loki.metallum.search.SearchRelevance;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import de.loki.metallum.core.parser.IJSONParser;
-import de.loki.metallum.entity.AbstractEntity;
-import de.loki.metallum.search.SearchRelevance;
-
 /**
  * Parses the data which was gained by the search
- * 
+ *
  * @author Zarathustra
- * 
  */
 public abstract class AbstractSearchParser<T extends AbstractEntity> implements IJSONParser {
 
-	private long	totalSearchResults	= 0;
+	private long totalSearchResults = 0;
 
 	public final long getTotalSearchResults() {
 		return this.totalSearchResults;
@@ -60,10 +58,10 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
 	 * The search relevance is how straight the result matches the SearchQuery<br>
 	 * If there is a search relevance, you will get it, otherwise 0<br>
 	 * <br>
-	 * 
+	 * <p/>
 	 * <b>If you don't override this method the String from hits at position 0 will be used.</b>
-	 * 
-	 * @param htis the JSON hits
+	 *
+	 * @param hits the JSON hits
 	 * @return 0 or the search relevance.
 	 * @throws JSONException
 	 */
@@ -75,7 +73,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
 
 	/**
 	 * Parse the id from the JSon hit.
-	 * 
+	 *
 	 * @param hit the JSon hit.
 	 * @return the parsed id.
 	 */
