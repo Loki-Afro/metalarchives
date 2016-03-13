@@ -89,6 +89,7 @@ public class DiscSearchServiceTest {
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setReleaseTypes(DiscType.EP);
 		query.setReleaseName("Hordanes Land", false);
+        service.setloadLyrics(true);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Enslaved", discResult.getBandName());
 		Assert.assertEquals("Hordanes Land", discResult.getName());
@@ -101,6 +102,7 @@ public class DiscSearchServiceTest {
 		Assert.assertFalse(discResult.getAddedOn().isEmpty());
 		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
 		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
+        Assert.assertFalse(discResult.getTrackList().get(1).getLyrics().isEmpty());
 	}
 
 	@Test
@@ -240,7 +242,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Burzum", discResult.getName());
 		Assert.assertEquals(2, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.DEMO, discResult.getType());
-		Assert.assertEquals("Deathlike Silence", discResult.getLabel().getName());
+		Assert.assertEquals("Independent", discResult.getLabel().getName());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
 		Assert.assertFalse(discResult.getAddedOn().isEmpty());

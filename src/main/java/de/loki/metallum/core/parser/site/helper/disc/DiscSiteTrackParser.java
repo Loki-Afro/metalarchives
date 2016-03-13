@@ -105,7 +105,8 @@ public final class DiscSiteTrackParser {
 		Elements rows = tabeElement.select("tr[class~=(even|odd)]");
 		List<Track> trackList = new ArrayList<Track>();
 		for (Element row : rows) {
-			long trackId = parseTrackId(row);
+			final String trackIdStr = parseTrackId(row);
+			final long trackId = Long.parseLong(trackIdStr.replaceAll("[\\D]", ""));
 			Track track = new Track(trackId);
 			track.setName(parseTrackTitle(row, this.isSplit));
 			track.setPlayTime(parsePlayTime(row));
@@ -122,7 +123,7 @@ public final class DiscSiteTrackParser {
 				track.setBandName(parseBandName(row));
 			}
 			track.setInstrumental(parseIsInstrumental(row));
-			if (this.loadLyrics && row.getElementById("lyricsButton" + trackId) != null) {
+			if (this.loadLyrics && row.getElementById("lyricsButton" + trackIdStr) != null) {
 				lazyInitLache(rows.size());
 				parseLyrics2(row, trackId, track);
 			} else {
@@ -146,10 +147,12 @@ public final class DiscSiteTrackParser {
 		}
 	}
 
-	private long parseTrackId(final Element row) {
+	private String parseTrackId(final Element row) {
 //		<a name="5767" class="anchor"> </a>
 		String idStr = row.select("a[name~=\\d.*]").first().attr("name");
-		return Long.parseLong(idStr);
+        // if it is a tape with 2 sides, like side A, A is attached to the id of the track
+        // searching for lyrics however is still possible without the attached A
+        return idStr;
 	}
 
 	private String parseTrackTitle(final Element row, final boolean isSplit) {
