@@ -37,6 +37,7 @@ public class Downloader {
 			return THREAD_POOL_EXECUTOR.submit(downloader).get();
 		} catch (final InterruptedException e) {
 			LOGGER.error("Failed to download: " + request, e);
+			Thread.currentThread().interrupt();
 		}
 		return null;
 	}
