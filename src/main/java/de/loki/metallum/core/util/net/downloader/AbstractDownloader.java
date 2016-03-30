@@ -2,19 +2,11 @@ package de.loki.metallum.core.util.net.downloader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClient;
-import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,15 +24,15 @@ abstract class AbstractDownloader {
 	private static final String USER_AGENT_PROPERTY = "de.loki.metallum.useragent";
 
 	static {
-		final CacheConfig cacheConfig = new CacheConfig();
-		cacheConfig.setMaxCacheEntries(1000);
-		cacheConfig.setHeuristicCachingEnabled(true);
+		CacheConfig cacheConfig = CacheConfig.custom()
+				.setMaxCacheEntries(1000)
+				.setHeuristicCachingEnabled(true)
+				.build();
 
-		final HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		final SchemeRegistry schemeRegistry = new SchemeRegistry();
-		schemeRegistry.register(new Scheme(PROTOCOL, PORT, PlainSocketFactory.getSocketFactory()));
-		HTTP_CLIENT = new CachingHttpClient(new DefaultHttpClient(new PoolingClientConnectionManager(schemeRegistry), params), cacheConfig);
+		HTTP_CLIENT = CachingHttpClientBuilder.create()
+				.setCacheConfig(cacheConfig)
+				.setConnectionManager(new PoolingHttpClientConnectionManager())
+				.build();
 	}
 
 	AbstractDownloader(final String urlString) {

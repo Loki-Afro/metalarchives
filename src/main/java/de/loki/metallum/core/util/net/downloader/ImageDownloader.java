@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-public final class ImageDownloader extends AbstractDownloader implements IImageDownloader {
+final class ImageDownloader extends AbstractDownloader implements IImageDownloader {
 
-	protected ImageDownloader(String urlString) {
+	ImageDownloader(final String urlString) {
 		super(urlString);
 	}
 
@@ -19,10 +19,15 @@ public final class ImageDownloader extends AbstractDownloader implements IImageD
 	public final BufferedImage call() throws Exception {
 		final HttpEntity entity = getDownloadEntity();
 		final byte[] imageInByte = EntityUtils.toByteArray(entity);
-		final InputStream in = new ByteArrayInputStream(imageInByte);
-		final BufferedImage image = ImageIO.read(in);
-		in.close();
-		return image;
+		InputStream in = null;
+		try {
+			in = new ByteArrayInputStream(imageInByte);
+			return ImageIO.read(in);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+		}
 	}
 
 }
