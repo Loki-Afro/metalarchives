@@ -50,7 +50,7 @@ public final class SearchRelevance implements Comparable<SearchRelevance> {
 			return 1;
 		} else if (this.doubleIntern > o.doubleIntern) {
 			return -1;
-		} else if (this.doubleIntern == o.doubleIntern) {
+		} else if (Double.doubleToLongBits(this.doubleIntern) == Double.doubleToLongBits(o.doubleIntern)) {
 			return 0;
 		}
 		return 0;
