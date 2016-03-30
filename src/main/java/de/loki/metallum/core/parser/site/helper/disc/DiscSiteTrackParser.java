@@ -94,7 +94,6 @@ public final class DiscSiteTrackParser {
 
 	public Track[] parse() {
 		Element tabeElement = this.doc.select("table[class$=table_lyrics]").first();
-//		final int discCount = tabeElement.select("td[colspan=4]").size();
 		int counter = 1;
 		boolean foundFirstFirstTrack = false;
 		Elements rows = tabeElement.select("tr[class~=(even|odd)]");
@@ -135,9 +134,10 @@ public final class DiscSiteTrackParser {
 		if (this.loadLyrics && this.doneSignal != null) {
 			try {
 //				as fallback we wait here 6 seconds for each track if that fails smth went wrong
-				this.doneSignal.await(trackCount * 6, TimeUnit.SECONDS);
+				this.doneSignal.await((long) trackCount * 6, TimeUnit.SECONDS);
 			} catch (final InterruptedException e) {
 				LOGGER.error("Please, please report this error: Thread Lock failed while downloading lyrics", e);
+				Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public final class DiscSiteTrackParser {
 	private String parseTrackTitle(final Element row, final boolean isSplit) {
 		String title = row.getElementsByTag("td").get(1).text();
 		if (isSplit) {
-//			because the result is smth like: BnadName - TitleName
+//			because the result is smth. like: BandName - TitleName
 			title = title.substring(title.indexOf(" - ") + 3, title.length());
 			return title;
 		} else {
