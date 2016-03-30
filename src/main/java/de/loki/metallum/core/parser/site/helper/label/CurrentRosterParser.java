@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 
-	public CurrentRosterParser(long labelId, byte numberPerPage, boolean alphabetical, LabelSiteParser.PARSE_STYLE sortType) {
+	public CurrentRosterParser(final long labelId,final byte numberPerPage,final boolean alphabetical,final LabelSiteParser.PARSE_STYLE sortType) {
 		super(labelId, numberPerPage, alphabetical, sortType);
 	}
 
@@ -23,7 +23,7 @@ public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 	}
 
 	@Override
-	protected String getSearchURL(long labelId, byte numberPerPage, boolean alphabetical, int sortType) {
+	protected String getSearchURL(final long labelId,final byte numberPerPage,final boolean alphabetical,final int sortType) {
 		return MetallumURL.assembleLabelCurrentRoster(labelId, numberPerPage, alphabetical, sortType);
 	}
 

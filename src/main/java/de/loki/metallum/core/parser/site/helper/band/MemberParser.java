@@ -4,6 +4,8 @@ import de.loki.metallum.core.util.MetallumUtil;
 import de.loki.metallum.entity.Band;
 import de.loki.metallum.entity.Member;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MemberParser {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberParser.class);
+
 	private enum MemberCategory {
 		LAST_KNOWN("Last known lineup"), PAST("Past members"), CURRENT("current lineup"), LIVE("Live musicians");
 		private final String[] asString;
@@ -25,7 +30,7 @@ public class MemberParser {
 					return cat;
 				}
 			}
-			System.err.println("MemberCategory: " + possibleMemberCategory);
+			LOGGER.error("MemberCategory: " + possibleMemberCategory);
 			return null;
 		}
 
@@ -71,7 +76,7 @@ public class MemberParser {
 		}
 	}
 
-	public final void addToMemberList(final Member memberToAdd, final String role, final String category) {
+	private final void addToMemberList(final Member memberToAdd, final String role, final String category) {
 		final MemberCategory cat = MemberCategory.getMemberTypeForString(category);
 		switch (cat) {
 			case CURRENT:

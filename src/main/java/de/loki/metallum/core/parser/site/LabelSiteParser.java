@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 public class LabelSiteParser extends AbstractSiteParser<Label> {
 
-	private static Logger logger = LoggerFactory.getLogger(LabelSiteParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LabelSiteParser.class);
 
 	/**
 	 * There are ways to sort the return values of the rooster and release parsers.<br>
@@ -161,7 +161,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 				final LinkParser parser = new LinkParser(this.entity.getId(), LinkParser.LABEL_PARSER);
 				return parser.parse();
 			} catch (final ExecutionException e) {
-				logger.error("unanble to parse label links from " + this.entity, e);
+				LOGGER.error("unanble to parse label links from " + this.entity, e);
 			}
 		}
 		return new Link[0];
@@ -210,7 +210,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			return labelList;
 		}
 		final String[] labellinks = upperRightPart.split(",");
-		for (String labellink : labellinks) {
+		for (final String labellink : labellinks) {
 			// prepare, to remove Online Shopping if it appears
 			String parseAbleString = labellink.replaceAll("(?imx)</dd>.*", "").trim();
 			// name
@@ -244,8 +244,8 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			try {
 				final CurrentRosterParser parser = new CurrentRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadCurrentRooster);
 				return new ArrayList<Band>(parser.parse().values());
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (final Exception e) {
+				LOGGER.error("Unable to parse current roster", e);
 			}
 		}
 		return new ArrayList<Band>();
@@ -272,7 +272,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			try {
 				return new PastRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadPastRooster).parse();
 			} catch (final Exception e) {
-				logger.error("unanble to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
+				LOGGER.error("unanble to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
 			}
 		}
 		return new HashMap<Band, Integer>();
@@ -298,7 +298,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			try {
 				return new ReleaseParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadReleases).parse();
 			} catch (final Exception e) {
-				logger.error("unanble to parse label releases with " + this.loadReleases + " and " + this.entity, e);
+				LOGGER.error("unanble to parse label releases with " + this.loadReleases + " and " + this.entity, e);
 			}
 		}
 		return new HashMap<Band, List<Disc>>();
@@ -383,7 +383,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 			try {
 				return Downloader.getImage(logoUrl);
 			} catch (final ExecutionException e) {
-				logger.error("Exception while downloading an image from \"" + logoUrl + "\" ," + this.entity, e);
+				LOGGER.error("Exception while downloading an image from \"" + logoUrl + "\" ," + this.entity, e);
 			}
 		}
 		return null;

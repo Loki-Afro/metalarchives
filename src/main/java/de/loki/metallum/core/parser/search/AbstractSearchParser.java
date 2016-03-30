@@ -6,6 +6,8 @@ import de.loki.metallum.search.SearchRelevance;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.TreeMap;
  * @author Zarathustra
  */
 public abstract class AbstractSearchParser<T extends AbstractEntity> implements IJSONParser {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchParser.class);
 
 	private long totalSearchResults = 0;
 
@@ -47,9 +51,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
 				}
 			}
 		} catch (final JSONException e) {
-			System.err.println("maybe not valid html, see the StackTrace below");
-			e.printStackTrace();
-			System.err.println(html);
+			LOGGER.error("maybe not valid html: " + html, e);
 		}
 		return resultMap;
 	}
@@ -77,7 +79,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
 	 * @param hit the JSon hit.
 	 * @return the parsed id.
 	 */
-	protected long parseBandId(final String hit) {
+	long parseBandId(final String hit) {
 		String bandId = hit.substring(0, hit.indexOf("\" title"));
 		bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
 		return Long.parseLong(bandId);

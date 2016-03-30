@@ -16,7 +16,7 @@ public class DiscSiteMemberParser {
 	private final Map<Member, String> guestLineupList = new HashMap<Member, String>();
 	private final Map<Member, String> otherMemberList = new HashMap<Member, String>();
 	private final Document doc;
-	private static Logger logger = LoggerFactory.getLogger(DiscSiteMemberParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiscSiteMemberParser.class);
 
 	private enum MemberCategory {
 		ALBUM_LINEUP("Band members"), ALBUM_GUEST("Guest/session musicians", "Guest/Session"), ALBUM_OTHER("Other staff", "Misc. staff", "Miscellaneous staff");
@@ -32,7 +32,7 @@ public class DiscSiteMemberParser {
 					return cat;
 				}
 			}
-			logger.error("MemberCategory: " + possibleMemberCategory);
+			LOGGER.error("MemberCategory: " + possibleMemberCategory);
 			return null;
 		}
 
@@ -51,7 +51,7 @@ public class DiscSiteMemberParser {
 			category = this.doc.getElementsByAttributeValue("href", "#album_members_lineup").first().text();
 		}
 		Elements tableRows = lineUpElementAll.getElementsByTag("tr");
-		for (Element row : tableRows) {
+		for (final Element row : tableRows) {
 			if (row.hasClass("lineupHeaders")) {
 				category = row.text();
 			} else if (row.hasClass("lineupRow")) {
@@ -69,7 +69,7 @@ public class DiscSiteMemberParser {
 			memberIdStr = memberLink.attr("href");
 			memberIdStr = memberIdStr.substring(memberIdStr.lastIndexOf("/") + 1, memberIdStr.length());
 		} else {
-			logger.warn("Member without Link detected, please report that; Member = " + memberRow.text());
+			LOGGER.warn("Member without Link detected, please report that; Member = " + memberRow.text());
 		}
 		Member member = new Member(Long.parseLong(memberIdStr));
 		member.setName(memberLink != null ? memberLink.text() : memberRow.text());

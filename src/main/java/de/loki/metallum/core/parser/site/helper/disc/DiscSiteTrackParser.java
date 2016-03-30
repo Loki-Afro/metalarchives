@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public final class DiscSiteTrackParser {
-	private static Logger logger = LoggerFactory.getLogger(DiscSiteTrackParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DiscSiteTrackParser.class);
 	private       CountDownLatch doneSignal;
 	private final Document       doc;
 	private final boolean        isSplit;
@@ -38,15 +38,14 @@ public final class DiscSiteTrackParser {
 	 *
 	 * @param trackCount count of tracks to parse
 	 */
-	private void lazyInitLache(final int trackCount) {
+	private void lazyInitLatch(final int trackCount) {
 		if (this.doneSignal == null) {
 			this.doneSignal = new CountDownLatch(trackCount);
 		}
 	}
 
 	private void parseLyrics2(final Element row, final long trackId, final Track trackToModify) {
-		Runnable runable = new DownloadLyricsRunnable(trackToModify, trackId);
-		new Thread(runable).start();
+		new Thread(new DownloadLyricsRunnable(trackToModify, trackId)).start();
 	}
 
 	private final class DownloadLyricsRunnable implements Runnable {
@@ -54,7 +53,7 @@ public final class DiscSiteTrackParser {
 		private final Track trackToModify;
 		private final long  trackId;
 
-		public DownloadLyricsRunnable(final Track trackToModify, final long trackId) {
+		DownloadLyricsRunnable(final Track trackToModify, final long trackId) {
 			this.trackToModify = trackToModify;
 			this.trackId = trackId;
 		}
@@ -65,8 +64,8 @@ public final class DiscSiteTrackParser {
 				String lyricsHTML = Downloader.getHTML(MetallumURL.assembleLyricsURL(this.trackId));
 				lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
 				this.trackToModify.setLyrics(lyricsHTML.trim());
-			} catch (ExecutionException e) {
-				logger.error("unanble to get lyrics from \"" + this.trackId + "\"", e);
+			} catch (final ExecutionException e) {
+				LOGGER.error("unanble to get lyrics from \"" + this.trackId + "\"", e);
 			} finally {
 				signalDoneCountDown();
 			}
@@ -100,7 +99,7 @@ public final class DiscSiteTrackParser {
 		boolean foundFirstFirstTrack = false;
 		Elements rows = tabeElement.select("tr[class~=(even|odd)]");
 		List<Track> trackList = new ArrayList<Track>();
-		for (Element row : rows) {
+		for (final Element row : rows) {
 			final String trackIdStr = parseTrackId(row);
 			final long trackId = Long.parseLong(trackIdStr.replaceAll("[\\D]", ""));
 			Track track = new Track(trackId);
@@ -120,7 +119,7 @@ public final class DiscSiteTrackParser {
 			}
 			track.setInstrumental(parseIsInstrumental(row));
 			if (this.loadLyrics && row.getElementById("lyricsButton" + trackIdStr) != null) {
-				lazyInitLache(rows.size());
+				lazyInitLatch(rows.size());
 				parseLyrics2(row, trackId, track);
 			} else {
 				signalDoneCountDown();
@@ -137,8 +136,8 @@ public final class DiscSiteTrackParser {
 			try {
 //				as fallback we wait here 6 seconds for each track if that fails smth went wrong
 				this.doneSignal.await(trackCount * 6, TimeUnit.SECONDS);
-			} catch (InterruptedException e) {
-				logger.error("Please, please report this error: Thread Lock failed while downloading lyrics", e);
+			} catch (final InterruptedException e) {
+				LOGGER.error("Please, please report this error: Thread Lock failed while downloading lyrics", e);
 			}
 		}
 	}

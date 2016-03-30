@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public abstract class AbstractRosterParser<K, V> implements IJSONParser {
+abstract class AbstractRosterParser<K, V> implements IJSONParser {
 
 	private final long        labelId;
 	private final byte        numberPerPage;
@@ -23,9 +23,9 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	private final PARSE_STYLE sortType;
 
 	private final   Band      dummyBand = new Band(0, "Various Artists");
-	protected final Map<K, V> mainMap   = new HashMap<K, V>();
+	final Map<K, V> mainMap   = new HashMap<K, V>();
 
-	public AbstractRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE sortType) {
+	AbstractRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE sortType) {
 		this.labelId = labelId;
 		this.numberPerPage = numberPerPage;
 		this.alphabetical = alphabetical;
@@ -62,7 +62,7 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	 * @param hit the hit where the Disc information occurs
 	 * @return A Disc with name and Id
 	 */
-	protected Disc getADisc(final String hit) {
+	Disc getADisc(final String hit) {
 		Disc disc = new Disc(parseId(hit));
 		disc.setName(parseName(hit));
 		return disc;
@@ -72,7 +72,7 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 	 * @param hit the hit where the Band information occurs
 	 * @return A Band with name and Id
 	 */
-	protected Band getABand(final String hit) {
+	Band getABand(final String hit) {
 		if (hit.contains("</a> / <a")) {
 			return this.dummyBand;
 		}
@@ -98,11 +98,11 @@ public abstract class AbstractRosterParser<K, V> implements IJSONParser {
 		return Jsoup.parse(hit).text();
 	}
 
-	protected String parseGenre(final String hit) {
+	String parseGenre(final String hit) {
 		return hit;
 	}
 
-	protected Country parseBandCountry(final String hit) {
+	Country parseBandCountry(final String hit) {
 		return Country.getRightCountryForString(hit);
 	}
 }

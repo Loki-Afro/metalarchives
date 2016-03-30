@@ -11,6 +11,8 @@ import de.loki.metallum.entity.Link;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.enums.Country;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class MemberSiteParser extends AbstractSiteParser<Member> {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MemberSiteParser.class);
 
 	private final boolean loadReadMore;
 
@@ -131,8 +135,8 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 			try {
 				final LinkParser parser = new LinkParser(this.entity.getId(), LinkParser.MEMBER_PARSER);
 				return parser.parse();
-			} catch (ExecutionException e) {
-				e.printStackTrace();
+			} catch (final ExecutionException e) {
+				LOGGER.error("Unable to parse links of " + this.entity.getId(), e);
 			}
 		}
 		return new Link[0];
@@ -159,7 +163,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 			try {
 				imagePhoto = Downloader.getImage(imageUrl);
 			} catch (final ExecutionException e) {
-				e.printStackTrace();
+				LOGGER.error("Unable get photo for " + entity.getId(), e);
 			}
 		}
 		return imagePhoto;
@@ -170,7 +174,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 		try {
 			html = Downloader.getHTML(MetallumURL.assembleMemberReadMoreURL(this.entity.getId()));
 		} catch (final ExecutionException e) {
-			e.printStackTrace();
+			LOGGER.error("Unable get \"read more\" for " + entity.getId(), e);
 		}
 		return MetallumUtil.parseHtmlWithLineSeperators(html);
 	}
