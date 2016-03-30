@@ -6,12 +6,9 @@ import de.loki.metallum.entity.Band;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 
-	public CurrentRosterParser(final long labelId,final byte numberPerPage,final boolean alphabetical,final LabelSiteParser.PARSE_STYLE sortType) {
+	public CurrentRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final LabelSiteParser.PARSE_STYLE sortType) {
 		super(labelId, numberPerPage, alphabetical, sortType);
 	}
 
@@ -23,7 +20,7 @@ public class CurrentRosterParser extends AbstractRosterParser<Integer, Band> {
 	}
 
 	@Override
-	protected String getSearchURL(final long labelId,final byte numberPerPage,final boolean alphabetical,final int sortType) {
+	protected String getSearchURL(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType) {
 		return MetallumURL.assembleLabelCurrentRoster(labelId, numberPerPage, alphabetical, sortType);
 	}
 

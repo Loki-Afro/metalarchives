@@ -14,9 +14,9 @@ import java.util.concurrent.ExecutionException;
 
 public class LinkParser {
 
-	private static      Logger logger        = LoggerFactory.getLogger(LinkParser.class);
-	public final static int    LABEL_PARSER  = 0;
-	public final static int    MEMBER_PARSER = 1;
+	private static final     Logger LOGGER        = LoggerFactory.getLogger(LinkParser.class);
+	public final static int         LABEL_PARSER  = 0;
+	public final static int         MEMBER_PARSER = 1;
 	private final String html;
 
 	public LinkParser(final long id, final int parseMode) throws ExecutionException {
@@ -28,7 +28,7 @@ public class LinkParser {
 				this.html = Downloader.getHTML(MetallumURL.assembleMemberLinksURL(id));
 				break;
 			default:
-				logger.error("wrong parse mode!");
+				LOGGER.error("wrong parse mode!");
 				this.html = "";
 		}
 	}

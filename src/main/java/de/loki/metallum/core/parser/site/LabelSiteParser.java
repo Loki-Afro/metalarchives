@@ -118,7 +118,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 		final String logoUrl = parseLogoUrl();
 		label.setLogoUrl(logoUrl);
 		label.setLogo(parseLabelLogo(logoUrl));
-		label = parseModfications(label);
+		label = parseModifications(label);
 		return label;
 	}
 

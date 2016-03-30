@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class BandParser {
 
-	private static Logger logger = LoggerFactory.getLogger(BandParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BandParser.class);
 
 	public enum Mode {
 		ACTIVE, GUEST, PAST, MISC, LIVE
@@ -90,8 +90,8 @@ public class BandParser {
 				bandId = html.substring(html.indexOf("memberInBand_") + 13, html.indexOf("\">"));
 			}
 			return Long.parseLong(bandId);
-		} catch (NumberFormatException numE) {
-			logger.warn("Band is not in Ecyclopedia Metallum, html: " + html, numE);
+		} catch (final NumberFormatException numE) {
+			LOGGER.warn("Band is not in Ecyclopedia Metallum, html: " + html, numE);
 			return 0;
 		}
 	}

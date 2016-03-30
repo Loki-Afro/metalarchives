@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
 
-	public ReleaseParser(long labelId, byte numberPerPage, boolean alphabetical, PARSE_STYLE style) {
+	public ReleaseParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE style) {
 		super(labelId, numberPerPage, alphabetical, style);
 	}
 
@@ -55,7 +55,7 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
 		return bandArray;
 	}
 
-	private List<Disc> getDiscList(Band band) {
+	private List<Disc> getDiscList(final Band band) {
 		List<Disc> discList;
 		if (this.mainMap.containsKey(band)) {
 			discList = this.mainMap.get(band);
@@ -67,7 +67,7 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
 	}
 
 	@Override
-	protected String getSearchURL(long labelId, byte numberPerPage, boolean alphabetical, int sortType) {
+	protected String getSearchURL(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType) {
 		return MetallumURL.assembleLabelReleasesURL(labelId, numberPerPage, alphabetical, sortType);
 	}
 

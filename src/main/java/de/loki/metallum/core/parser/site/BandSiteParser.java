@@ -55,7 +55,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 		band.addToReviews(parseReviews(band));
 		band.setSimliarArtists(parseSimilarArtists());
 		band.addLinks(parseLinks());
-		band = parseModfications(band);
+		band = parseModifications(band);
 		logger.debug("parsed Entity: " + band);
 		return band;
 	}

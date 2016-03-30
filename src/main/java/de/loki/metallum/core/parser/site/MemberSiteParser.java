@@ -48,7 +48,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 		member.setMiscActivitys(parseMiscBands());
 		member.setDetails(parseDetails());
 		member.addLinks(parseLinks());
-		member = parseModfications(member);
+		member = parseModifications(member);
 		return member;
 	}
 

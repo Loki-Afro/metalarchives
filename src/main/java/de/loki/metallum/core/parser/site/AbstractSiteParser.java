@@ -13,19 +13,18 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
 	@Deprecated
 	protected final String   html;
-	protected final Document doc;
-	protected final boolean  loadImage;
-	protected final boolean  loadLinks;
+	final           Document doc;
+	final           boolean  loadImage;
+	final           boolean  loadLinks;
 	protected final T        entity;
 
 	private static final String imageCssQuery = "img[src~=(?i)\\.(png|jpe?g|gif)]";
 
-	public AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
+	AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
 		this.entity = entity;
 		this.loadImage = loadImage;
 		this.loadLinks = loadLinks;
 		this.html = Downloader.getHTML(getSiteURL());
-//		may we should mark html as deprecated
 		this.doc = Jsoup.parse(this.html);
 	}
 
@@ -38,7 +37,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 	 */
 	protected abstract String getSiteURL();
 
-	protected T parseModfications(final T entity) {
+	T parseModifications(final T entity) {
 		final Element footer = this.doc.getElementById("auditTrail");
 		final Elements elements = footer.select("td");
 		entity.setAddedBy(modificationElementToString(elements.get(0)));
@@ -63,7 +62,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
 	 * @param element  the wrapping Element.
 	 * @param cssClass where the image link is in.
 	 */
-	protected final String parseImageURL(final Element element, final String cssClass) {
+	final String parseImageURL(final Element element, final String cssClass) {
 		String imageURL = null;
 		Elements elements = this.doc.getElementsByClass(cssClass);
 		if (!elements.isEmpty()) {

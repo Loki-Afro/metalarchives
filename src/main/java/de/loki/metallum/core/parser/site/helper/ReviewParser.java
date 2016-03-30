@@ -24,7 +24,7 @@ public final class ReviewParser {
 	public List<Review> parse() {
 		final List<Review> reviews = new ArrayList<Review>();
 		Elements elements = this.doc.select("div[class=reviewBox]");
-		for (Element element : elements) {
+		for (final Element element : elements) {
 			final Review review = new Review();
 			review.setId(parseReviewId(element));
 			review.setName(parseTitle(element));

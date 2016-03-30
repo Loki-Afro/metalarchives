@@ -20,9 +20,9 @@ import java.util.concurrent.ExecutionException;
 
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
-	private        boolean loadReviews = false;
-	private        boolean loadLyrics  = false;
-	private static Logger  logger      = LoggerFactory.getLogger(DiscSiteParser.class);
+	private              boolean loadReviews = false;
+	private              boolean loadLyrics  = false;
+	private static final Logger  logger      = LoggerFactory.getLogger(DiscSiteParser.class);
 
 	/**
 	 * Creates a new DiscParser, just call parse
@@ -58,7 +58,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 			disc.setBand(parseBand());
 		}
 		disc.addReview(parseReviewList(disc));
-		disc = parseModfications(disc);
+		disc = parseModifications(disc);
 		return disc;
 	}
 
