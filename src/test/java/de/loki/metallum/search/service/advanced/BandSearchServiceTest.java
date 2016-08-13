@@ -76,7 +76,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getYearFormedIn(), 1993);
 		assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
 		assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Rituals, H.P. Lovecraft");
-		assertEquals("Nuclear Blast Records", resultBand.getLabel().getName());
+		assertEquals("Nuclear Blast", resultBand.getLabel().getName());
 		assertTrue(resultBand.getLabel().getId() != 0);
 		assertTrue(resultBand.getInfo().startsWith("Despite the odd misconception that"));
 		assertTrue(resultBand.getInfo().endsWith("..."));
@@ -130,7 +130,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getLyricalThemes(), "Horror (early), Depression, Relationships");
 		assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
 		assertTrue(resultBand.getLabel().getId() != 0);
-		assertTrue(resultBand.getInfo().startsWith("Warning were formed by Patrick"));
+		assertTrue(resultBand.getInfo().startsWith("Formed by Patrick"));
 		assertTrue(resultBand.getInfo().endsWith("..."));
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
@@ -158,7 +158,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getYearFormedIn(), 2009);
 		assertEquals(resultBand.getGenre(), "Doom Metal");
 		assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
-		assertEquals(resultBand.getLabel().getName(), "Cyclone Empire");
+		assertEquals(resultBand.getLabel().getName(), "Radiance Records");
 		assertTrue(resultBand.getLabel().getId() != 0);
 		assertTrue(resultBand.getInfo().startsWith("Patrick Walker took the band name"));
 		assertTrue(resultBand.getInfo().endsWith("\"Emerald Lies\"."));
@@ -235,7 +235,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
 		assertTrue(resultBand.getLabel().getId() == 0);
 		assertTrue(resultBand.getInfo().startsWith("Vital Remains participated"));
-		assertTrue(resultBand.getInfo().endsWith("A Tribute ..."));
+		assertTrue(resultBand.getInfo().endsWith("..."));
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
 		assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -571,14 +571,14 @@ public class BandSearchServiceTest {
 		assertTrue(!resultBand.getInfo().isEmpty());
 		checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
 		final Map<Integer, List<Band>> similarArtists = resultBand.getSimilarArtists();
-		checkSimilarArtists(resultBand, similarArtists);
+		checkSimilarArtists(similarArtists);
 		assertFalse(resultBand.getAddedBy().isEmpty());
 		assertFalse(resultBand.getAddedOn().isEmpty());
 		assertFalse(resultBand.getModifiedBy().isEmpty());
 		assertFalse(resultBand.getLastModifiedOn().isEmpty());
 	}
 
-	private synchronized void checkSimilarArtists(final Band band, final Map<Integer, List<Band>> similarArtists) {
+	private synchronized void checkSimilarArtists(final Map<Integer, List<Band>> similarArtists) {
 		for (final List<Band> bandList : similarArtists.values()) {
 			for (final Band similarBand : bandList) {
 				assertTrue(similarBand.getId() != 0);

@@ -60,10 +60,10 @@ public class DiscSearchServiceTest {
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setReleaseTypes(DiscType.LIVE_ALBUM);
-		query.setReleaseName("Live ΕΣΧΑΤΟΝ - The Art of Rebellion", false);
+		query.setReleaseName("Live Εσχατον: The Art of Rebellion", false);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Behemoth", discResult.getBandName());
-		Assert.assertEquals("Live ΕΣΧΑΤΟΝ - The Art of Rebellion", discResult.getName());
+		Assert.assertEquals("Live Εσχατον: The Art of Rebellion", discResult.getName());
 		Assert.assertEquals(12, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.LIVE_ALBUM, discResult.getType());
 		Assert.assertEquals("Metal Mind Productions", discResult.getLabel().getName());
@@ -506,7 +506,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Pestapokalypse VI", discResult.getName());
 		Assert.assertEquals(9, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
+		Assert.assertEquals("Nuclear Blast", discResult.getLabel().getName());
 		Assert.assertNotNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
