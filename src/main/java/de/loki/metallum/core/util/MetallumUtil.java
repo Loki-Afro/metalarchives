@@ -1,8 +1,6 @@
 package de.loki.metallum.core.util;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +13,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public final class MetallumUtil {
-	private final static String       lineSeperator = System.getProperty("line.separator");
-	private final static String[]     daySuffixes   =
+	private final static String   LINE_SEPARATOR = System.getProperty("line.separator");
+	private final static String[] daySuffixes    =
 			// 0 1 2 3 4 5 6 7 8 9
 			{"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 					// 10 11 12 13 14 15 16 17 18 19
@@ -25,13 +23,13 @@ public final class MetallumUtil {
 					"th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th",
 					// 30 31
 					"th", "st"};
-	private static       final Logger LOGGER        = LoggerFactory.getLogger(MetallumUtil.class);
+	private static final Logger   LOGGER         = LoggerFactory.getLogger(MetallumUtil.class);
 
 	private MetallumUtil() {
 
 	}
 
-	public final static String getDayOfMonthSuffix(final int day) {
+	private final static String getDayOfMonthSuffix(final int day) {
 		return daySuffixes[day];
 	}
 
@@ -51,24 +49,6 @@ public final class MetallumUtil {
 			LOGGER.error("Unable to parse date " + possibleDate, e);
 		}
 		return null;
-	}
-
-	public final static String removeComments(final String html) {
-		final Document doc = Jsoup.parse(html);
-		removeComments(doc);
-		return doc.text();
-	}
-
-	private final static void removeComments(final Node node) {
-		for (int i = 0; i < node.childNodes().size(); ) {
-			Node child = node.childNode(i);
-			if (child.nodeName().equals("#comment")) {
-				child.remove();
-			} else {
-				removeComments(child);
-				i++;
-			}
-		}
 	}
 
 	/**
@@ -104,9 +84,8 @@ public final class MetallumUtil {
 		String cleanHtml = Jsoup.parse(html.replaceAll("(?i)<br[^>]*>", "br2n")).text();
 		for (final String strPart : cleanHtml.split("br2n")) {
 			strBuf.append(strPart.trim());
-			strBuf.append(lineSeperator);
+			strBuf.append(LINE_SEPARATOR);
 		}
-		cleanHtml = strBuf.substring(0, strBuf.length() - 1);
 		return strBuf.toString().trim();
 	}
 

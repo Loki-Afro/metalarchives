@@ -65,9 +65,8 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
 	 *
 	 * @param hits the JSON hits
 	 * @return 0 or the search relevance.
-	 * @throws JSONException
 	 */
-	protected SearchRelevance getSearchRelevance(final JSONArray hits) throws JSONException {
+	protected SearchRelevance getSearchRelevance(final JSONArray hits) {
 		String relevance = hits.getString(0);
 		relevance = relevance.substring(relevance.indexOf("<!-- ") + 5, relevance.indexOf(" -->"));
 		return new SearchRelevance(relevance);

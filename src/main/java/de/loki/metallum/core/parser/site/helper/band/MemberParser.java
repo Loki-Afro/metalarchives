@@ -42,7 +42,6 @@ public class MemberParser {
 	private final Map<Member, String> lastKnownLineupList = new HashMap<Member, String>();
 
 	public final void parse(final String html) {
-		final List<Member> members = new ArrayList<Member>();
 		if (!html.contains("id=\"band_members\"")) {
 			return;
 		}
@@ -69,7 +68,6 @@ public class MemberParser {
 						member.setUncategorizedBands(parseMemberBands(memInfo[2]));
 					}
 					addToMemberList(member, role, cat);
-					members.add(member);
 				}
 			}
 

@@ -1,18 +1,15 @@
 package de.loki.metallum.search.service;
 
-import java.util.List;
-
-import org.junit.Assert;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import de.loki.metallum.MetallumException;
 import de.loki.metallum.entity.Link;
 import de.loki.metallum.entity.Member;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.enums.LinkCategory;
 import de.loki.metallum.search.query.MemberSearchQuery;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
 
 public class MemberSearchTest {
 	// TODO to test: -objectToLoad

@@ -21,7 +21,7 @@ public enum DiscType {
 	private final String  realName;
 	private final int     searchNumber;
 	private final boolean isSplit;
-	private static Logger logger = LoggerFactory.getLogger(DiscType.class);
+	private static final Logger logger = LoggerFactory.getLogger(DiscType.class);
 
 	DiscType(final String realName, final int searchNumber, final boolean isSplitType) {
 		this.realName = realName;
@@ -45,9 +45,6 @@ public enum DiscType {
 	}
 
 	public static boolean isSplit(final DiscType type) {
-		if (type == null) {
-			return false;
-		}
-		return type.isSplit;
+		return type != null && type.isSplit;
 	}
 }

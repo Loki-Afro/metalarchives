@@ -1,11 +1,5 @@
 package de.loki.metallum.search.service.advanced;
 
-import java.util.List;
-import java.util.Map;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import de.loki.metallum.MetallumException;
 import de.loki.metallum.entity.Disc;
 import de.loki.metallum.entity.Member;
@@ -14,6 +8,11 @@ import de.loki.metallum.entity.Track;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.enums.DiscType;
 import de.loki.metallum.search.query.DiscSearchQuery;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Map;
 
 public class DiscSearchServiceTest {
 
@@ -81,7 +80,7 @@ public class DiscSearchServiceTest {
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setReleaseTypes(DiscType.EP);
 		query.setReleaseName("Hordanes Land", false);
-        service.setloadLyrics(true);
+		service.setloadLyrics(true);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Enslaved", discResult.getBandName());
 		Assert.assertEquals("Hordanes Land", discResult.getName());
@@ -94,7 +93,7 @@ public class DiscSearchServiceTest {
 		Assert.assertFalse(discResult.getAddedOn().isEmpty());
 		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
 		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
-        Assert.assertFalse(discResult.getTrackList().get(1).getLyrics().isEmpty());
+		Assert.assertFalse(discResult.getTrackList().get(1).getLyrics().isEmpty());
 	}
 
 	@Test
@@ -368,28 +367,6 @@ public class DiscSearchServiceTest {
 
 	@Test
 	public void releaseDateToTest() throws MetallumException {
-		final DiscSearchService service = new DiscSearchService();
-		final DiscSearchQuery query = new DiscSearchQuery();
-		query.setReleaseName("Burzum", false);
-		query.setReleaseMonthTo(4);
-		query.setReleaseYearTo(1993);
-		query.setReleaseTypes(DiscType.FULL_LENGTH);
-		final Disc discResult = service.performSearch(query).get(0);
-		Assert.assertEquals("Burzum", discResult.getBandName());
-		Assert.assertEquals("Burzum", discResult.getName());
-		Assert.assertEquals(9, discResult.getTrackList().size());
-		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Deathlike Silence Productions", discResult.getLabel().getName());
-		Assert.assertNull(discResult.getArtwork());
-		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
-		Assert.assertFalse(discResult.getAddedBy().isEmpty());
-		Assert.assertFalse(discResult.getAddedOn().isEmpty());
-		Assert.assertFalse(discResult.getModifiedBy().isEmpty());
-		Assert.assertFalse(discResult.getLastModifiedOn().isEmpty());
-	}
-
-	@Test
-	public void releaseDateTest() throws MetallumException {
 		final DiscSearchService service = new DiscSearchService();
 		final DiscSearchQuery query = new DiscSearchQuery();
 		query.setReleaseName("Burzum", false);
