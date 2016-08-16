@@ -123,3 +123,7 @@ fabric.properties
 
 *.iml
 *.idea
+
+
+#Project specific settings
+!maven/maven-wrapper.jar
