@@ -9,6 +9,11 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class TrackSearchServiceTest {
 
 	@Test
@@ -167,8 +172,8 @@ public class TrackSearchServiceTest {
 		Assert.assertNotSame(0, resultTrack.getDisc().getId());
 		Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
 		Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
-		Assert.assertTrue(resultTrack.getLyrics().startsWith("This is war"));
-		Assert.assertTrue(resultTrack.getLyrics().endsWith("War"));
+		assertThat(resultTrack.getLyrics(), startsWith("This is... huh, War!"));
+        assertThat(resultTrack.getLyrics(), endsWith("War!"));
 	}
 
 	@Test
