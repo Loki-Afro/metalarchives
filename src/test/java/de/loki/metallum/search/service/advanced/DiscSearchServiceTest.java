@@ -14,6 +14,9 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 public class DiscSearchServiceTest {
 
 	@Test
@@ -212,7 +215,7 @@ public class DiscSearchServiceTest {
 		Assert.assertEquals("Live & Plugged Vol. 2", discResult.getName());
 		Assert.assertEquals(17, discResult.getTrackList().size());
 		Assert.assertEquals(DiscType.SPLIT_VIDEO, discResult.getType());
-		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
+		assertThat(discResult.getLabel().getName(), is("Nuclear Blast"));
 		Assert.assertTrue(discResult.isSplit());
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
@@ -351,6 +354,7 @@ public class DiscSearchServiceTest {
 		query.setReleaseName("Det Som Engang Var", false);
 		query.setReleaseMonthFrom(1);
 		query.setReleaseYearFrom(1993);
+		query.setReleaseYearTo(2007);
 		final Disc discResult = service.performSearch(query).get(0);
 		Assert.assertEquals("Burzum", discResult.getBandName());
 		Assert.assertEquals("Det som engang var", discResult.getName());
@@ -560,7 +564,7 @@ public class DiscSearchServiceTest {
 			Assert.assertFalse(track.getPlayTime().isEmpty());
 		}
 		Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-		Assert.assertEquals("Nuclear Blast Records", discResult.getLabel().getName());
+		assertThat(discResult.getLabel().getName(), is("Nuclear Blast"));
 		Assert.assertNull(discResult.getArtwork());
 		Assert.assertFalse(discResult.getArtworkURL().isEmpty());
 		Assert.assertFalse(discResult.getAddedBy().isEmpty());
