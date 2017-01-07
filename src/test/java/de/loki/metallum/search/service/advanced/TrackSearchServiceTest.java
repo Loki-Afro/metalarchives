@@ -172,7 +172,7 @@ public class TrackSearchServiceTest {
 		Assert.assertNotSame(0, resultTrack.getDisc().getId());
 		Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
 		Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
-		assertThat(resultTrack.getLyrics(), startsWith("This is... huh, War!"));
+		assertThat(resultTrack.getLyrics(), startsWith("This is war!"));
         assertThat(resultTrack.getLyrics(), endsWith("War!"));
 	}
 
