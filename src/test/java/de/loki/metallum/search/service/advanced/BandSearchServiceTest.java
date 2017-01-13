@@ -15,9 +15,7 @@ import de.loki.metallum.enums.BandStatus;
 import de.loki.metallum.enums.Country;
 import de.loki.metallum.search.query.BandSearchQuery;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BandSearchServiceTest {
 
@@ -234,7 +232,7 @@ public class BandSearchServiceTest {
 		assertEquals(resultBand.getLyricalThemes(), "Satanism, Occultism, Anti-Christianity, Death");
 		assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
 		assertTrue(resultBand.getLabel().getId() == 0);
-		assertTrue(resultBand.getInfo().startsWith("Vital Remains participated"));
+		assertTrue(resultBand.getInfo().startsWith("Compilation "));
 		assertTrue(resultBand.getInfo().endsWith("..."));
 		assertFalse(resultBand.hasLogo());
 		assertFalse(resultBand.hasPhoto());
