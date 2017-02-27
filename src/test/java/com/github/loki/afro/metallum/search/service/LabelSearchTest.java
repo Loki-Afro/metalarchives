@@ -43,7 +43,6 @@ public class LabelSearchTest {
      * This test exists because there is no date and no user who added this Label
      * http://www.metal-archives.com/labels/Spinefarm_Records/14
      *
-     * @throws MetallumException
      */
     @Test
     public void addedByTest() throws MetallumException {

@@ -229,7 +229,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     /**
      * Here you'll get all Bands which are currently used by this Label.<br>
      * <br>
-     * <b>ONLY if option is set<b>
+     * <b>ONLY if option is set</b>
      *
      * @return a List of Bands, if there are none, you'll get a empty List.
      */
@@ -251,10 +251,10 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     /**
      * Can return a Map with the Band entry (as Key) where Band.getId () = 0 & Band.getName(Various
      * Artists) <br>
-     * You'll get this when the Label also releases a SplitDisc., in the List<Disc> of that band,<br>
+     * You'll get this when the Label also releases a SplitDisc., in the List&lt;Disc&gt; of that band,<br>
      * which is the SplitDisc you'll get the real Bands.<br>
      * <br>
-     * <b>ONLY if option is set<b>
+     * <b>ONLY if option is set</b>
      *
      * @return the Map with Band as Key and Integer as Value representing the quantum of releases<br>
      * If there are none you'll get a empty HashMap.
@@ -281,7 +281,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * Label<br>
      * mapped to the specific Band<br>
      * <br>
-     * <b>ONLY if option is set<b>
+     * <b>ONLY if option is set</b>
      *
      * @return a Map with Band as Key and a List with Discs.
      */

@@ -48,7 +48,6 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
     /**
      * parses a JSon Array and fills the {@link AbstractRosterParser#mainMap}
      *
-     * @throws JSONException
      */
     protected abstract void parseSpecific(JSONArray jsonArray) throws JSONException;
 
