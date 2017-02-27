@@ -53,7 +53,8 @@ Later it was used in an Android App to have a mobile version of the original sit
 "THE BEER-WARE LICENSE" (Revision 42):
 Phillip Wirth<schaum@kaffeekrone.de>  wrote this file.
 As long as you retain this notice you can do whatever you want with this stuff.
-If we meet some day, and you think this stuff is worth it, you can buy me a beer in return.
+If we meet some day, and you think this stuff is worth it, you can buy me a non alcohol-free in return.
 	Phillip Wirth
 ```
+https://gist.github.com/Loki-Afro/f2162ba55e6ef22c670388d71698f2ce/538ba05a6d9665e109ed19743baf6646658992ba
 
