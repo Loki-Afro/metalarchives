@@ -23,10 +23,10 @@ public class Band extends AbstractEntity {
     private Map<Member, String> lastMember = new HashMap<Member, String>();
     private Map<Member, String> liveMember = new HashMap<Member, String>();
     private Map<Member, String> pastMember = new HashMap<Member, String>();
-    private List<Link> officalLinks = new ArrayList<Link>();
-    private List<Link> officalMerchLinks = new ArrayList<Link>();
-    private List<Link> unofficalLinks = new ArrayList<Link>();
-    private List<Link> tabulatureLinks = new ArrayList<Link>();
+    private List<Link> officialLinks = new ArrayList<Link>();
+    private List<Link> officialMerchLinks = new ArrayList<Link>();
+    private List<Link> unofficialLinks = new ArrayList<Link>();
+    private List<Link> tablatureLinks = new ArrayList<Link>();
     private List<Link> labelLinks = new ArrayList<Link>();
     private Map<Integer, List<Band>> similarArtist = new HashMap<Integer, List<Band>>();
     private String photoUrl = null;
@@ -204,19 +204,19 @@ public class Band extends AbstractEntity {
         for (Link link : links) {
             switch (link.getCategory()) {
                 case OFFICIAL:
-                    this.officalLinks.add(link);
+                    this.officialLinks.add(link);
                     break;
                 case OFFICIAL_MERCH:
-                    this.officalMerchLinks.add(link);
+                    this.officialMerchLinks.add(link);
                     break;
                 case UNOFFICIAL:
-                    this.unofficalLinks.add(link);
+                    this.unofficialLinks.add(link);
                     break;
                 case LABEL:
                     this.labelLinks.add(link);
                     break;
                 case TABLATURES:
-                    this.tabulatureLinks.add(link);
+                    this.tablatureLinks.add(link);
                     break;
                 default:
                     System.err.println("unrecognized linkcategory, the Link will be ignored, this should never happen!");
@@ -226,27 +226,27 @@ public class Band extends AbstractEntity {
         }
     }
 
-    public void addOfficalLinks(final Link... links) {
-        Collections.addAll(this.officalLinks, links);
+    public void addOfficialLinks(final Link... links) {
+        Collections.addAll(this.officialLinks, links);
     }
 
-    public void addOfficalMerchLinks(final Link... links) {
-        Collections.addAll(this.officalMerchLinks, links);
+    public void addOfficialMerchLinks(final Link... links) {
+        Collections.addAll(this.officialMerchLinks, links);
     }
 
-    public void addUnofficalLinks(final Link... links) {
-        Collections.addAll(this.unofficalLinks, links);
+    public void addUnofficialLinks(final Link... links) {
+        Collections.addAll(this.unofficialLinks, links);
     }
 
     public void addLabelLinks(final Link... links) {
         Collections.addAll(this.labelLinks, links);
     }
 
-    public void addTabulatureLinks(final Link... links) {
-        Collections.addAll(this.tabulatureLinks, links);
+    public void addTablatureLinks(final Link... links) {
+        Collections.addAll(this.tablatureLinks, links);
     }
 
-    public void addSimliarArtists(final Band band, final int score) {
+    public void addSimilarArtists(final Band band, final int score) {
         List<Band> bandListFromMap = this.similarArtist.get(score);
         if (bandListFromMap == null) {
             bandListFromMap = new ArrayList<Band>();
@@ -277,24 +277,24 @@ public class Band extends AbstractEntity {
         return this.pastMember;
     }
 
-    public List<Link> getOfficalLinks() {
-        return this.officalLinks;
+    public List<Link> getOfficialLinks() {
+        return this.officialLinks;
     }
 
-    public List<Link> getOfficalMerchLinks() {
-        return this.officalMerchLinks;
+    public List<Link> getOfficialMerchLinks() {
+        return this.officialMerchLinks;
     }
 
-    public List<Link> getUnofficalLinks() {
-        return this.unofficalLinks;
+    public List<Link> getUnofficialLinks() {
+        return this.unofficialLinks;
     }
 
     public List<Link> getLabelLinks() {
         return this.labelLinks;
     }
 
-    public List<Link> getTabulatureLinks() {
-        return this.tabulatureLinks;
+    public List<Link> getTablatureLinks() {
+        return this.tablatureLinks;
     }
 
     public final List<Review> getReviews() {
@@ -342,7 +342,7 @@ public class Band extends AbstractEntity {
         return this.name.equals(other.name);
     }
 
-    public void setSimliarArtists(final Map<Integer, List<Band>> similarArtists) {
+    public void setSimilarArtists(final Map<Integer, List<Band>> similarArtists) {
         this.similarArtist = similarArtists;
     }
 
@@ -352,11 +352,11 @@ public class Band extends AbstractEntity {
 
     public List<Link> getLinks() {
         List<Link> linkList = new ArrayList<Link>();
-        linkList.addAll(this.officalLinks);
-        linkList.addAll(this.officalMerchLinks);
-        linkList.addAll(this.unofficalLinks);
+        linkList.addAll(this.officialLinks);
+        linkList.addAll(this.officialMerchLinks);
+        linkList.addAll(this.unofficialLinks);
         linkList.addAll(this.labelLinks);
-        linkList.addAll(this.tabulatureLinks);
+        linkList.addAll(this.tablatureLinks);
         return linkList;
     }
 
@@ -372,24 +372,24 @@ public class Band extends AbstractEntity {
         this.discs = discList;
     }
 
-    public void setOfficalLinks(final List<Link> officalLinks) {
-        this.officalLinks = officalLinks;
+    public void setOfficialLinks(final List<Link> officialLinks) {
+        this.officialLinks = officialLinks;
     }
 
-    public void setOfficalMerchLinks(final List<Link> officalMerchLinkList) {
-        this.officalMerchLinks = officalMerchLinkList;
+    public void setOfficialMerchLinks(final List<Link> officialMerchLinkList) {
+        this.officialMerchLinks = officialMerchLinkList;
     }
 
-    public void setUnofficalLinks(final List<Link> list) {
-        this.unofficalLinks = list;
+    public void setUnofficialLinks(final List<Link> list) {
+        this.unofficialLinks = list;
     }
 
     public void setLabelLinks(final List<Link> list) {
         this.labelLinks = list;
     }
 
-    public void setTabulatureLinks(final List<Link> list) {
-        this.tabulatureLinks = list;
+    public void setTablatureLinks(final List<Link> list) {
+        this.tablatureLinks = list;
     }
 
     public void setLogoUrl(final String logoUrl) {
