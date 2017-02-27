@@ -161,8 +161,8 @@ public class Disc extends AbstractEntity {
         this.miscMember = miscMember;
     }
 
-    public void setGuestLineup(final Map<Member, String> guestMembery) {
-        this.guestMember = guestMembery;
+    public void setGuestLineup(final Map<Member, String> guestMember) {
+        this.guestMember = guestMember;
     }
 
     /**
@@ -260,10 +260,10 @@ public class Disc extends AbstractEntity {
      * @return a map with all Member, where the value the role at the specific album;
      */
     public Map<Member, String> getMember() {
-        Map<Member, String> comlpeteMemberMap = getLineup();
-        comlpeteMemberMap.putAll(getMiscMember());
-        comlpeteMemberMap.putAll(getGuestMember());
-        return comlpeteMemberMap;
+        Map<Member, String> completeMemberMap = getLineup();
+        completeMemberMap.putAll(getMiscMember());
+        completeMemberMap.putAll(getGuestMember());
+        return completeMemberMap;
     }
 
 }

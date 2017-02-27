@@ -53,7 +53,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         }
         band = parseMember(band);
         band.addToReviews(parseReviews(band));
-        band.setSimliarArtists(parseSimilarArtists());
+        band.setSimilarArtists(parseSimilarArtists());
         band.addLinks(parseLinks());
         band = parseModifications(band);
         logger.debug("parsed Entity: " + band);
@@ -109,11 +109,11 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return bandNameElement.text();
     }
 
-    private final int parseYearOfCreation(final String firstParthtml) {
-        if (firstParthtml.contains("N/A")) {
+    private final int parseYearOfCreation(final String firstPartHtml) {
+        if (firstPartHtml.contains("N/A")) {
             return 0;
         }
-        return Integer.parseInt(firstParthtml);
+        return Integer.parseInt(firstPartHtml);
     }
 
     private final Label parseCurrentLabel(final Element labelElement) {
@@ -144,13 +144,13 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         } else {
             info = info.substring(0, info.indexOf("</div>"));
         }
-        info = MetallumUtil.parseHtmlWithLineSeperators(info);
+        info = MetallumUtil.parseHtmlWithLineSeparators(info);
         if (this.entity.getInfo().length() > info.length()) {
             return this.entity.getInfo();
         } else if (this.loadReadMore && this.html.contains("btn_read_more")) {
             try {
                 final String downloadedReadMore = Downloader.getHTML(MetallumURL.assembleMoreInfoURL(this.entity.getId()));
-                return MetallumUtil.parseHtmlWithLineSeperators(downloadedReadMore);
+                return MetallumUtil.parseHtmlWithLineSeparators(downloadedReadMore);
             } catch (ExecutionException e) {
                 logger.error("error in parsing additional information for band: " + this.entity, e);
             }
@@ -163,8 +163,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         final List<Disc> discs = this.entity.getDiscs();
         if (discs.isEmpty()) {
             try {
-                final DiscParser bsdp = new DiscParser(this.entity.getId());
-                return bsdp.parse();
+                final DiscParser discParser = new DiscParser(this.entity.getId());
+                return discParser.parse();
             } catch (final ExecutionException e) {
                 logger.error("error in parsing the discography for band: " + this.entity, e);
             }
@@ -179,7 +179,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         // split by cat
         band.setCurrentLineup(memberParser.getCurrentLineup());
         band.setPastLineup(memberParser.getPastLineup());
-        band.setLiveLineup(memberParser.getLiveLieup());
+        band.setLiveLineup(memberParser.getLiveLineup());
         band.setLastKnownLineup(memberParser.getLastKnownLineup());
         return band;
     }
@@ -226,9 +226,9 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     }
 
     private final Link[] parseLinks() {
-        final List<Link> linkLinst = this.entity.getLinks();
-        if (!linkLinst.isEmpty()) {
-            return linkLinst.toArray(new Link[linkLinst.size()]);
+        final List<Link> links = this.entity.getLinks();
+        if (!links.isEmpty()) {
+            return links.toArray(new Link[links.size()]);
         }
         if (this.loadLinks) {
             try {

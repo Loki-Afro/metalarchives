@@ -52,8 +52,8 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
     }
 
     /**
-     * Here we do have the method for the optional fields. Optional Fields are fiels which do only
-     * apper under given circumstances.
+     * Here we do have the method for the optional fields. Optional Fields are fields which do only
+     * appear under given circumstances.
      * <br>
      * So it gives the disc optional values, Genre, ReleaseDate and Label
      *
@@ -197,8 +197,8 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
     }
 
     @Override
-    protected final SearchRelevance getSearchRelevance(final JSONArray htis) throws JSONException {
-        String relevanceString = htis.getString(1);
+    protected final SearchRelevance getSearchRelevance(final JSONArray hits) throws JSONException {
+        String relevanceString = hits.getString(1);
         relevanceString = relevanceString.substring(relevanceString.indexOf("<!-- ") + 5, relevanceString.indexOf(" -->"));
         return new SearchRelevance(relevanceString);
     }

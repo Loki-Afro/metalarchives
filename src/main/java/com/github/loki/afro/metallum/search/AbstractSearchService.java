@@ -196,7 +196,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
      *
      * @param entity the parsed entity
      * @return If there is no parser, the same entity will be returned! otherwise the parsed entity,
-     * with all informations
+     * with all information
      */
     private final T useSiteParser(final T entity) throws MetallumException {
         AbstractSiteParser<T> parser;

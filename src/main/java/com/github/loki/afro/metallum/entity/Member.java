@@ -15,7 +15,7 @@ public class Member extends AbstractEntity {
     private String province = "";
     private String gender = "";
     private BufferedImage photo = null;
-    private String alternativName = "";
+    private String alternativeName = "";
     private Map<Band, Map<Disc, String>> guestSessionBands = new LinkedHashMap<Band, Map<Disc, String>>();
     private Map<Band, Map<Disc, String>> activeInBands = new LinkedHashMap<Band, Map<Disc, String>>();
     private Map<Band, Map<Disc, String>> pastBands = new LinkedHashMap<Band, Map<Disc, String>>();
@@ -82,12 +82,12 @@ public class Member extends AbstractEntity {
         this.guestSessionBands = map;
     }
 
-    public void setAlternativeName(final String alternativName) {
-        this.alternativName = alternativName;
+    public void setAlternativeName(final String alternativeName) {
+        this.alternativeName = alternativeName;
     }
 
     @Deprecated
-    public void setMiscActivitys(final Map<Band, Map<Disc, String>> parseMiscBands) {
+    public void setMiscActivities(final Map<Band, Map<Disc, String>> parseMiscBands) {
         this.miscBands = parseMiscBands;
     }
 
@@ -134,10 +134,10 @@ public class Member extends AbstractEntity {
     }
 
     /**
-     * @return the alternativName
+     * @return the alternativeName
      */
-    public String getAlternativName() {
-        return this.alternativName;
+    public String getAlternativeName() {
+        return this.alternativeName;
     }
 
     /**

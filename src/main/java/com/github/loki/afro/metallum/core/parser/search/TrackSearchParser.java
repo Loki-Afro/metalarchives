@@ -72,7 +72,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
             id = id.substring(0, id.indexOf("\" title=\""));
             return Long.parseLong(id);
         } else {
-            logger.debug("The current Track, does not have a lyricaLink => Unable to the track-id");
+            logger.debug("The current Track, does not have a lyrical-Link => Unable to the track-id");
             return 0L;
         }
     }
@@ -89,11 +89,11 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
             if (this.loadLyrics) {
                 String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(track.getId())).trim();
                 // making it nice and if there are no lyrics there should be nothing to return!
-                lyricsHtml = MetallumUtil.parseHtmlWithLineSeperators(lyricsHtml);
+                lyricsHtml = MetallumUtil.parseHtmlWithLineSeparators(lyricsHtml);
                 return lyricsHtml.replaceAll("\\(lyrics not available\\)", "");
             }
         } catch (final ExecutionException e) {
-            logger.error("Unanble to get the Lyrics from \"" + track, e);
+            logger.error("Unable to get the Lyrics from \"" + track, e);
         }
         return "";
     }
@@ -129,7 +129,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
     }
 
     @Override
-    protected SearchRelevance getSearchRelevance(final JSONArray htis) throws JSONException {
+    protected SearchRelevance getSearchRelevance(final JSONArray hits) throws JSONException {
         return new SearchRelevance(0d);
     }
 }

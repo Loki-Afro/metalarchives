@@ -223,9 +223,9 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
     }
 
     private String getLabelName() {
-        final String labelname = this.searchObject.getLabel().getName();
-        this.isAValidQuery = (this.isAValidQuery || !labelname.isEmpty());
-        return "bandLabelName=" + MetallumURL.asURLString(labelname);
+        final String labelName = this.searchObject.getLabel().getName();
+        this.isAValidQuery = (this.isAValidQuery || !labelName.isEmpty());
+        return "bandLabelName=" + MetallumURL.asURLString(labelName);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     private String parseDetails() {
         Element notesElement = this.doc.getElementById("album_tabs_notes");
         if (notesElement != null) {
-            return MetallumUtil.parseHtmlWithLineSeperators(notesElement.html());
+            return MetallumUtil.parseHtmlWithLineSeparators(notesElement.html());
         }
         return "";
     }
@@ -130,7 +130,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         parser.parse();
         disc.setLineup(parser.getLineup());
         disc.setGuestLineup(parser.getGuestLineup());
-        disc.setMiscLineup(parser.getOtherLinup());
+        disc.setMiscLineup(parser.getOtherLineup());
         return disc;
     }
 
@@ -149,7 +149,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
                 }
                 return parsedReviewList.toArray(reviewArr);
             } catch (final ExecutionException e) {
-                logger.error("unanble to parse reviews from: " + disc, e);
+                logger.error("unable to parse reviews from: " + disc, e);
             }
         }
         return new Review[0];

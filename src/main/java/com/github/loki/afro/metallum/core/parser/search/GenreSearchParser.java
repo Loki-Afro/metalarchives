@@ -15,7 +15,7 @@ public class GenreSearchParser extends AbstractSearchParser<Band> {
 
     @Override
     protected Band useSpecificSearchParser(JSONArray hits) throws JSONException {
-        Band band = new Band(parsebandId(hits.getString(0)));
+        Band band = new Band(parseBandIdIntern(hits.getString(0)));
         band.setName(parseBandName(hits.getString(0)));
         band.setGenre(parseBandGenre(hits.getString(1)));
         band.setCountry(parseCountry(hits.getString(2)));
@@ -23,16 +23,7 @@ public class GenreSearchParser extends AbstractSearchParser<Band> {
         return band;
     }
 
-    // private String parseAlternativeName(String hit) {
-    // String akaName = "";
-    // if (hit.contains("(a.k.a")) {
-    // akaName = hit.substring(hit.indexOf("(a.k.a. ") + 8, hit.length() - 1);
-    // akaName = Jsoup.parse(akaName).text();
-    // }
-    // return akaName;
-    // }
-
-    private long parsebandId(final String hit) {
+    private long parseBandIdIntern(final String hit) {
         String id = hit.substring(0, hit.indexOf("\">"));
         id = id.substring(id.lastIndexOf("/") + 1, id.length());
         return Long.parseLong(id);

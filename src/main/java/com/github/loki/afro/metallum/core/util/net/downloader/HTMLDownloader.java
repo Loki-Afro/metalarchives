@@ -1,12 +1,12 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
-import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IHTMLDowloader;
+import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IHTMLDownloader;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-final class HTMLDownloader extends AbstractDownloader implements IHTMLDowloader {
+final class HTMLDownloader extends AbstractDownloader implements IHTMLDownloader {
 
     HTMLDownloader(final String urlString) {
         super(urlString);

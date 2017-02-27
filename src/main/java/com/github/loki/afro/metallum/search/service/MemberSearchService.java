@@ -11,10 +11,10 @@ import java.util.concurrent.ExecutionException;
  * <pre>
  * This class represents the simple Member search.
  *
- * This service is configuratable to enhance the speed of the parser.
+ * This service is configurable to enhance the speed of the parser.
  * You'll also have less requests to the metal-archives.
  *
- * Configuratable prameters:
+ * Configurable parameters:
  *  - if you want to have the related <b>links</b>, if available (default <i>true</i>)
  *  - if you want to have the member <b>details</b>, if available (default <i>true</i>)
  *  - if you want to have the member <b>photo</b>, if available (default <i>false</i>)
@@ -29,9 +29,9 @@ public class MemberSearchService extends AbstractSearchService<Member> {
 
     /**
      * Constructs a default MemberSearchService.
-     * You'll not download Memberimages.
-     * You'll download Memberlinks.
-     * You'll download Memberdetails.
+     * You'll not download Member-images.
+     * You'll download Member-links.
+     * You'll download Member-details.
      */
     public MemberSearchService() {
         this(0, false, true, true);

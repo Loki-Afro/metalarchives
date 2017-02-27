@@ -45,7 +45,7 @@ public class DiscSiteMemberParser {
     public final void parse() {
         Element lineUpElementAll = this.doc.getElementById("album_all_members_lineup");
         String category = null;
-//		importent when there are not categories or just one, happens often by Split DVDs and such things 
+//		important when there are not categories or just one, happens often by Split DVDs and such things
         if (lineUpElementAll == null) {
             lineUpElementAll = this.doc.getElementById("album_members_lineup");
             category = this.doc.getElementsByAttributeValue("href", "#album_members_lineup").first().text();
@@ -97,7 +97,7 @@ public class DiscSiteMemberParser {
         return this.albumLineupList;
     }
 
-    public final Map<Member, String> getOtherLinup() {
+    public final Map<Member, String> getOtherLineup() {
         return this.otherMemberList;
     }
 

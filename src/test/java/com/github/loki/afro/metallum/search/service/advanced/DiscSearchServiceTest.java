@@ -83,7 +83,7 @@ public class DiscSearchServiceTest {
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setReleaseTypes(DiscType.EP);
         query.setReleaseName("Hordanes Land", false);
-        service.setloadLyrics(true);
+        service.setLoadLyrics(true);
         final Disc discResult = service.performSearch(query).get(0);
         Assert.assertEquals("Enslaved", discResult.getBandName());
         Assert.assertEquals("Hordanes Land", discResult.getName());
@@ -499,7 +499,7 @@ public class DiscSearchServiceTest {
     @Test
     public void lyricsTest() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
-        service.setloadLyrics(true);
+        service.setLoadLyrics(true);
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setBandName("Cannibal Corpse", false);
         query.setReleaseName("Eaten Back to Life", false);
@@ -531,7 +531,7 @@ public class DiscSearchServiceTest {
         Assert.assertFalse(discResult.getReviews().isEmpty());
         for (final Review resultReview : discResult.getReviews()) {
             Assert.assertFalse(resultReview.getAuthor().isEmpty());
-            Assert.assertFalse(resultReview.getContet().isEmpty());
+            Assert.assertFalse(resultReview.getContent().isEmpty());
             Assert.assertFalse(resultReview.getName().isEmpty());
             Assert.assertFalse(resultReview.getDate().isEmpty());
             Assert.assertTrue(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100);

@@ -70,34 +70,15 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
                 bandList.add(band);
             }
         }
-//		String[] bandSplit = hit.split(", ");
-//		for (int i = 0; i < bandSplit.length; i++) {
-//			if (!bandSplit[i].contains("etc.")) {
-//				LOGGER.info(bandSplit[i]);
-//				String bandId = bandSplit[i].substring(0, bandSplit[i].indexOf("\">"));
-//				bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
-////				because there are Members which do not have any band O.o 
-////				see FENRIZ - http://www.metal-archives.com/artists/FENRIZ/407865
-//				if (!bandId.isEmpty()) {
-//					Band band = new Band(Long.parseLong(bandId));
-//					band.setName(parseBandName(bandSplit[i]));
-//					bandList.add(band);
-//				}
-//			}
-//		}
         return bandList;
     }
-
-//	private String parseBandName(final String hit) {
-//		return MetallumUtil.trimNoBreakSpaces(Jsoup.parse(hit).text());
-//	}
 
     private String parseRealName(final String hit) {
         return hit;
     }
 
     /**
-     * Parses the name without the alternativ name.
+     * Parses the name without the alternative name.
      * Example:
      * put in <a href="http://www.metal-archives.com/artists/%2232%22_Kondo/182832">"32" Kondo</a>
      * (a.k.a. <em>32</em>)
@@ -124,7 +105,7 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
     }
 
     @Override
-    protected SearchRelevance getSearchRelevance(final JSONArray htis) throws JSONException {
+    protected SearchRelevance getSearchRelevance(final JSONArray hits) throws JSONException {
         // they do all have the same searchrelevance!
         return new SearchRelevance(0d);
     }

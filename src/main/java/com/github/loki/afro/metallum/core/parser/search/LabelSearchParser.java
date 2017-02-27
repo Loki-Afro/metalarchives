@@ -42,7 +42,7 @@ public class LabelSearchParser extends AbstractSearchParser<Label> {
     }
 
     @Override
-    protected final SearchRelevance getSearchRelevance(JSONArray htis) throws JSONException {
+    protected final SearchRelevance getSearchRelevance(JSONArray hits) throws JSONException {
         // actually there is no searchrelevance :'(
         return new SearchRelevance(0d);
     }

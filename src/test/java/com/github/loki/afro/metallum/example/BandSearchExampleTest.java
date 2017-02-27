@@ -35,7 +35,6 @@ public class BandSearchExampleTest {
                 Assert.assertEquals(band.getLabel().getName(), "Black Mark Production");
                 Assert.assertEquals(band.getLabel().getId(), 38);
                 // here we could parse anything
-                // BANDSTATUS
             }
         }
     }

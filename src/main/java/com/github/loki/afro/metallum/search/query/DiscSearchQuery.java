@@ -117,7 +117,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     }
 
     /**
-     * @param labelName the labelname of the disc we are searching for
+     * @param labelName the labelName of the disc we are searching for
      * @param indie     actually I don't know what makes a label to a indie label
      */
     public void setLabel(final String labelName, final boolean indie) {
@@ -134,7 +134,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     }
 
     /**
-     * Addes the DiscTypes we are searching for
+     * Adds the DiscTypes we are searching for
      *
      * @param discTypes the types of release we are searching for
      */
@@ -299,7 +299,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
             final DiscType discType = this.discTypes.get(0);
             for (final List<Disc> discList : resultMap.values()) {
                 for (final Disc disc : discList) {
-                    // if there is a discType we are overriting it!
+                    // if there is a discType we are overwriting it!
                     disc.setDiscType(discType);
                 }
             }

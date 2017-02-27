@@ -34,16 +34,16 @@ public class SimilarArtistsParser {
         return returnMap;
     }
 
-    private static Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> themap, final int key, final Band value) {
-        List<Band> bandListFromMap = themap.get(key);
+    private static Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> theMap, final int key, final Band value) {
+        List<Band> bandListFromMap = theMap.get(key);
         if (bandListFromMap == null) {
             bandListFromMap = new ArrayList<Band>();
             bandListFromMap.add(value);
         } else {
             bandListFromMap.add(value);
         }
-        themap.put(key, bandListFromMap);
-        return themap;
+        theMap.put(key, bandListFromMap);
+        return theMap;
     }
 
     private long parseBandId(final String htmlPart) {

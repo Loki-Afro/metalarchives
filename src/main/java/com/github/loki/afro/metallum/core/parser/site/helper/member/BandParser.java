@@ -52,9 +52,9 @@ public class BandParser {
             final Band band = parseBand(html[i]);
             final Map<Disc, String> albumMap = new LinkedHashMap<Disc, String>();
 
-            final String[] roleinBand = html[i].split("id=\"memberInAlbum");
-            for (int j = 1; j < roleinBand.length; j++) {
-                albumMap.put(parseDisc(roleinBand[j], band), parseDiscComment(roleinBand[j]));
+            final String[] roleInBand = html[i].split("id=\"memberInAlbum");
+            for (int j = 1; j < roleInBand.length; j++) {
+                albumMap.put(parseDisc(roleInBand[j], band), parseDiscComment(roleInBand[j]));
             }
             returnMap.put(band, albumMap);
         }
@@ -91,7 +91,7 @@ public class BandParser {
             }
             return Long.parseLong(bandId);
         } catch (final NumberFormatException numE) {
-            LOGGER.warn("Band is not in Ecyclopedia Metallum, html: " + html, numE);
+            LOGGER.warn("Band is not in Encyclopedia Metallum, html: " + html, numE);
             return 0;
         }
     }

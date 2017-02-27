@@ -12,7 +12,7 @@ import java.util.SortedMap;
 public class LabelSearchQuery extends AbstractSearchQuery<Label> {
 
     public LabelSearchQuery() {
-        // the zero doesen't matter here...
+        // the zero does not matter here...
         super(new Label());
     }
 

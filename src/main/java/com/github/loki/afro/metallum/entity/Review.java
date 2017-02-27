@@ -24,7 +24,7 @@ public class Review extends AbstractEntity {
         return this.percent;
     }
 
-    public String getContet() {
+    public String getContent() {
         return this.content;
     }
 

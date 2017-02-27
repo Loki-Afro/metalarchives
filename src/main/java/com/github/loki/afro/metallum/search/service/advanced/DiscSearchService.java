@@ -83,7 +83,7 @@ public class DiscSearchService extends AbstractSearchService<Disc> {
         this.loadReviews = loadReviews;
     }
 
-    public void setloadLyrics(final boolean loadLyrics) {
+    public void setLoadLyrics(final boolean loadLyrics) {
         this.loadLyrics = loadLyrics;
     }
 

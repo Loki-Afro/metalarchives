@@ -17,8 +17,6 @@ abstract class AbstractDownloader {
     private final String urlString;
     private static final HttpClient HTTP_CLIENT;
     final static Charset HTML_CHARSET = Charset.forName("UTF-8");
-    private final static int PORT = 80;
-    private final static String PROTOCOL = "http";
     private final static Logger LOGGER = LoggerFactory.getLogger(AbstractDownloader.class);
 
     private static final String USER_AGENT_PROPERTY = "de.loki.metallum.useragent";

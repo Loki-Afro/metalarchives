@@ -65,7 +65,7 @@ public final class DiscSiteTrackParser {
                 lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
                 this.trackToModify.setLyrics(lyricsHTML.trim());
             } catch (final ExecutionException e) {
-                LOGGER.error("unanble to get lyrics from \"" + this.trackId + "\"", e);
+                LOGGER.error("unable to get lyrics from \"" + this.trackId + "\"", e);
             } finally {
                 signalDoneCountDown();
             }
@@ -93,10 +93,10 @@ public final class DiscSiteTrackParser {
     }
 
     public Track[] parse() {
-        Element tabeElement = this.doc.select("table[class$=table_lyrics]").first();
+        Element tableElement = this.doc.select("table[class$=table_lyrics]").first();
         int counter = 1;
         boolean foundFirstFirstTrack = false;
-        Elements rows = tabeElement.select("tr[class~=(even|odd)]");
+        Elements rows = tableElement.select("tr[class~=(even|odd)]");
         List<Track> trackList = new ArrayList<Track>();
         for (final Element row : rows) {
             final String trackIdStr = parseTrackId(row);
@@ -112,7 +112,7 @@ public final class DiscSiteTrackParser {
                 foundFirstFirstTrack = true;
             }
             track.setDiscNumber(counter);
-//			because otherwise the bandname is always the same
+//			because otherwise the bandName is always the same
             if (this.isSplit) {
                 track.setBandName(parseBandName(row));
             }

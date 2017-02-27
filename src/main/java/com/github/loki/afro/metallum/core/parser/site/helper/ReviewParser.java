@@ -28,7 +28,7 @@ public final class ReviewParser {
             final Review review = new Review();
             review.setId(parseReviewId(element));
             review.setName(parseTitle(element));
-            review.setPercent(parseRecentage(element));
+            review.setPercent(parsePercentage(element));
             review.setContent(parseBody(element));
             review.setAuthor(parseAuthor(element));
             review.setDate(parseDate(element));
@@ -66,7 +66,7 @@ public final class ReviewParser {
         return "";
     }
 
-    private int parseRecentage(final Element elem) {
+    private int parsePercentage(final Element elem) {
         String title = parseTitleIntern(elem);
         int lastIndexOfHyphen = title.lastIndexOf("-");
         if (lastIndexOfHyphen > 1) {
@@ -78,7 +78,7 @@ public final class ReviewParser {
 
     private String parseBody(final Element elem) {
         Element bodyElem = elem.getElementById(elem.id().replaceAll("reviewBox", "reviewText"));
-        return MetallumUtil.parseHtmlWithLineSeperators(bodyElem.html());
+        return MetallumUtil.parseHtmlWithLineSeparators(bodyElem.html());
     }
 
     private String parseAuthor(final Element elem) {

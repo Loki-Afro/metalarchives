@@ -175,7 +175,7 @@ public class Band extends AbstractEntity {
     /**
      * The band photo is mostly a picture of the band members.
      *
-     * @return the bandphoto as Image, could be null if there is none!
+     * @return the photo as Image, could be null if there is none!
      */
     public BufferedImage getPhoto() {
         return this.photo;
@@ -184,7 +184,7 @@ public class Band extends AbstractEntity {
     /**
      * The Band logo is mostly the lettering of the band.
      *
-     * @return the bandlogo as Image, could be null if there is none!
+     * @return the logo as Image, could be null if there is none!
      */
     public BufferedImage getLogo() {
         return this.logo;
@@ -198,7 +198,7 @@ public class Band extends AbstractEntity {
      * To add a Link to the Band.
      * If there is no suitable Category for the link, the link will not be added to any List.
      *
-     * @param links doesen't matter what you put in for a Link as long as it has a category.
+     * @param links does not matter what you put in for a Link as long as it has a category.
      */
     public void addLinks(final Link... links) {
         for (Link link : links) {
@@ -219,7 +219,7 @@ public class Band extends AbstractEntity {
                     this.tablatureLinks.add(link);
                     break;
                 default:
-                    System.err.println("unrecognized linkcategory, the Link will be ignored, this should never happen!");
+                    System.err.println("unrecognized link-category, the Link will be ignored, this should never happen!");
                     System.err.println(link.getName() + "    " + link.getURL());
                     break;
             }

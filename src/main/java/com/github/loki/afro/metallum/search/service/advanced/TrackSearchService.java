@@ -37,7 +37,7 @@ public class TrackSearchService extends AbstractSearchService<Track> {
     /**
      * Constructs a default TrackSearchService.
      *
-     * @param loadLyrics If true, the lyrics will get downlaoded.
+     * @param loadLyrics If true, the lyrics will get downloaded.
      */
     public TrackSearchService(final boolean loadLyrics) {
         this.loadLyrics = loadLyrics;

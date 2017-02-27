@@ -112,9 +112,9 @@ public class MemberParser {
     }
 
     private final List<Band> parseMemberBands(final String htmlPart) {
-        final List<Band> mbands = new ArrayList<Band>();
+        final List<Band> mBands = new ArrayList<Band>();
         if (!htmlPart.contains("See also:")) {
-            return mbands;
+            return mBands;
         }
 
         final String[] bands = htmlPart.split("<a");
@@ -126,17 +126,17 @@ public class MemberParser {
             idStr = idStr.substring(idStr.indexOf("/") + 1, idStr.indexOf("\">"));
             band.setId(Long.parseLong(idStr));
 
-            mbands.add(band);
+            mBands.add(band);
         }
 
-        return mbands;
+        return mBands;
     }
 
     public final Map<Member, String> getCurrentLineup() {
         return this.currentLineupList;
     }
 
-    public final Map<Member, String> getLiveLieup() {
+    public final Map<Member, String> getLiveLineup() {
         return this.liveLineupList;
     }
 

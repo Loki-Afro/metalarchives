@@ -121,8 +121,8 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     }
 
     private Label parseRightSide(final Label label) {
-        String newhtml = this.html.substring(this.html.indexOf("</dl>") + 5);
-        String[] upperRightPart = newhtml.substring(0, newhtml.indexOf("</dl>")).split("<dd>");
+        String newHtml = this.html.substring(this.html.indexOf("</dl>") + 5);
+        String[] upperRightPart = newHtml.substring(0, newHtml.indexOf("</dl>")).split("<dd>");
         label.setStatus(parseLabelStatus(upperRightPart[1]));
         label.setSpecialisation(parseSpecialisedIn(upperRightPart[2]));
         label.setFoundingDate(parseFoundingDate(upperRightPart[3]));
@@ -159,7 +159,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
                 final LinkParser parser = new LinkParser(this.entity.getId(), LinkParser.LABEL_PARSER);
                 return parser.parse();
             } catch (final ExecutionException e) {
-                LOGGER.error("unanble to parse label links from " + this.entity, e);
+                LOGGER.error("unable to parse label links from " + this.entity, e);
             }
         }
         return new Link[0];
@@ -168,7 +168,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     private String parseAddress(final String upperLeftPart) {
         String address = upperLeftPart.substring(upperLeftPart.indexOf("> ") + 2, upperLeftPart.indexOf("</dd>"));
-        address = MetallumUtil.parseHtmlWithLineSeperators(address);
+        address = MetallumUtil.parseHtmlWithLineSeparators(address);
         return address;
     }
 
@@ -203,14 +203,14 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     private List<Label> parseSubLabels(final String upperRightPart) {
         List<Label> labelList = new ArrayList<Label>();
-        // must and with </dd> and at least 9 chracters to match
+        // must and with </dd> and at least 9 characters to match
         if (!upperRightPart.trim().matches(".{9,}?[</dd>]$")) {
             return labelList;
         }
-        final String[] labellinks = upperRightPart.split(",");
-        for (final String labellink : labellinks) {
+        final String[] labelLinks = upperRightPart.split(",");
+        for (final String labelLink : labelLinks) {
             // prepare, to remove Online Shopping if it appears
-            String parseAbleString = labellink.replaceAll("(?imx)</dd>.*", "").trim();
+            String parseAbleString = labelLink.replaceAll("(?imx)</dd>.*", "").trim();
             // name
             String labelName = Jsoup.parse(parseAbleString).text();
             // id
@@ -234,7 +234,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * @return a List of Bands, if there are none, you'll get a empty List.
      */
     private List<Band> parseCurrentRoster() {
-        List<Band> roster = this.entity.getCurrentRoser();
+        List<Band> roster = this.entity.getCurrentRoster();
         if (!roster.isEmpty()) {
             return roster;
         } else if (this.loadCurrentRooster != PARSE_STYLE.NONE) {
@@ -268,7 +268,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
             try {
                 return new PastRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadPastRooster).parse();
             } catch (final Exception e) {
-                LOGGER.error("unanble to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
+                LOGGER.error("unable to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
             }
         }
         return new HashMap<Band, Integer>();
@@ -293,7 +293,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
             try {
                 return new ReleaseParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadReleases).parse();
             } catch (final Exception e) {
-                LOGGER.error("unanble to parse label releases with " + this.loadReleases + " and " + this.entity, e);
+                LOGGER.error("unable to parse label releases with " + this.loadReleases + " and " + this.entity, e);
             }
         }
         return new HashMap<Band, List<Disc>>();
@@ -304,7 +304,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         if (this.html.contains("<div id=\"label_notes")) {
             additionalNotes = this.html.substring(this.html.indexOf("<div id=\"label_notes"), this.html.indexOf("<div id=\"auditTrail"));
             additionalNotes = additionalNotes.replaceAll("<.?p>", "<br><br>");
-            additionalNotes = MetallumUtil.parseHtmlWithLineSeperators(additionalNotes);
+            additionalNotes = MetallumUtil.parseHtmlWithLineSeparators(additionalNotes);
         }
         return additionalNotes;
     }

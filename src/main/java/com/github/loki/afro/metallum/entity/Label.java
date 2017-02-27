@@ -19,7 +19,7 @@ public class Label extends AbstractEntity {
     private boolean onlineShopping = false;
     private Link websiteURL = new Link();
     private String email = "";
-    private List<Band> currentRoser = new ArrayList<Band>();
+    private List<Band> currentRoster = new ArrayList<Band>();
     private Map<Band, List<Disc>> releases = new LinkedHashMap<Band, List<Disc>>();
     private Map<Band, Integer> pastRoster = new LinkedHashMap<Band, Integer>();
     private String details = "";
@@ -96,10 +96,10 @@ public class Label extends AbstractEntity {
     }
 
     /**
-     * @return the currentRoser
+     * @return the currentRoster
      */
-    public List<Band> getCurrentRoser() {
-        return this.currentRoser;
+    public List<Band> getCurrentRoster() {
+        return this.currentRoster;
     }
 
     /**
@@ -190,7 +190,7 @@ public class Label extends AbstractEntity {
     }
 
     public void setCurrentRoster(final List<Band> currentRooster) {
-        this.currentRoser = currentRooster;
+        this.currentRoster = currentRooster;
     }
 
     public void setPastRoster(final Map<Band, Integer> map) {

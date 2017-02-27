@@ -13,7 +13,7 @@ public class LyricalThemesSearchTest {
     // TODO to test: -objectToLoad
 
     @Test
-    public void noThemesest() {
+    public void noThemeTest() {
         final LyricalThemesSearchService searchService = new LyricalThemesSearchService();
         final LyricalThemesSearchQuery query = new LyricalThemesSearchQuery();
         query.setLyricalThemes("");

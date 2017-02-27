@@ -27,7 +27,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.AUSTRALIA);
         assertEquals(resultBand.getProvince(), "Adelaide, South Australia");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1993);
         assertEquals(resultBand.getGenre(), "Funeral Doom Metal");
         assertEquals("Despair, Desolation, Depression, Mysticism", resultBand.getLyricalThemes());
@@ -68,7 +68,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.UNITED_STATES);
         assertEquals(resultBand.getProvince(), "Greenville, South Carolina");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1993);
         assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
         assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Rituals, H.P. Lovecraft");
@@ -120,7 +120,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
         assertEquals("Harlow, Essex, England", resultBand.getProvince());
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1994);
         assertEquals(resultBand.getGenre(), "Doom Metal");
         assertEquals(resultBand.getLyricalThemes(), "Horror (early), Depression, Relationships");
@@ -150,7 +150,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
         assertEquals(resultBand.getProvince(), "London, England");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2009);
         assertEquals(resultBand.getGenre(), "Doom Metal, Atmospheric Rock");
         assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
@@ -224,7 +224,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.UNITED_STATES);
         assertEquals(resultBand.getProvince(), "Providence, Rhode Island");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1988);
         assertEquals(resultBand.getGenre(), "Death Metal");
         assertEquals(resultBand.getLyricalThemes(), "Satanism, Occultism, Anti-Christianity, Death");
@@ -255,7 +255,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.SWITZERLAND);
         assertEquals(resultBand.getProvince(), "Zurich");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2008);
         assertEquals("Gothic/Doom/Death/Black Metal", resultBand.getGenre());
         assertEquals("Despair, Pain, Depression, Darkness", resultBand.getLyricalThemes());
@@ -278,13 +278,13 @@ public class BandSearchServiceTest {
         final BandSearchService service = new BandSearchService();
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Nocturnal Depression", false);
-        query.addStatus(BandStatus.ACTIV);
+        query.addStatus(BandStatus.ACTIVE);
         final Band resultBand = service.performSearch(query).get(0);
         assertEquals(resultBand.getName(), "Nocturnal Depression");
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.FRANCE);
         assertEquals(resultBand.getProvince(), "Grenoble, Rhône-Alpes");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2004);
         assertEquals(resultBand.getGenre(), "Black Metal");
         assertEquals(resultBand.getLyricalThemes(), "Suicide, Sorrow, Despair, Death, Nature");
@@ -308,7 +308,7 @@ public class BandSearchServiceTest {
         final BandSearchService service = new BandSearchService();
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Nagelfar", false);
-        query.addStatus(BandStatus.ACTIV, BandStatus.SPLIT_UP);
+        query.addStatus(BandStatus.ACTIVE, BandStatus.SPLIT_UP);
         final Band resultBand = service.performSearch(query).get(0);
         assertEquals(resultBand.getName(), "Nagelfar");
         assertTrue(resultBand.getId() != 0);
@@ -472,7 +472,7 @@ public class BandSearchServiceTest {
 
     private void defaultReviewTest(final Review review, final Band band) {
         assertFalse(review.getAuthor().isEmpty());
-        assertFalse(review.getContet().isEmpty());
+        assertFalse(review.getContent().isEmpty());
         assertFalse(review.getDate().isEmpty());
         assertTrue(review.getId() != 0);
         assertFalse(review.getName().isEmpty());
@@ -511,7 +511,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.BRAZIL);
         assertEquals(resultBand.getProvince(), "Piracicaba, São Paulo");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2005);
         assertFalse(resultBand.getGenre().isEmpty());
         assertFalse(resultBand.getLyricalThemes().isEmpty());
@@ -554,7 +554,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.UNITED_KINGDOM);
         assertEquals("Harlow, Essex, England", resultBand.getProvince());
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1994);
         assertFalse(resultBand.getGenre().isEmpty());
         assertFalse(resultBand.getLyricalThemes().isEmpty());
@@ -595,7 +595,7 @@ public class BandSearchServiceTest {
         assertTrue(resultBand.getId() == 666);
         assertEquals(resultBand.getCountry(), Country.ITALY);
         assertEquals(resultBand.getProvince(), "Treviso, Veneto");
-        assertEquals(resultBand.getStatus(), BandStatus.ACTIV);
+        assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1991);
         assertEquals(resultBand.getGenre(), "Neoclassical/Progressive Metal");
         assertEquals(resultBand.getLyricalThemes(), "Philosophical and existentialistic themes");

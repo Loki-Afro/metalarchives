@@ -60,7 +60,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
     }
 
     /**
-     * Settes the lyrics of the track we are searching for
+     * Setters the lyrics of the track we are searching for
      *
      * @param lyrics you do not need to know the full lyrics, I think its enough to know some words
      */
@@ -80,9 +80,9 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
         Collections.addAll(this.discTypes, releaseTypes);
     }
 
-    private final String asPair(String attribut, String toAdd) {
+    private final String asPair(String attribute, String toAdd) {
         this.isAValidQuery = (this.isAValidQuery || !toAdd.isEmpty());
-        return attribut + "=" + MetallumURL.asURLString(toAdd);
+        return attribute + "=" + MetallumURL.asURLString(toAdd);
     }
 
     private final String getDiscTypes() {

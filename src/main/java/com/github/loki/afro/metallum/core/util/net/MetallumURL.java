@@ -227,8 +227,8 @@ public final class MetallumURL {
         return BASEURL + "labels/_/" + labelId;
     }
 
-    public static String assembleLabelLinkURL(final long labelid) {
-        return BASEURL + "link/ajax-list/type/label/id/" + labelid;
+    public static String assembleLabelLinkURL(final long labelId) {
+        return BASEURL + "link/ajax-list/type/label/id/" + labelId;
     }
 
 }

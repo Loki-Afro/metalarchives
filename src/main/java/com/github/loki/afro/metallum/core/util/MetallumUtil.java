@@ -79,7 +79,7 @@ public final class MetallumUtil {
      * @param html the HTML String with tags
      * @return a HTML clean String (parsed), but with line separators
      */
-    public static String parseHtmlWithLineSeperators(final String html) {
+    public static String parseHtmlWithLineSeparators(final String html) {
         final StringBuilder strBuf = new StringBuilder();
         String cleanHtml = Jsoup.parse(html.replaceAll("(?i)<br[^>]*>", "br2n")).text();
         for (final String strPart : cleanHtml.split("br2n")) {
@@ -107,7 +107,7 @@ public final class MetallumUtil {
             int code = huc.getResponseCode();
             return code == 200;
         } catch (IOException e) {
-            LOGGER.error("Metalarchives is not accessable", e);
+            LOGGER.error("Metalarchives is not accessible", e);
         }
         return false;
     }

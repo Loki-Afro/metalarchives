@@ -45,7 +45,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         member.setGuestIn(parseGuestSessionBands());
         member.setActiveIn(parseActiveBands());
         member.setPastBands(parsePastBands());
-        member.setMiscActivitys(parseMiscBands());
+        member.setMiscActivities(parseMiscBands());
         member.setDetails(parseDetails());
         member.addLinks(parseLinks());
         member = parseModifications(member);
@@ -176,7 +176,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         } catch (final ExecutionException e) {
             LOGGER.error("Unable get \"read more\" for " + entity.getId(), e);
         }
-        return MetallumUtil.parseHtmlWithLineSeperators(html);
+        return MetallumUtil.parseHtmlWithLineSeparators(html);
     }
 
     private final String parseDetails() {
@@ -187,7 +187,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         biography = biography.substring(0, biography.indexOf("</div>"));
         // To keep the headlines formatted
         biography = biography.replaceAll("</?h.*?>", "<br><br>");
-        biography = MetallumUtil.parseHtmlWithLineSeperators(biography);
+        biography = MetallumUtil.parseHtmlWithLineSeparators(biography);
         return biography;
     }
 
