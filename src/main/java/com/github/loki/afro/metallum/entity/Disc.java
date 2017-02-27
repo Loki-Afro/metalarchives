@@ -8,8 +8,8 @@ import java.util.*;
 public class Disc extends AbstractEntity {
 
     private DiscType type;
-    private List<Track> trackList = new ArrayList<Track>();
-    private List<Review> reviewList = new ArrayList<Review>();
+    private List<Track> trackList = new ArrayList<>();
+    private List<Review> reviewList = new ArrayList<>();
     private String releaseDate;
     private Band band = new Band();
     private Label label = new Label();
@@ -20,11 +20,11 @@ public class Disc extends AbstractEntity {
      * Only filled if DiscType.isSplit(type) is true
      * Does only contain BandName and Id.
      */
-    private List<Band> splitBands = new ArrayList<Band>();
+    private List<Band> splitBands = new ArrayList<>();
 
-    private Map<Member, String> lineup = new HashMap<Member, String>();
-    private Map<Member, String> miscMember = new HashMap<Member, String>();
-    private Map<Member, String> guestMember = new HashMap<Member, String>();
+    private Map<Member, String> lineup = new HashMap<>();
+    private Map<Member, String> miscMember = new HashMap<>();
+    private Map<Member, String> guestMember = new HashMap<>();
 
     private int discCount = 1;
     private boolean hasReviews = false;
@@ -173,7 +173,7 @@ public class Disc extends AbstractEntity {
     }
 
     public List<Track> getTrackListOnDisc(final int discNumber) {
-        final List<Track> trackListByDiscNumber = new ArrayList<Track>();
+        final List<Track> trackListByDiscNumber = new ArrayList<>();
         for (final Track track : this.trackList) {
             if (track.getDiscNumber() == discNumber) {
                 trackListByDiscNumber.add(track);

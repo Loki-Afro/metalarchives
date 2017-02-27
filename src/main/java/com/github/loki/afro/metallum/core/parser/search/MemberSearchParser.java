@@ -55,7 +55,7 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
 
     private List<Band> parseBands(final String hit) {
         LOGGER.debug("new hit: " + hit);
-        List<Band> bandList = new ArrayList<Band>();
+        List<Band> bandList = new ArrayList<>();
         Document doc = Jsoup.parse(hit);
         Elements links = doc.getElementsByAttribute("href");
         for (Element link : links) {

@@ -202,7 +202,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     }
 
     private List<Label> parseSubLabels(final String upperRightPart) {
-        List<Label> labelList = new ArrayList<Label>();
+        List<Label> labelList = new ArrayList<>();
         // must and with </dd> and at least 9 characters to match
         if (!upperRightPart.trim().matches(".{9,}?[</dd>]$")) {
             return labelList;
@@ -240,12 +240,12 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         } else if (this.loadCurrentRooster != PARSE_STYLE.NONE) {
             try {
                 final CurrentRosterParser parser = new CurrentRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadCurrentRooster);
-                return new ArrayList<Band>(parser.parse().values());
+                return new ArrayList<>(parser.parse().values());
             } catch (final Exception e) {
                 LOGGER.error("Unable to parse current roster", e);
             }
         }
-        return new ArrayList<Band>();
+        return new ArrayList<>();
     }
 
     /**
@@ -271,7 +271,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
                 LOGGER.error("unable to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
             }
         }
-        return new HashMap<Band, Integer>();
+        return new HashMap<>();
     }
 
     /**
@@ -296,7 +296,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
                 LOGGER.error("unable to parse label releases with " + this.loadReleases + " and " + this.entity, e);
             }
         }
-        return new HashMap<Band, List<Disc>>();
+        return new HashMap<>();
     }
 
     private String parseAdditionalNotes() {

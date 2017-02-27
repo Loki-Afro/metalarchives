@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DiscSiteMemberParser {
-    private final Map<Member, String> albumLineupList = new HashMap<Member, String>();
-    private final Map<Member, String> guestLineupList = new HashMap<Member, String>();
-    private final Map<Member, String> otherMemberList = new HashMap<Member, String>();
+    private final Map<Member, String> albumLineupList = new HashMap<>();
+    private final Map<Member, String> guestLineupList = new HashMap<>();
+    private final Map<Member, String> otherMemberList = new HashMap<>();
     private final Document doc;
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscSiteMemberParser.class);
 

@@ -13,7 +13,7 @@ public class LabelSearchExampleTest {
 
     @Ignore
     public void test() throws MetallumException {
-        List<String> stringList = new ArrayList<String>();
+        List<String> stringList = new ArrayList<>();
         stringList.add("Deathlike Silence");
         stringList.add("Apparitia Recordings");
         stringList.add("Metal Blade Records");

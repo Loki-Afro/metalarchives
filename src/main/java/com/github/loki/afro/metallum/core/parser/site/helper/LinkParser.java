@@ -35,7 +35,7 @@ public class LinkParser {
 
     public Link[] parse() {
         final String[] linkHtml = this.html.split("id=\"header_");
-        final List<Link> linkList = new ArrayList<Link>();
+        final List<Link> linkList = new ArrayList<>();
         for (int i = 1; i < linkHtml.length; i++) {
             final LinkCategory category = parseLinkCategory(linkHtml[i]);
             final String[] catLinks = linkHtml[i].split("id=\"link[\\d]");

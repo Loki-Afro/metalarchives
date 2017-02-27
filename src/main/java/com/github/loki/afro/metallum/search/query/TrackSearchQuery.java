@@ -27,7 +27,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
     private boolean exactTitleNameMatch = false;
     private boolean exactBandNameMatch = false;
     private boolean exactReleaseNameMatch = false;
-    private final List<DiscType> discTypes = new ArrayList<DiscType>();
+    private final List<DiscType> discTypes = new ArrayList<>();
 
     public TrackSearchQuery() {
         super(new Track());

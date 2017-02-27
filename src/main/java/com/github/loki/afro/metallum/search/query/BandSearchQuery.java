@@ -27,8 +27,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
     private int fromYear;
     private int toYear;
     private boolean indieLabel = false;
-    private final List<Country> countries = new ArrayList<Country>();
-    private final List<BandStatus> bandStatus = new ArrayList<BandStatus>();
+    private final List<Country> countries = new ArrayList<>();
+    private final List<BandStatus> bandStatus = new ArrayList<>();
 
     public BandSearchQuery() {
         super(new Band());

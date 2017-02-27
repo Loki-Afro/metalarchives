@@ -15,15 +15,15 @@ public class Label extends AbstractEntity {
     private String phoneNumber = "";
     private LabelStatus status = LabelStatus.ANY;
     private String foundingDate = "";
-    private List<Label> subLabels = new ArrayList<Label>();
+    private List<Label> subLabels = new ArrayList<>();
     private boolean onlineShopping = false;
     private Link websiteURL = new Link();
     private String email = "";
-    private List<Band> currentRoster = new ArrayList<Band>();
-    private Map<Band, List<Disc>> releases = new LinkedHashMap<Band, List<Disc>>();
-    private Map<Band, Integer> pastRoster = new LinkedHashMap<Band, Integer>();
+    private List<Band> currentRoster = new ArrayList<>();
+    private Map<Band, List<Disc>> releases = new LinkedHashMap<>();
+    private Map<Band, Integer> pastRoster = new LinkedHashMap<>();
     private String details = "";
-    private List<Link> links = new ArrayList<Link>();
+    private List<Link> links = new ArrayList<>();
     private BufferedImage logo = null;
     private String logoUrl = null;
 

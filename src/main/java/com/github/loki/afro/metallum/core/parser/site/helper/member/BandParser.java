@@ -47,10 +47,10 @@ public class BandParser {
     }
 
     private Map<Band, Map<Disc, String>> parseIntern(final String[] html) {
-        final Map<Band, Map<Disc, String>> returnMap = new LinkedHashMap<Band, Map<Disc, String>>();
+        final Map<Band, Map<Disc, String>> returnMap = new LinkedHashMap<>();
         for (int i = 1; i < html.length; i++) {
             final Band band = parseBand(html[i]);
-            final Map<Disc, String> albumMap = new LinkedHashMap<Disc, String>();
+            final Map<Disc, String> albumMap = new LinkedHashMap<>();
 
             final String[] roleInBand = html[i].split("id=\"memberInAlbum");
             for (int j = 1; j < roleInBand.length; j++) {

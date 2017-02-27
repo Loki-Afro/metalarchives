@@ -14,7 +14,7 @@ public class MemberSearchExampleTest {
     @Ignore
     public void test() throws MetallumException {
 
-        List<String> stringList = new ArrayList<String>();
+        List<String> stringList = new ArrayList<>();
         stringList.add("Kerry King");
         stringList.add("");
         stringList.add("Fenriz");

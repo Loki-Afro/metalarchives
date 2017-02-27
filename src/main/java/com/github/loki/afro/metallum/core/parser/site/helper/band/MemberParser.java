@@ -36,10 +36,10 @@ public class MemberParser {
 
     }
 
-    private final Map<Member, String> currentLineupList = new HashMap<Member, String>();
-    private final Map<Member, String> pastLineupList = new HashMap<Member, String>();
-    private final Map<Member, String> liveLineupList = new HashMap<Member, String>();
-    private final Map<Member, String> lastKnownLineupList = new HashMap<Member, String>();
+    private final Map<Member, String> currentLineupList = new HashMap<>();
+    private final Map<Member, String> pastLineupList = new HashMap<>();
+    private final Map<Member, String> liveLineupList = new HashMap<>();
+    private final Map<Member, String> lastKnownLineupList = new HashMap<>();
 
     public final void parse(final String html) {
         if (!html.contains("id=\"band_members\"")) {
@@ -112,7 +112,7 @@ public class MemberParser {
     }
 
     private final List<Band> parseMemberBands(final String htmlPart) {
-        final List<Band> mBands = new ArrayList<Band>();
+        final List<Band> mBands = new ArrayList<>();
         if (!htmlPart.contains("See also:")) {
             return mBands;
         }

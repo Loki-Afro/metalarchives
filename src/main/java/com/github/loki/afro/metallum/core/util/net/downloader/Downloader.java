@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Downloader {
 
-    private final static ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(4, 10, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>()) {
+    private final static ThreadPoolExecutor THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(4, 10, 5L, TimeUnit.SECONDS, new LinkedBlockingQueue<>()) {
         {
             allowCoreThreadTimeOut(true);
         }

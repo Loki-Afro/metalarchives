@@ -22,7 +22,7 @@ public final class ReviewParser {
     }
 
     public List<Review> parse() {
-        final List<Review> reviews = new ArrayList<Review>();
+        final List<Review> reviews = new ArrayList<>();
         Elements elements = this.doc.select("div[class=reviewBox]");
         for (final Element element : elements) {
             final Review review = new Review();

@@ -14,7 +14,7 @@ public class LyricalThemesExampleTest {
     @Ignore
     public void test() throws MetallumException {
 
-        List<String> stringList = new ArrayList<String>();
+        List<String> stringList = new ArrayList<>();
         stringList.add("Love");
         stringList.add("Sex");
         for (String lyricalThemes : stringList) {

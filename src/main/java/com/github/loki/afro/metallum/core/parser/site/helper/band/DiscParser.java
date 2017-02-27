@@ -22,7 +22,7 @@ public final class DiscParser {
     }
 
     public final Disc[] parse() {
-        List<Disc> discography = new LinkedList<Disc>();
+        List<Disc> discography = new LinkedList<>();
         Elements rows = this.doc.getElementsByTag("tr");
         for (int i = 1; i < rows.size(); i++) {
             Element row = rows.get(i);

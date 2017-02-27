@@ -13,7 +13,7 @@ public class GenreSearchExampleTest {
 
     @Ignore
     public void test() throws MetallumException {
-        List<String> stringList = new ArrayList<String>();
+        List<String> stringList = new ArrayList<>();
         stringList.add("Death Metal");
         stringList.add("Death Metal");
         // stringList.add("Black Metal");

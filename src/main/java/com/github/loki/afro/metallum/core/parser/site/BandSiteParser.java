@@ -190,7 +190,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             final Review[] reviewArr = new Review[reviews.size()];
             return reviews.toArray(reviewArr);
         } else if (this.loadReviews) {
-            final List<Review> parsedReviewList = new ArrayList<Review>();
+            final List<Review> parsedReviewList = new ArrayList<>();
             for (final Disc disc : band.getDiscs()) {
                 try {
                     final ReviewParser parser = new ReviewParser(disc.getId());
@@ -222,7 +222,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
                 logger.error("error in parsing similar Artists for band: " + this.entity, e);
             }
         }
-        return new HashMap<Integer, List<Band>>();
+        return new HashMap<>();
     }
 
     private final Link[] parseLinks() {

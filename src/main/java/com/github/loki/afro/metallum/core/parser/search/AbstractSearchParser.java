@@ -30,7 +30,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
     }
 
     public final SortedMap<SearchRelevance, List<T>> parseSearchResults(final String html) {
-        final SortedMap<SearchRelevance, List<T>> resultMap = new TreeMap<SearchRelevance, List<T>>();
+        final SortedMap<SearchRelevance, List<T>> resultMap = new TreeMap<>();
         try {
             final JSONObject json = new JSONObject(html);
             // the total results from the html.
@@ -44,7 +44,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
                     if (resultMap.containsKey(relevance)) {
                         resultMap.get(relevance).add(parsedObject);
                     } else {
-                        final List<T> newList = new ArrayList<T>();
+                        final List<T> newList = new ArrayList<>();
                         newList.add(parsedObject);
                         resultMap.put(relevance, newList);
                     }

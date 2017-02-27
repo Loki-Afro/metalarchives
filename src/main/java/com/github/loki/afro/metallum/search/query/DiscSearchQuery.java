@@ -34,8 +34,8 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     private int toMonth = 0;
     private int toYear = 0;
     private int fromMonth = 0;
-    private final List<Country> countries = new ArrayList<Country>();
-    private final List<DiscType> discTypes = new ArrayList<DiscType>();
+    private final List<Country> countries = new ArrayList<>();
+    private final List<DiscType> discTypes = new ArrayList<>();
 
     public DiscSearchQuery() {
         super(new Disc());

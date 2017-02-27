@@ -60,7 +60,7 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
         if (this.mainMap.containsKey(band)) {
             discList = this.mainMap.get(band);
         } else {
-            discList = new ArrayList<Disc>();
+            discList = new ArrayList<>();
         }
 
         return discList;

@@ -20,7 +20,7 @@ public class SimilarArtistsParser {
     }
 
     public Map<Integer, List<Band>> parse() {
-        final Map<Integer, List<Band>> returnMap = new TreeMap<Integer, List<Band>>();
+        final Map<Integer, List<Band>> returnMap = new TreeMap<>();
         final String[] bandStringArray = this.html.split("<tr id=\"recRow_");
         for (int i = 1; i < bandStringArray.length; i++) {
             final String[] bandInformationStringArray = bandStringArray[i].split("<td>");
@@ -37,7 +37,7 @@ public class SimilarArtistsParser {
     private static Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> theMap, final int key, final Band value) {
         List<Band> bandListFromMap = theMap.get(key);
         if (bandListFromMap == null) {
-            bandListFromMap = new ArrayList<Band>();
+            bandListFromMap = new ArrayList<>();
             bandListFromMap.add(value);
         } else {
             bandListFromMap.add(value);

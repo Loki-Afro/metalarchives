@@ -17,12 +17,12 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
     protected AbstractSearchParser<T> parser = getSearchParser();
 
     public AbstractSearchService(final int objectsToLoad) {
-        this.resultMap = new TreeMap<SearchRelevance, List<T>>();
+        this.resultMap = new TreeMap<>();
         this.objectToLoad = objectsToLoad;
     }
 
     public AbstractSearchService() {
-        this.resultMap = new TreeMap<SearchRelevance, List<T>>();
+        this.resultMap = new TreeMap<>();
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
             parseSearchResults(query);
         } else {
             // direct id
-            final List<T> list = new ArrayList<T>();
+            final List<T> list = new ArrayList<>();
             list.add(query.searchObject);
             this.resultMap.put(new SearchRelevance(0d), list);
 
@@ -108,7 +108,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
 
     private final List<T> getFirstList() {
         if (this.resultMap.isEmpty()) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
         }
         return this.resultMap.get(this.resultMap.firstKey());
     }
@@ -120,7 +120,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
      * @return a List representation of the specific entities.
      */
     public final List<T> getResultAsList() {
-        final List<T> listToReturn = new ArrayList<T>();
+        final List<T> listToReturn = new ArrayList<>();
         for (final List<T> listWithSearchObjects : this.resultMap.values()) {
             listToReturn.addAll(listWithSearchObjects);
         }
@@ -163,7 +163,7 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
     private final void loadResults(final AbstractSearchQuery<T> query) throws MetallumException {
         if (!this.resultMap.isEmpty()) {
             final SearchRelevance key = this.resultMap.firstKey();
-            final CopyOnWriteArrayList<T> entityListFromMap = new CopyOnWriteArrayList<T>(this.resultMap.get(key));
+            final CopyOnWriteArrayList<T> entityListFromMap = new CopyOnWriteArrayList<>(this.resultMap.get(key));
             int i = 0;
             for (final T entity : entityListFromMap) {
                 if (i < this.objectToLoad) {

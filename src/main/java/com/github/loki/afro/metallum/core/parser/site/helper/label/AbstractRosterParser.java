@@ -23,7 +23,7 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
     private final PARSE_STYLE sortType;
 
     private final Band dummyBand = new Band(0, "Various Artists");
-    final Map<K, V> mainMap = new HashMap<K, V>();
+    final Map<K, V> mainMap = new HashMap<>();
 
     AbstractRosterParser(final long labelId, final byte numberPerPage, final boolean alphabetical, final PARSE_STYLE sortType) {
         this.labelId = labelId;

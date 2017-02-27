@@ -18,17 +18,17 @@ public class Band extends AbstractEntity {
     private BufferedImage photo = null;
     private BufferedImage logo = null;
     private String info = "";
-    private List<Disc> discs = new ArrayList<Disc>();
-    private Map<Member, String> currentMember = new HashMap<Member, String>();
-    private Map<Member, String> lastMember = new HashMap<Member, String>();
-    private Map<Member, String> liveMember = new HashMap<Member, String>();
-    private Map<Member, String> pastMember = new HashMap<Member, String>();
-    private List<Link> officialLinks = new ArrayList<Link>();
-    private List<Link> officialMerchLinks = new ArrayList<Link>();
-    private List<Link> unofficialLinks = new ArrayList<Link>();
-    private List<Link> tablatureLinks = new ArrayList<Link>();
-    private List<Link> labelLinks = new ArrayList<Link>();
-    private Map<Integer, List<Band>> similarArtist = new HashMap<Integer, List<Band>>();
+    private List<Disc> discs = new ArrayList<>();
+    private Map<Member, String> currentMember = new HashMap<>();
+    private Map<Member, String> lastMember = new HashMap<>();
+    private Map<Member, String> liveMember = new HashMap<>();
+    private Map<Member, String> pastMember = new HashMap<>();
+    private List<Link> officialLinks = new ArrayList<>();
+    private List<Link> officialMerchLinks = new ArrayList<>();
+    private List<Link> unofficialLinks = new ArrayList<>();
+    private List<Link> tablatureLinks = new ArrayList<>();
+    private List<Link> labelLinks = new ArrayList<>();
+    private Map<Integer, List<Band>> similarArtist = new HashMap<>();
     private String photoUrl = null;
     private String logoUrl = null;
 
@@ -249,7 +249,7 @@ public class Band extends AbstractEntity {
     public void addSimilarArtists(final Band band, final int score) {
         List<Band> bandListFromMap = this.similarArtist.get(score);
         if (bandListFromMap == null) {
-            bandListFromMap = new ArrayList<Band>();
+            bandListFromMap = new ArrayList<>();
             bandListFromMap.add(band);
         } else {
             bandListFromMap.add(band);
@@ -298,7 +298,7 @@ public class Band extends AbstractEntity {
     }
 
     public final List<Review> getReviews() {
-        final List<Review> reviewList = new ArrayList<Review>();
+        final List<Review> reviewList = new ArrayList<>();
         for (final Disc disc : this.discs) {
             reviewList.addAll(disc.getReviews());
         }
@@ -351,7 +351,7 @@ public class Band extends AbstractEntity {
     }
 
     public List<Link> getLinks() {
-        List<Link> linkList = new ArrayList<Link>();
+        List<Link> linkList = new ArrayList<>();
         linkList.addAll(this.officialLinks);
         linkList.addAll(this.officialMerchLinks);
         linkList.addAll(this.unofficialLinks);

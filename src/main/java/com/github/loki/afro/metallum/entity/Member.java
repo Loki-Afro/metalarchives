@@ -10,17 +10,17 @@ public class Member extends AbstractEntity {
 
     private Country country;
     private String realName;
-    private List<Band> uncategorizedBands = new ArrayList<Band>();
+    private List<Band> uncategorizedBands = new ArrayList<>();
     private int age = 0;
     private String province = "";
     private String gender = "";
     private BufferedImage photo = null;
     private String alternativeName = "";
-    private Map<Band, Map<Disc, String>> guestSessionBands = new LinkedHashMap<Band, Map<Disc, String>>();
-    private Map<Band, Map<Disc, String>> activeInBands = new LinkedHashMap<Band, Map<Disc, String>>();
-    private Map<Band, Map<Disc, String>> pastBands = new LinkedHashMap<Band, Map<Disc, String>>();
-    private Map<Band, Map<Disc, String>> miscBands = new LinkedHashMap<Band, Map<Disc, String>>();
-    private final List<Link> linkList = new ArrayList<Link>();
+    private Map<Band, Map<Disc, String>> guestSessionBands = new LinkedHashMap<>();
+    private Map<Band, Map<Disc, String>> activeInBands = new LinkedHashMap<>();
+    private Map<Band, Map<Disc, String>> pastBands = new LinkedHashMap<>();
+    private Map<Band, Map<Disc, String>> miscBands = new LinkedHashMap<>();
+    private final List<Link> linkList = new ArrayList<>();
     private String details = "";
     private String photoUrl = "";
 

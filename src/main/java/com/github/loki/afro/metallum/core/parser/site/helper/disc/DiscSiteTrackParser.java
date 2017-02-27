@@ -97,7 +97,7 @@ public final class DiscSiteTrackParser {
         int counter = 1;
         boolean foundFirstFirstTrack = false;
         Elements rows = tableElement.select("tr[class~=(even|odd)]");
-        List<Track> trackList = new ArrayList<Track>();
+        List<Track> trackList = new ArrayList<>();
         for (final Element row : rows) {
             final String trackIdStr = parseTrackId(row);
             final long trackId = Long.parseLong(trackIdStr.replaceAll("[\\D]", ""));
