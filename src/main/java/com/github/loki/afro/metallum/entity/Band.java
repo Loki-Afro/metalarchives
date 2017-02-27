@@ -203,19 +203,19 @@ public class Band extends AbstractEntity {
     public void addLinks(final Link... links) {
         for (Link link : links) {
             switch (link.getCategory()) {
-                case OFFICAL:
+                case OFFICIAL:
                     this.officalLinks.add(link);
                     break;
-                case OFFICAL_MERCH:
+                case OFFICIAL_MERCH:
                     this.officalMerchLinks.add(link);
                     break;
-                case UNOFFICAL:
+                case UNOFFICIAL:
                     this.unofficalLinks.add(link);
                     break;
                 case LABEL:
                     this.labelLinks.add(link);
                     break;
-                case TABULATURES:
+                case TABLATURES:
                     this.tabulatureLinks.add(link);
                     break;
                 default:

@@ -34,7 +34,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     private int toMonth = 0;
     private int toYear = 0;
     private int fromMonth = 0;
-    private final List<Country> countrys = new ArrayList<Country>();
+    private final List<Country> countries = new ArrayList<Country>();
     private final List<DiscType> discTypes = new ArrayList<DiscType>();
 
     public DiscSearchQuery() {
@@ -96,7 +96,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     public boolean setCountry(final String country) {
         final Country c = Country.getRightCountryForString(country);
         if (c != Country.ANY) {
-            this.countrys.add(c);
+            this.countries.add(c);
             return true;
         } else {
             return false;
@@ -106,12 +106,12 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     /**
      * metal-archives allows us now to search for more as one country simultaneously
      *
-     * @param countrys to add to the query
+     * @param countries to add to the query
      */
-    public void setCountrys(final Country... countrys) {
-        for (final Country country : countrys) {
+    public void setCountries(final Country... countries) {
+        for (final Country country : countries) {
             if (country != Country.ANY) {
-                this.countrys.add(country);
+                this.countries.add(country);
             }
         }
     }
@@ -187,11 +187,11 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
         return buf.toString();
     }
 
-    private final String getCountrys() {
+    private final String getCountries() {
         final StringBuilder buf = new StringBuilder();
-        if (!this.countrys.isEmpty()) {
+        if (!this.countries.isEmpty()) {
             this.isAValidQuery = true;
-            for (final Country country : this.countrys) {
+            for (final Country country : this.countries) {
                 buf.append("country[]=" + country.getShortForm() + "&");
             }
         }
@@ -234,7 +234,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
         searchQueryBuf.append("exactBandMatch=" + (this.exactBandName ? 1 : 0) + "&");
         searchQueryBuf.append("indieLabel=" + (this.indieLabel ? 1 : 0) + "&");
         searchQueryBuf.append(getYearMonth());
-        searchQueryBuf.append(getCountrys());
+        searchQueryBuf.append(getCountries());
         searchQueryBuf.append(getReleaseLabelName());
         searchQueryBuf.append(getGenre());
         searchQueryBuf.append(getLocation());
@@ -247,9 +247,9 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
             return true;
         }
         // is able when there are more than 2 entries in the list
-        int foundCountrys = 0;
+        int foundCountries = 0;
         for (final DiscType type : this.discTypes) {
-            if (type != null && ++foundCountrys > 1) {
+            if (type != null && ++foundCountries > 1) {
                 return true;
             }
         }
@@ -257,9 +257,9 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
     }
 
     private boolean isAbleToParseCountry() {
-        int foundCountrys = 0;
-        for (final Country country : this.countrys) {
-            if (country != Country.ANY && ++foundCountrys > 1) {
+        int foundCountries = 0;
+        for (final Country country : this.countries) {
+            if (country != Country.ANY && ++foundCountries > 1) {
                 return true;
             }
         }
@@ -289,7 +289,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
         this.toMonth = 0;
         this.toYear = 0;
         this.fromMonth = 0;
-        this.countrys.clear();
+        this.countries.clear();
         this.discTypes.clear();
     }
 
@@ -304,8 +304,8 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
                 }
             }
         }
-        if (this.countrys.size() == 1) {
-            final Country country = this.countrys.get(0);
+        if (this.countries.size() == 1) {
+            final Country country = this.countries.get(0);
             for (final List<Disc> discList : resultMap.values()) {
                 for (final Disc disc : discList) {
                     disc.getBand().setCountry(country);

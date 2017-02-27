@@ -1,11 +1,11 @@
 package com.github.loki.afro.metallum.enums;
 
 public enum LinkCategory {
-    OFFICAL("Official"), OFFICAL_MERCH("Official merchandise"), UNOFFICAL("Unofficial"), TABULATURES("Tablatures"), LABEL("Labels"), ANY("");
+    OFFICIAL("Official"), OFFICIAL_MERCH("Official merchandise"), UNOFFICIAL("Unofficial"), TABLATURES("Tablatures"), LABEL("Labels"), ANY("");
 
     private final String linkCategoryAsName;
 
-    private LinkCategory(String linkCatName) {
+    LinkCategory(String linkCatName) {
         this.linkCategoryAsName = linkCatName;
     }
 

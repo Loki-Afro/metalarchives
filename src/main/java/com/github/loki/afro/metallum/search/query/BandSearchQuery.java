@@ -27,7 +27,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
     private int fromYear;
     private int toYear;
     private boolean indieLabel = false;
-    private final List<Country> countrys = new ArrayList<Country>();
+    private final List<Country> countries = new ArrayList<Country>();
     private final List<BandStatus> bandStatus = new ArrayList<BandStatus>();
 
     public BandSearchQuery() {
@@ -105,7 +105,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
     public final boolean addCountry(final String country) {
         Country c = Country.getRightCountryForString(country);
         if (c != Country.ANY) {
-            this.countrys.add(c);
+            this.countries.add(c);
             return true;
         } else {
             return false;
@@ -115,12 +115,12 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
     /**
      * metal-archives allows us now to search for more as one country simultaneously.
      *
-     * @param countrys the country's to add to the query
+     * @param countries the country's to add to the query
      */
-    public final void addCountry(final Country... countrys) {
-        for (Country country : countrys) {
+    public final void addCountry(final Country... countries) {
+        for (Country country : countries) {
             if (country != Country.ANY) {
-                this.countrys.add(country);
+                this.countries.add(country);
             }
         }
     }
@@ -160,16 +160,16 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
         return "genre=" + MetallumURL.asURLString(genre);
     }
 
-    private final String getCountrys() {
-        this.isAValidQuery = (this.isAValidQuery || !this.countrys.isEmpty());
-        if (!this.countrys.isEmpty()) {
+    private final String getCountries() {
+        this.isAValidQuery = (this.isAValidQuery || !this.countries.isEmpty());
+        if (!this.countries.isEmpty()) {
             final StringBuilder buf = new StringBuilder();
             // &country[]=DM&country[]=EG&country[]=DE
             // is there a maximum?
-            if (this.countrys.size() == 1) {
-                buf.append("country=" + MetallumURL.asURLString(this.countrys.get(0).getShortForm()));
+            if (this.countries.size() == 1) {
+                buf.append("country=" + MetallumURL.asURLString(this.countries.get(0).getShortForm()));
             } else {
-                for (Country country : this.countrys) {
+                for (Country country : this.countries) {
                     buf.append("country[]=" + MetallumURL.asURLString(country.getShortForm()));
                 }
             }
@@ -234,7 +234,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
         searchQueryBuf.append(getBandName());
         searchQueryBuf.append("exactBandMatch=" + (this.exactBandNameMatch ? 1 : 0) + "&");
         searchQueryBuf.append(getGenre());
-        searchQueryBuf.append(getCountrys());
+        searchQueryBuf.append(getCountries());
         searchQueryBuf.append(getFromYear());
         searchQueryBuf.append(getToYear());
         searchQueryBuf.append(getBandStatus());
@@ -253,13 +253,13 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
         }
         bandParser.setIsAbleToParseLabel(!this.searchObject.getLabel().getName().isEmpty());
         bandParser.setIsAbleToParseLyricalThemes(!this.searchObject.getLyricalThemes().isEmpty());
-        bandParser.setIsAbleToParseProvince(!this.searchObject.getProvince().isEmpty() || !this.countrys.isEmpty());
-        if (this.countrys.isEmpty()) {
+        bandParser.setIsAbleToParseProvince(!this.searchObject.getProvince().isEmpty() || !this.countries.isEmpty());
+        if (this.countries.isEmpty()) {
             bandParser.setIsAbleToParseCountry(true);
         } else {
-            int foundCountrys = 0;
-            for (Country country : this.countrys) {
-                if (country != Country.ANY && ++foundCountrys > 1) {
+            int foundCountries = 0;
+            for (Country country : this.countries) {
+                if (country != Country.ANY && ++foundCountries > 1) {
                     bandParser.setIsAbleToParseCountry(true);
                     bandParser.setIsAbleToParseProvince(true);
                 }
@@ -273,7 +273,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
         this.fromYear = 0;
         this.toYear = 0;
         this.indieLabel = false;
-        this.countrys.clear();
+        this.countries.clear();
         this.bandStatus.clear();
         this.exactBandNameMatch = false;
         this.searchObject = new Band();
@@ -281,8 +281,8 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
 
     @Override
     protected SortedMap<SearchRelevance, List<Band>> enrichParsedEntity(final SortedMap<SearchRelevance, List<Band>> resultMap) {
-        if (this.countrys.size() == 1) {
-            final Country country = this.countrys.get(0);
+        if (this.countries.size() == 1) {
+            final Country country = this.countries.get(0);
             for (final List<Band> bandList : resultMap.values()) {
                 for (final Band band : bandList) {
                     band.setCountry(country);

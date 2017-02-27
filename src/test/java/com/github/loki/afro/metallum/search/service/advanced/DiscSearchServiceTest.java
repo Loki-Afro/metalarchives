@@ -268,7 +268,7 @@ public class DiscSearchServiceTest {
         final DiscSearchService service = new DiscSearchService();
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setReleaseName("Autumn Aurora", false);
-        query.setCountrys(Country.UKRAINE);
+        query.setCountries(Country.UKRAINE);
         final Disc discResult = service.performSearch(query).get(0);
         Assert.assertEquals("Drudkh", discResult.getBandName());
         Assert.assertEquals("Autumn Aurora", discResult.getName());
@@ -290,7 +290,7 @@ public class DiscSearchServiceTest {
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setReleaseName("The Somberlain", false);
         query.setReleaseTypes(DiscType.FULL_LENGTH);
-        query.setCountrys(Country.UKRAINE, Country.GERMANY, Country.SWEDEN, Country.TAIWAN);
+        query.setCountries(Country.UKRAINE, Country.GERMANY, Country.SWEDEN, Country.TAIWAN);
         final Disc discResult = service.performSearch(query).get(0);
         Assert.assertEquals("Dissection", discResult.getBandName());
         Assert.assertEquals("The Somberlain", discResult.getName());
