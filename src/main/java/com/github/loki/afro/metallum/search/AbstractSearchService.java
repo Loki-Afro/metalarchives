@@ -135,10 +135,8 @@ public abstract class AbstractSearchService<T extends AbstractEntity> {
      * @return true if there is more as one result, false if there is also no result
      */
     public final boolean hasMoreAsOneResult() {
-        if (this.resultMap.size() > 1) {
-            return true;
-        }
-        return this.getFirstList().size() > 1;
+        return this.resultMap.size() > 1
+                || this.getFirstList().size() > 1;
 
     }
 

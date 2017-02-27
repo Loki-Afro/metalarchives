@@ -82,6 +82,10 @@ public class TrackSearchServiceTest {
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setReleaseTitle("Vîrstele Pămîntului", false);
         final List<Track> resultTrackList = service.performSearch(query);
+        assertVirstele(resultTrackList);
+    }
+
+    private void assertVirstele(List<Track> resultTrackList) {
         for (final Track resultTrack : resultTrackList) {
             Assert.assertTrue(resultTrack.getDiscName().contains("Vîrstele pămîntului"));
             Assert.assertNotSame(0, resultTrack.getBand().getId());
@@ -97,13 +101,7 @@ public class TrackSearchServiceTest {
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setReleaseTitle("Vîrstele Pămîntului", true);
         final List<Track> resultTrackList = service.performSearch(query);
-        for (final Track resultTrack : resultTrackList) {
-            Assert.assertTrue(resultTrack.getDiscName().contains("Vîrstele pămîntului"));
-            Assert.assertNotSame(0, resultTrack.getBand().getId());
-            Assert.assertNotSame(0, resultTrack.getDisc().getId());
-            Assert.assertTrue(resultTrack.getDiscTyp() != null);
-            Assert.assertTrue(resultTrack.getLyrics().isEmpty());
-        }
+        assertVirstele(resultTrackList);
     }
 
     @Test

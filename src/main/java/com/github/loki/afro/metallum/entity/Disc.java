@@ -235,10 +235,6 @@ public class Disc extends AbstractEntity {
 
     public final void setTrackList(final List<Track> newTrackList) {
         this.trackList = newTrackList;
-        int highestDiscCount = 1;
-        for (final Track track : newTrackList) {
-            Math.max(track.getDiscNumber(), highestDiscCount);
-        }
     }
 
     public String getArtworkURL() {
