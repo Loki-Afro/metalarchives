@@ -1,4 +1,4 @@
-# Unoffical Encyclopedia Metallum API
+# Unofficial Encyclopedia Metallum API
 
 [![Build Status](https://travis-ci.org/Loki-Afro/metalarchives.svg?branch=develop)](https://travis-ci.org/Loki-Afro/metalarchives)
 
