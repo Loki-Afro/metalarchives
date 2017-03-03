@@ -2,11 +2,15 @@ package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class Band extends AbstractEntity {
+
+    private static final Logger logger = LoggerFactory.getLogger(Band.class);
 
     private String genre = "";
     private Country country = Country.ANY;
@@ -219,8 +223,8 @@ public class Band extends AbstractEntity {
                     this.tablatureLinks.add(link);
                     break;
                 default:
-                    System.err.println("unrecognized link-category, the Link will be ignored, this should never happen!");
-                    System.err.println(link.getName() + "    " + link.getURL());
+                    logger.error("unrecognized link-category, the Link will be ignored, this should never happen!");
+                    logger.error(link.getName() + "    " + link.getURL());
                     break;
             }
         }

@@ -1,7 +1,12 @@
 package com.github.loki.afro.metallum.enums;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public enum LinkCategory {
     OFFICIAL("Official"), OFFICIAL_MERCH("Official merchandise"), UNOFFICIAL("Unofficial"), TABLATURES("Tablatures"), LABEL("Labels"), ANY("");
+
+    private static final Logger logger = LoggerFactory.getLogger(LinkCategory.class);
 
     private final String linkCategoryAsName;
 
@@ -15,7 +20,7 @@ public enum LinkCategory {
                 return type;
             }
         }
-        System.err.println("possible LinkCategory " + possibleCategory);
+        logger.error("possible LinkCategory  " + possibleCategory);
         return ANY;
     }
 

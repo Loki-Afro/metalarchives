@@ -7,7 +7,7 @@ public enum LabelStatus {
     ANY(""), ACTIVE("active"), UNKNOWN("unknown"), CLOSED("closed"), CHANGED_NAME("changed name");
     private final String asString;
 
-    private static Logger logger = LoggerFactory.getLogger(LabelStatus.class);
+    private static final Logger logger = LoggerFactory.getLogger(LabelStatus.class);
 
     LabelStatus(final String asString) {
         this.asString = asString;
@@ -20,7 +20,6 @@ public enum LabelStatus {
                 return type;
             }
         }
-        System.err.println("LabelStatus: " + possibleStatus);
         logger.error("Unrecognized LabelStatus: " + possibleStatus);
         return ANY;
     }
