@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Unofficial Encyclopedia Metallum API</description>
