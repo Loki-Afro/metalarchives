@@ -13,14 +13,34 @@ Because Encyclopedia Metallum is still the best website to get correct and compl
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-## Installation
+## Build
 
 Just install it with maven
 ```
 mvn clean install
 ```
 
-## Usage
+## Howto
+
+### Maven
+
+Snapshots (Repository http://oss.sonatype.org/content/repositories/snapshots)
+
+```xml
+<dependency>
+    <groupId>com.github.loki-afro</groupId>
+    <artifactId>metalarchives-api</artifactId>
+    <version>0.5.0</version>
+</dependency>
+```
+
+### Gradle
+
+```
+compile 'com.github.loki-afro:metalarchives-api:0.5.0'
+```
+
+### Usage
 ```java
        public static void main(String[] args) {
                 final BandSearchService service = new BandSearchService();
