@@ -1,6 +1,8 @@
 # Unofficial Encyclopedia Metallum API
 
-[![Build Status](https://travis-ci.org/Loki-Afro/metalarchives.svg?branch=develop)](https://travis-ci.org/Loki-Afro/metalarchives)
+[![Build Status](https://travis-ci.org/Loki-Afro/metalarchives.svg?branch=master)](https://travis-ci.org/Loki-Afro/metalarchives)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api)
+
 
 Unfortunately http://www.metal-archives.com/ does not provide any API whats so ever, this library exists.
 Because Encyclopedia Metallum is still the best website to get correct and complete information about any metal band on earth.
