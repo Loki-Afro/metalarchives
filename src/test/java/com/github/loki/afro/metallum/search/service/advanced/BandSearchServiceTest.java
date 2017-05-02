@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 public class BandSearchServiceTest {
@@ -85,6 +86,16 @@ public class BandSearchServiceTest {
         assertFalse(resultBand.getAddedOn().isEmpty());
         assertFalse(resultBand.getModifiedBy().isEmpty());
         assertFalse(resultBand.getLastModifiedOn().isEmpty());
+    }
+
+    @Test
+    public void testDisputedStatus() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(174L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getStatus(), is(BandStatus.DISPUTED));
     }
 
     private synchronized void checkDefaultDisc(final List<Disc> discList, final int expectedSize, final Band bandFromDisc) {
