@@ -60,7 +60,7 @@ public class TrackSearchQuery extends AbstractSearchQuery<Track> {
     }
 
     /**
-     * Setters the lyrics of the track we are searching for
+     * Sets the lyrics of the track we are searching for
      *
      * @param lyrics you do not need to know the full lyrics, I think its enough to know some words
      */
