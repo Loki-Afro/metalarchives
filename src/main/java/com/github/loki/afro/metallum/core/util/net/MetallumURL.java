@@ -23,7 +23,7 @@ public final class MetallumURL {
     /**
      * The metal-archives Base-URL.
      */
-    private static final String BASEURL = "http://www.metal-archives.com/";
+    public static final String BASEURL = "https://www.metal-archives.com/";
 
     public enum SearchTyp {
         BAND("bands"), TRACK("songs"), DISC("albums");

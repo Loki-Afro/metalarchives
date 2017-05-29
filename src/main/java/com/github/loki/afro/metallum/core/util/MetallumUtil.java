@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.github.loki.afro.metallum.core.util.net.MetallumURL.BASEURL;
+
 public final class MetallumUtil {
     private final static String LINE_SEPARATOR = System.getProperty("line.separator");
     private final static String[] daySuffixes =
@@ -100,7 +102,7 @@ public final class MetallumUtil {
 
     public static boolean isEncyclopediaMetallumOnline() {
         try {
-            URL u = new URL("http://www.metal-archives.com/");
+            URL u = new URL(BASEURL);
             HttpURLConnection huc = (HttpURLConnection) u.openConnection();
             huc.setRequestMethod("GET");
             huc.connect();
