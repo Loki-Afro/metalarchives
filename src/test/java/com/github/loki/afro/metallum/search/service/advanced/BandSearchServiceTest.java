@@ -72,7 +72,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1993);
         assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
-        assertEquals(resultBand.getLyricalThemes(), "Egyptian Mythology, Death, Rituals, H.P. Lovecraft");
+        assertEquals(resultBand.getLyricalThemes(), "Egyptian mythology, Death, Rituals, Lovecraftian");
         assertEquals("Nuclear Blast", resultBand.getLabel().getName());
         assertTrue(resultBand.getLabel().getId() != 0);
         assertTrue(resultBand.getInfo().startsWith("Despite the odd misconception that"));
