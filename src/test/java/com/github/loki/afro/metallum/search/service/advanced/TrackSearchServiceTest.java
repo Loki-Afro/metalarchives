@@ -212,7 +212,7 @@ public class TrackSearchServiceTest {
     public void wasOnceAnIssue() throws MetallumException {
         TrackSearchService service = new TrackSearchService();
         TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Fatal Self Inflicted Disfigurement", true);
+        query.setSongTitle("Fatal Self-Inflicted Disfigurement", true);
         service.performSearch(query);
         List<Track> trackList = service.getResultAsList();
         Assert.assertEquals(1, trackList.size());
@@ -220,7 +220,7 @@ public class TrackSearchServiceTest {
 
         Assert.assertEquals("Defeated Sanity", track.getBandName());
         Assert.assertEquals("Psalms of the Moribund", track.getDiscName());
-        Assert.assertEquals("Fatal Self Inflicted Disfigurement", track.getName());
+        Assert.assertEquals("Fatal Self-Inflicted Disfigurement", track.getName());
     }
 
 }
