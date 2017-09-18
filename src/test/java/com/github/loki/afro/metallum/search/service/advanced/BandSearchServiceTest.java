@@ -299,7 +299,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getYearFormedIn(), 2004);
         assertEquals(resultBand.getGenre(), "Black Metal");
         assertEquals(resultBand.getLyricalThemes(), "Suicide, Sorrow, Despair, Death, Nature");
-        assertEquals(resultBand.getLabel().getName(), "Avantgarde Music");
+        assertEquals(resultBand.getLabel().getName(), "Sun & Moon Records");
         assertTrue(resultBand.getLabel().getId() != 0);
         assertTrue(resultBand.getInfo().startsWith("Herr Suizid "));
         assertTrue(resultBand.getInfo().endsWith("band."));
