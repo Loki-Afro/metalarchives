@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
@@ -75,7 +76,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getLyricalThemes(), "Egyptian mythology, Death, Rituals, Lovecraftian");
         assertEquals("Nuclear Blast", resultBand.getLabel().getName());
         assertTrue(resultBand.getLabel().getId() != 0);
-        assertTrue(resultBand.getInfo().startsWith("Despite the odd misconception that"));
+        assertThat(resultBand.getInfo(), startsWith("In the late 1980s, prior to forming Nile"));
         assertTrue(resultBand.getInfo().endsWith("..."));
         assertFalse(resultBand.hasLogo());
         assertFalse(resultBand.hasPhoto());
