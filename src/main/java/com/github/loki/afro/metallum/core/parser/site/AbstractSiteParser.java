@@ -18,7 +18,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     final boolean loadLinks;
     protected final T entity;
 
-    private static final String imageCssQuery = "img[src~=(?i)\\.(png|jpe?g|gif)]";
+    private static final String imageCssQuery = "img[src~=(?i)\\.(png|jpe?g|gif|bmp)]";
 
     AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
         this.entity = entity;

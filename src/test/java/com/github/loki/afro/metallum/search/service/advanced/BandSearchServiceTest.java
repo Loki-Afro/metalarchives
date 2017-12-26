@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -633,6 +634,18 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
 
         assertThat(resultBand.getDiscs(), hasSize(0));
+    }
+
+    @Test
+    public void bitmapImageTest() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        service.setLoadImages(true);
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(4515L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getLogo(), is(notNullValue()));
+        assertThat(resultBand.getPhoto(), is(notNullValue()));
     }
 
 }
