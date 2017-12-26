@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -622,6 +623,16 @@ public class BandSearchServiceTest {
         assertFalse(resultBand.getAddedOn().isEmpty());
         assertFalse(resultBand.getModifiedBy().isEmpty());
         assertFalse(resultBand.getLastModifiedOn().isEmpty());
+    }
+
+    @Test
+    public void noDiscographyYetTest() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(3540273493L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getDiscs(), hasSize(0));
     }
 
 }
