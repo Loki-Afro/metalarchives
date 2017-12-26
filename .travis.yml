@@ -1,6 +1,9 @@
 before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
 language: java
-script: "mvn deploy --settings target/travis/settings.xml"
+addons:
+  sonarcloud:
+    organization: "loki-afro-github"
+script: "mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar install deploy --settings target/travis/settings.xml"
 jdk:
         - oraclejdk8
 branches:

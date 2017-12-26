@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Loki-Afro/metalarchives.svg?branch=master)](https://travis-ci.org/Loki-Afro/metalarchives)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=com.github.loki-afro:metalarchives-api)](https://sonarcloud.io/dashboard?id=com.github.loki-afro:metalarchives-api)
 
 
 Unfortunately http://www.metal-archives.com/ does not provide any API whats so ever, this library exists.
