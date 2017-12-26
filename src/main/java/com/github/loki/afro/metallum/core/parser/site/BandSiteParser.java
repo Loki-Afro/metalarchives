@@ -118,7 +118,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         // id
         String labelId;
         String labelElementText = labelElement.html();
-        if (!labelElement.text().contains("Unsigned/independent")) {
+        if (!labelElement.text().contains("Unsigned/independent") && !labelElement.text().contains("Unknown")) {
             labelId = labelElementText.substring(labelElementText.indexOf("/labels/") + 8);
             labelId = labelId.substring(labelId.indexOf("/") + 1, labelId.indexOf("\">"));
         } else {
