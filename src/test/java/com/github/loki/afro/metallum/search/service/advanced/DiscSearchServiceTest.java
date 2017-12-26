@@ -648,4 +648,18 @@ public class DiscSearchServiceTest {
         Assert.assertTrue(foundMember);
     }
 
+    @Test
+    public void onlyMiscMemberCategoryButNoMembers() throws MetallumException {
+        final DiscSearchService service = new DiscSearchService();
+        final DiscSearchQuery query = new DiscSearchQuery();
+        query.setSearchObject(new Disc(248488L));
+        Disc disc = service.performSearch(query).get(0);
+
+        assertThat(disc.getMember().size(), is(0));
+        assertThat(disc.getName(), is("Demon's Night"));
+        assertThat(disc.getBandName(), is("Accept"));
+
+    }
+
+
 }

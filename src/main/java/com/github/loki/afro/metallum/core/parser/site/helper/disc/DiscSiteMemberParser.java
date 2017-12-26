@@ -45,10 +45,16 @@ public class DiscSiteMemberParser {
     public final void parse() {
         Element lineUpElementAll = this.doc.getElementById("album_all_members_lineup");
         String category = null;
-//		important when there are not categories or just one, happens often by Split DVDs and such things
+//		important when there are no categories or just one, happens often by Split DVDs and such things
         if (lineUpElementAll == null) {
             lineUpElementAll = this.doc.getElementById("album_members_lineup");
-            category = this.doc.getElementsByAttributeValue("href", "#album_members_lineup").first().text();
+//            not 100% sure when this occurs but sometimes there is just "Misc.staff"
+            if (lineUpElementAll != null) {
+                category = this.doc.getElementsByAttributeValue("href", "#album_members_lineup").first().text();
+            } else {
+                lineUpElementAll = this.doc.getElementById("album_members_misc");
+                category = this.doc.getElementsByAttributeValue("href", "#album_members_misc").first().text();
+            }
         }
         Elements tableRows = lineUpElementAll.getElementsByTag("tr");
         for (final Element row : tableRows) {
