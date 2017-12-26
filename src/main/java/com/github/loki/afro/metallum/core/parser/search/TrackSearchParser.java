@@ -54,8 +54,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
         }
         track.getBand().setId(parseBandId(hits.getString(0)));
         track.setId(parseTrackId(hits.getString(hits.length() - 1)));
-        track = parseOptionalFields(track, hits);
-        return track;
+        return parseOptionalFields(track, hits);
     }
 
     private Track parseOptionalFields(final Track track, final JSONArray jArray) throws JSONException {

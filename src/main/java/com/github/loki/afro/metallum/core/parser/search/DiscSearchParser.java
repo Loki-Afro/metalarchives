@@ -35,8 +35,7 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
             disc.addSplitBand(parseSplitBands(hit.getString(0)));
         }
 
-        disc = parseOptionalFields(disc, hit);
-        return disc;
+        return parseOptionalFields(disc, hit);
     }
 
     private Band[] parseSplitBands(final String string) {

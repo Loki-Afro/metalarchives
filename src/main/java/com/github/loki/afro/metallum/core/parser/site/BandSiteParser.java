@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class BandSiteParser extends AbstractSiteParser<Band> {
-    private boolean loadReviews = false;
-    private boolean loadSimilarArtists = false;
-    private boolean loadReadMore = false;
+    private final boolean loadReviews;
+    private final boolean loadSimilarArtists;
+    private final boolean loadReadMore;
     private static final Logger logger = LoggerFactory.getLogger(BandSiteParser.class);
 
     public BandSiteParser(final Band band, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) throws ExecutionException {
@@ -41,8 +41,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         Band band = new Band(this.entity.getId());
         band.setName(parseBandName());
 
-        band = parseFirstHtmlPart(band);
-        band = parseSecondHtmlPart(band);
+        parseLeftHtmlPart(band);
+        parseRightHtmlPart(band);
 
         band = parseBandImages(band);
 
@@ -51,7 +51,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             disc.setBand(band);
             band.addToDiscography(disc);
         }
-        band = parseMember(band);
+        parseMember(band);
         band.addToReviews(parseReviews(band));
         band.setSimilarArtists(parseSimilarArtists());
         band.addLinks(parseLinks());
@@ -78,7 +78,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return parseImageURL(this.doc, "band_img");
     }
 
-    private final Band parseSecondHtmlPart(final Band band) {
+    private void parseRightHtmlPart(final Band band) {
         Element secondPart = this.doc.select("dl[class]").get(1);
         if (secondPart.hasClass("float_right")) {
             Elements valueElements = secondPart.getElementsByTag("dd");
@@ -86,13 +86,12 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             band.setLyricalThemes(valueElements.get(1).text().trim());
             band.setLabel(parseCurrentLabel(valueElements.get(2)));
         }
-        return band;
     }
 
     /**
      * This Method set the Country Province, Status and the year.
      */
-    private final Band parseFirstHtmlPart(final Band band) {
+    private void parseLeftHtmlPart(final Band band) {
         Element secondPart = this.doc.select("dl[class]").get(0);
         if (secondPart.hasClass("float_left")) {
             Elements valueElements = secondPart.getElementsByTag("dd");
@@ -101,7 +100,6 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             band.setStatus(BandStatus.getTypeBandStatusForString(valueElements.get(2).text()));
             band.setYearFormedIn(parseYearOfCreation(valueElements.get(3).text()));
         }
-        return band;
     }
 
     private final String parseBandName() {
@@ -173,7 +171,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return discs.toArray(discArray);
     }
 
-    private final Band parseMember(final Band band) {
+    private void parseMember(final Band band) {
         final MemberParser memberParser = new MemberParser();
         memberParser.parse(this.html);
         // split by cat
@@ -181,7 +179,6 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         band.setPastLineup(memberParser.getPastLineup());
         band.setLiveLineup(memberParser.getLiveLineup());
         band.setLastKnownLineup(memberParser.getLastKnownLineup());
-        return band;
     }
 
     private final Review[] parseReviews(final Band band) {

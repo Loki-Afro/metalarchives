@@ -44,7 +44,7 @@ public final class DiscSiteTrackParser {
         }
     }
 
-    private void parseLyrics2(final Element row, final long trackId, final Track trackToModify) {
+    private void parseLyrics2(final long trackId, final Track trackToModify) {
         new Thread(new DownloadLyricsRunnable(trackToModify, trackId)).start();
     }
 
@@ -119,7 +119,7 @@ public final class DiscSiteTrackParser {
             track.setInstrumental(parseIsInstrumental(row));
             if (this.loadLyrics && row.getElementById("lyricsButton" + trackIdStr) != null) {
                 lazyInitLatch(rows.size());
-                parseLyrics2(row, trackId, track);
+                parseLyrics2(trackId, track);
             } else {
                 signalDoneCountDown();
             }
@@ -134,7 +134,10 @@ public final class DiscSiteTrackParser {
         if (this.loadLyrics && this.doneSignal != null) {
             try {
 //				as fallback we wait here 6 seconds for each track if that fails smth went wrong
-                this.doneSignal.await((long) trackCount * 6, TimeUnit.SECONDS);
+                boolean await = this.doneSignal.await((long) trackCount * 6, TimeUnit.SECONDS);
+                if (!await) {
+                    LOGGER.debug("There are still tracks to be downloaded");
+                }
             } catch (final InterruptedException e) {
                 LOGGER.error("Please, please report this error: Thread Lock failed while downloading lyrics", e);
                 Thread.currentThread().interrupt();

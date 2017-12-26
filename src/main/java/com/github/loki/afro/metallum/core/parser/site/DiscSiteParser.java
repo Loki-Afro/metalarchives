@@ -20,8 +20,8 @@ import java.util.concurrent.ExecutionException;
 
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
-    private boolean loadReviews = false;
-    private boolean loadLyrics = false;
+    private final boolean loadReviews;
+    private final boolean loadLyrics;
     private static final Logger logger = LoggerFactory.getLogger(DiscSiteParser.class);
 
     /**

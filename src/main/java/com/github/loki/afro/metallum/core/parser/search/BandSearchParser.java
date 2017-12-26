@@ -42,8 +42,7 @@ public class BandSearchParser extends AbstractSearchParser<Band> {
         Band band = new Band(parseId(hits.getString(0)));
         band.setName(parseName(hits.getString(0)));
         band.setGenre(parseGenres(hits.getString(1)));
-        band = parseOptionalFields(hits, band);
-        return band;
+        return parseOptionalFields(hits, band);
     }
 
     private final Band parseOptionalFields(final JSONArray hits, final Band band) throws JSONException {
