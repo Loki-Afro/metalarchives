@@ -34,7 +34,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getYearFormedIn(), 1993);
         assertEquals(resultBand.getGenre(), "Funeral Doom Metal");
         assertEquals("Despair, Desolation, Depression, Mysticism", resultBand.getLyricalThemes());
-        assertEquals(resultBand.getLabel().getName(), "Weird Truth Productions");
+        assertEquals(resultBand.getLabel().getName(), "Osmose Productions");
         assertTrue(resultBand.getLabel().getId() != 0);
         assertTrue(resultBand.getInfo().startsWith("On the Australian and European tour"));
         assertTrue(resultBand.getInfo().endsWith("Solitude Productions)"));
