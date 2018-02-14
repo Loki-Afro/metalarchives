@@ -213,6 +213,7 @@ public class TrackSearchServiceTest {
         TrackSearchService service = new TrackSearchService();
         TrackSearchQuery query = new TrackSearchQuery();
         query.setSongTitle("Fatal Self-Inflicted Disfigurement", true);
+        query.setDiscType(DiscType.FULL_LENGTH);
         service.performSearch(query);
         List<Track> trackList = service.getResultAsList();
         Assert.assertEquals(1, trackList.size());
