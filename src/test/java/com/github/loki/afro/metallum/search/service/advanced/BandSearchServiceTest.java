@@ -296,7 +296,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getName(), "Nocturnal Depression");
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.FRANCE);
-        assertEquals(resultBand.getProvince(), "Grenoble, Rhône-Alpes");
+        assertEquals(resultBand.getProvince(), "Grenoble, Auvergne-Rhône-Alpes");
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2004);
         assertEquals(resultBand.getGenre(), "Black Metal");
