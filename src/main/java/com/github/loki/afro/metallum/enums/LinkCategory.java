@@ -4,7 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum LinkCategory {
-    OFFICIAL("Official"), OFFICIAL_MERCH("Official merchandise"), UNOFFICIAL("Unofficial"), TABLATURES("Tablatures"), LABEL("Labels"), ANY("");
+    OFFICIAL("Official"),
+    OFFICIAL_MERCH("Official merchandise"),
+    UNOFFICIAL("Unofficial"),
+    TABLATURES("Tablatures"),
+    LABEL("Labels"),
+    UNLISTED_BANDS("Unlisted bands"),
+    ANY("");
 
     private static final Logger logger = LoggerFactory.getLogger(LinkCategory.class);
 

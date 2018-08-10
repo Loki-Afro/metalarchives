@@ -9,6 +9,7 @@ import com.github.loki.afro.metallum.search.query.MemberSearchQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.List;
 
 public class MemberSearchTest {
@@ -34,7 +35,7 @@ public class MemberSearchTest {
         query.setMemberName("Fenriz");
         final List<Member> result = searchService.performSearch(query);
         Assert.assertFalse(result.isEmpty());
-        defaultSearchMemberCheck(result.toArray(new Member[result.size()]));
+        defaultSearchMemberCheck(result);
     }
 
     @Test
@@ -74,24 +75,27 @@ public class MemberSearchTest {
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
         Assert.assertFalse(member.getPhotoUrl().isEmpty());
-        final List<Link> memberLinkList = member.getLinks();
-        defaulLinkTest(memberLinkList.toArray(new Link[memberLinkList.size()]));
+        defaulLinkTest(member.getLinks());
     }
 
-    private void defaulLinkTest(final Link... links) {
+    private void defaulLinkTest(final Collection<Link> links) {
         for (final Link link : links) {
             Assert.assertFalse(link.getName().isEmpty());
             Assert.assertFalse(link.getURL().isEmpty());
-            Assert.assertTrue(link.getCategory() != LinkCategory.ANY);
+            Assert.assertNotSame(link.getCategory(), LinkCategory.ANY);
         }
     }
 
-    private void defaultSearchMemberCheck(final Member... memberToTest) {
-        for (final Member member : memberToTest) {
-            Assert.assertNotSame(0L, member.getId());
-            Assert.assertFalse(member.getName().isEmpty());
-            Assert.assertFalse(member.getRealName() == null);
-            Assert.assertNotSame(Country.ANY, member.getCountry());
+    private void defaultSearchMemberCheck(final Member member) {
+        Assert.assertNotSame(0L, member.getId());
+        Assert.assertFalse(member.getName().isEmpty());
+        Assert.assertNotNull(member.getRealName());
+        Assert.assertNotSame(Country.ANY, member.getCountry());
+    }
+
+    private void defaultSearchMemberCheck(final Collection<Member> membersToTest) {
+        for (final Member member : membersToTest) {
+            defaultSearchMemberCheck(member);
         }
     }
 }
