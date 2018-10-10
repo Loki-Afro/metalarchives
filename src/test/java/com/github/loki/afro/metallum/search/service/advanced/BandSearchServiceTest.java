@@ -609,7 +609,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getCountry(), Country.ITALY);
         assertEquals(resultBand.getProvince(), "Treviso, Veneto");
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
-        assertEquals(resultBand.getYearFormedIn(), 1991);
+        assertEquals(resultBand.getYearFormedIn(), 1986);
         assertEquals(resultBand.getGenre(), "Neoclassical/Progressive Metal");
         assertEquals(resultBand.getLyricalThemes(), "Philosophical and existentialistic themes");
         assertEquals(resultBand.getLabel().getName(), "Elevate Records");
