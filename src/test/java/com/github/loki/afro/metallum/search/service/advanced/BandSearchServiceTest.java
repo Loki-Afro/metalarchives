@@ -165,7 +165,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getProvince(), "London, England");
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2009);
-        assertEquals(resultBand.getGenre(), "Doom Metal, Atmospheric Rock");
+        assertEquals(resultBand.getGenre(), "Doom Metal, Atmospheric Rock/Slowcore");
         assertEquals(resultBand.getLyricalThemes(), "Relationships, Longing, Introspection");
         assertEquals(resultBand.getLabel().getName(), "Radiance Records");
         assertTrue(resultBand.getLabel().getId() != 0);

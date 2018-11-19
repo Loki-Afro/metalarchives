@@ -29,10 +29,10 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
         return this.totalSearchResults;
     }
 
-    public final SortedMap<SearchRelevance, List<T>> parseSearchResults(final String html) {
+    public final SortedMap<SearchRelevance, List<T>> parseSearchResults(final String jsonStr) {
         final SortedMap<SearchRelevance, List<T>> resultMap = new TreeMap<>();
         try {
-            final JSONObject json = new JSONObject(html);
+            final JSONObject json = new JSONObject(jsonStr);
             // the total results from the html.
             this.totalSearchResults = json.getInt(TOTAL_SEARCH_RESULTS_FROM_JSON);
             if (this.totalSearchResults > 0) {
@@ -51,7 +51,7 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
                 }
             }
         } catch (final JSONException e) {
-            LOGGER.error("maybe not valid html: " + html, e);
+            LOGGER.error("maybe not valid html: " + jsonStr, e);
         }
         return resultMap;
     }
