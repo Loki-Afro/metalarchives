@@ -38,12 +38,19 @@ abstract class AbstractDownloader {
     }
 
     final HttpEntity getDownloadEntity() throws IOException {
+        HttpResponse response = get();
+        if (response.getStatusLine().getStatusCode() == 403) {
+            response = get();
+        }
+        LOGGER.info("... download finished");
+        return response.getEntity();
+    }
+
+    private HttpResponse get() throws IOException {
         LOGGER.info("downloaded Content from " + this.urlString + " ...");
         final HttpGet request = new HttpGet(this.urlString);
         request.addHeader("User-Agent", getUserAgent());
-        final HttpResponse response = HTTP_CLIENT.execute(request);
-        LOGGER.info("... download finished");
-        return response.getEntity();
+        return HTTP_CLIENT.execute(request);
     }
 
     private final String getUserAgent() {
