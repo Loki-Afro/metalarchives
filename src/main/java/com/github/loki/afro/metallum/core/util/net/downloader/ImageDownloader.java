@@ -1,8 +1,6 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
 import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IImageDownloader;
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,16 +15,10 @@ final class ImageDownloader extends AbstractDownloader implements IImageDownload
 
     @Override
     public final BufferedImage call() throws Exception {
-        final HttpEntity entity = getDownloadEntity();
-        final byte[] imageInByte = EntityUtils.toByteArray(entity);
-        InputStream in = null;
-        try {
-            in = new ByteArrayInputStream(imageInByte);
+        final byte[] imageInByte = getDownloadEntity();
+
+        try (InputStream in = new ByteArrayInputStream(imageInByte)) {
             return ImageIO.read(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
     }
 

@@ -39,7 +39,7 @@ public class DownloaderTest {
 
     @Test
     public void downloadHtml() throws URISyntaxException, ExecutionException {
-        final String downloadedHtml = Downloader.getHTML("http://pastebin.com/raw.php?i=iEjw3swD");
+        final String downloadedHtml = Downloader.getHTML("http://pastebin.com/raw.php?i=iEjw3swD").replaceAll("[\r|\n]", "");
         Assert.assertEquals("<html><head><title>Riesenzwerg</title></head><body><h1>Hallo Welt!</h1><strong>Fett</strong><em>Kursiv</em></body></html>", downloadedHtml);
         Assert.assertEquals("Riesenzwerg Hallo Welt!FettKursiv", Jsoup.parse(downloadedHtml).text());
     }

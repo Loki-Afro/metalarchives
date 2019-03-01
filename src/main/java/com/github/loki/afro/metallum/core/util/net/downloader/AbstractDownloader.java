@@ -1,56 +1,62 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.InputStream;
 
 abstract class AbstractDownloader {
     private final String urlString;
-    private static final HttpClient HTTP_CLIENT;
-    final static Charset HTML_CHARSET = Charset.forName("UTF-8");
-    private final static Logger LOGGER = LoggerFactory.getLogger(AbstractDownloader.class);
+    private final static Logger logger = LoggerFactory.getLogger(AbstractDownloader.class);
 
     private static final String USER_AGENT_PROPERTY = "de.loki.metallum.useragent";
+    private static final HttpTransport httpTransport;
 
     static {
-        CacheConfig cacheConfig = CacheConfig.custom()
-                .setMaxCacheEntries(1000)
-                .setHeuristicCachingEnabled(true)
-                .build();
-
-        HTTP_CLIENT = CachingHttpClientBuilder.create()
-                .setCacheConfig(cacheConfig)
-                .setConnectionManager(new PoolingHttpClientConnectionManager())
-                .build();
+        httpTransport = new NetHttpTransport.Builder().build();
     }
+
 
     AbstractDownloader(final String urlString) {
         this.urlString = urlString;
     }
 
-    final HttpEntity getDownloadEntity() throws IOException {
-        HttpResponse response = get();
-        if (response.getStatusLine().getStatusCode() == 403) {
-            response = get();
+    final byte[] getDownloadEntity() throws IOException {
+        HttpResponse response = getIntern();
+        if (response.getStatusCode() == 403) {
+            response = getIntern();
         }
-        LOGGER.info("... download finished");
-        return response.getEntity();
+
+        try (InputStream is = response.getContent();
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+            int nRead;
+            byte[] data = new byte[16384];
+
+            while ((nRead = is.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            logger.info("... download finished");
+            return buffer.toByteArray();
+        }
+
+
     }
 
-    private HttpResponse get() throws IOException {
-        LOGGER.info("downloaded Content from " + this.urlString + " ...");
-        final HttpGet request = new HttpGet(this.urlString);
-        request.addHeader("User-Agent", getUserAgent());
-        return HTTP_CLIENT.execute(request);
+    private HttpResponse getIntern() throws IOException {
+        logger.info("downloaded Content from " + this.urlString + " ...");
+
+        HttpRequest httpRequest = httpTransport.createRequestFactory()
+                .buildGetRequest(new GenericUrl(this.urlString));
+        httpRequest.getHeaders().setUserAgent(getUserAgent());
+
+        return httpRequest.execute();
     }
 
     private final String getUserAgent() {
