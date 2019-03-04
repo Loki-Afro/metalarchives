@@ -142,9 +142,6 @@ public class Band extends AbstractEntity {
     public void addToDiscography(final Disc... discs) {
         for (final Disc disc : discs) {
             if (!this.discs.contains(disc)) {
-                // if (disc.getBand() != this) {
-                // disc.setBand(this);
-                // }
                 this.discs.add(disc);
             }
         }
