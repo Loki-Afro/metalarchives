@@ -264,7 +264,6 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         if (!pastRoster.isEmpty()) {
             return pastRoster;
         } else if (this.loadPastRooster != PARSE_STYLE.NONE) {
-            // try {
             try {
                 return new PastRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadPastRooster).parse();
             } catch (final Exception e) {
