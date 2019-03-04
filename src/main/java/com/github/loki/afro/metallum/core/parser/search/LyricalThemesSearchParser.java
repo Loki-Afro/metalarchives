@@ -20,7 +20,6 @@ public class LyricalThemesSearchParser extends AbstractSearchParser<Band> {
         band.setGenre(parseGenre(hits.getString(1)));
         band.setCountry(parseCountry(hits.getString(2)));
         band.setLyricalThemes(parseLyricalThemes(hits.getString(3)));
-        // band.setAlternativeName(parseAlternativeBandName(hits.getString(0)));
         return band;
     }
 
