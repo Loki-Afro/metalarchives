@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -44,9 +45,18 @@ public final class ReviewParser {
     }
 
     private String parseDate(final Element elem) {
-        String date = elem.getElementsByClass("reviewTitle").first().nextElementSibling().text();
-        date = date.substring(date.indexOf(", ") + 2);
-        return MetallumUtil.getMetallumDate(date).toString();
+        String dateStr = elem.getElementsByClass("reviewTitle").first().nextElementSibling().text();
+        dateStr = dateStr.substring(dateStr.indexOf(", ") + 2);
+        if (dateStr.contains("Written based on this version")) {
+            dateStr = dateStr.replaceAll("\\sWritten based on this version.*$", "");
+        }
+
+        Date metallumDate = MetallumUtil.getMetallumDate(dateStr);
+        if (metallumDate != null) {
+            return metallumDate.toString();
+        } else {
+            return null;
+        }
     }
 
     private String parseTitle(final Element elem) {
