@@ -74,7 +74,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1993);
         assertEquals(resultBand.getGenre(), "Brutal/Technical Death Metal");
-        assertEquals(resultBand.getLyricalThemes(), "Egyptian mythology, Death, Rituals, Lovecraftian");
+        assertEquals(resultBand.getLyricalThemes(), "Egyptian mythology, Death, Rituals, Lovecraft");
         assertEquals("Nuclear Blast", resultBand.getLabel().getName());
         assertTrue(resultBand.getLabel().getId() != 0);
         assertThat(resultBand.getInfo(), startsWith("In the late 1980s, prior to forming Nile"));
