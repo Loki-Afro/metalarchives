@@ -10,9 +10,4 @@ public class MetallumUtilTest {
         Assert.assertTrue(MetallumUtil.isStringInArray("Graupel", "Sturm", "Donner", "Graupel"));
         Assert.assertFalse(MetallumUtil.isStringInArray("Graupel", "Sturm", "Donner"));
     }
-
-    @Test
-    public void testIsMetallumOnline() {
-        Assert.assertTrue(MetallumUtil.isEncyclopediaMetallumOnline());
-    }
 }

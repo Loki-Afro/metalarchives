@@ -100,19 +100,6 @@ public final class MetallumUtil {
         return false;
     }
 
-    public static boolean isEncyclopediaMetallumOnline() {
-        try {
-            URL u = new URL(BASEURL);
-            HttpURLConnection huc = (HttpURLConnection) u.openConnection();
-            huc.setRequestMethod("GET");
-            huc.connect();
-            int code = huc.getResponseCode();
-            return code == 200;
-        } catch (IOException e) {
-            LOGGER.error("Metalarchives is not accessible", e);
-        }
-        return false;
-    }
     // :(( not possible because we cannot make a generic Array see
     // http://stackoverflow.com/questions/2927391/whats-the-reason-i-cant-create-generic-array-types-in-java
     // private static <E> E[] asArray(List<E> list) {
