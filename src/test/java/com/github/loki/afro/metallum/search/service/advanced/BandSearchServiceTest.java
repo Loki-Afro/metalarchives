@@ -267,7 +267,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getName(), "Triptykon");
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.SWITZERLAND);
-        assertEquals(resultBand.getProvince(), "Zurich");
+        assertEquals(resultBand.getProvince(), "Zürich");
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 2008);
         assertEquals("Gothic/Doom/Death/Black Metal", resultBand.getGenre());
