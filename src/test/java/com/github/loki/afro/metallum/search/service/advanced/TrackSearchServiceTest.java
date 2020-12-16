@@ -26,7 +26,7 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("Fucking Wizard", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() != null);
+        Assert.assertNotNull(resultTrack.getDiscTyp());
         Assert.assertTrue(resultTrack.getLyrics().isEmpty());
     }
 
@@ -41,7 +41,7 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("Fucking Wizard", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() != null);
+        Assert.assertNotNull(resultTrack.getDiscTyp());
         Assert.assertTrue(resultTrack.getLyrics().isEmpty());
     }
 
@@ -55,7 +55,7 @@ public class TrackSearchServiceTest {
             Assert.assertTrue(resultTrack.getBandName().contains("Drudkh"));
             Assert.assertNotSame(0, resultTrack.getBand().getId());
             Assert.assertNotSame(0, resultTrack.getDisc().getId());
-            Assert.assertTrue(resultTrack.getDiscTyp() != null);
+            Assert.assertNotNull(resultTrack.getDiscTyp());
             Assert.assertTrue(resultTrack.getLyrics().isEmpty());
         }
     }
@@ -72,7 +72,7 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("Cromwell", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() != null);
+        Assert.assertNotNull(resultTrack.getDiscTyp());
         Assert.assertTrue(resultTrack.getLyrics().isEmpty());
     }
 
@@ -90,7 +90,7 @@ public class TrackSearchServiceTest {
             Assert.assertTrue(resultTrack.getDiscName().contains("Vîrstele pămîntului"));
             Assert.assertNotSame(0, resultTrack.getBand().getId());
             Assert.assertNotSame(0, resultTrack.getDisc().getId());
-            Assert.assertTrue(resultTrack.getDiscTyp() != null);
+            Assert.assertNotNull(resultTrack.getDiscTyp());
             Assert.assertTrue(resultTrack.getLyrics().isEmpty());
         }
     }
@@ -116,7 +116,7 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("Ars Poetica", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
+        Assert.assertSame(resultTrack.getDiscTyp(), DiscType.FULL_LENGTH);
         Assert.assertTrue(resultTrack.getLyrics().isEmpty());
     }
 
@@ -149,7 +149,7 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("Fucking Wizard", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
+        Assert.assertSame(resultTrack.getDiscTyp(), DiscType.FULL_LENGTH);
         Assert.assertTrue(resultTrack.getLyrics().isEmpty());
     }
 
@@ -167,8 +167,8 @@ public class TrackSearchServiceTest {
         Assert.assertEquals("War", resultTrack.getName());
         Assert.assertNotSame(0, resultTrack.getBand().getId());
         Assert.assertNotSame(0, resultTrack.getDisc().getId());
-        Assert.assertTrue(resultTrack.getDiscTyp() == DiscType.FULL_LENGTH);
-        Assert.assertTrue(!resultTrack.getLyrics().isEmpty());
+        Assert.assertSame(resultTrack.getDiscTyp(), DiscType.FULL_LENGTH);
+        Assert.assertFalse(resultTrack.getLyrics().isEmpty());
         assertThat(resultTrack.getLyrics(), startsWith("This is war!"));
         assertThat(resultTrack.getLyrics(), endsWith("War!"));
     }
@@ -183,7 +183,7 @@ public class TrackSearchServiceTest {
         final List<Track> resultTrackList = service.performSearch(query);
         for (final Track resultTrack : resultTrackList) {
             Assert.assertEquals("Reverend Bizarre", resultTrack.getBandName());
-            Assert.assertTrue(!resultTrack.getDiscName().isEmpty());
+            Assert.assertFalse(resultTrack.getDiscName().isEmpty());
             Assert.assertEquals("Fucking Wizard", resultTrack.getName());
             Assert.assertNotSame(0, resultTrack.getBand().getId());
             Assert.assertNotSame(0, resultTrack.getDisc().getId());

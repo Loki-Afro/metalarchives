@@ -61,13 +61,13 @@ public class DiscSearchServiceTest {
     public void vhsTest() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
         final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.LIVE_ALBUM);
+        query.setReleaseTypes(DiscType.VIDEO);
         query.setReleaseName("Live Εσχατον: The Art of Rebellion", false);
         final Disc discResult = service.performSearch(query).get(0);
         Assert.assertEquals("Behemoth", discResult.getBandName());
         Assert.assertEquals("Live Εσχατον: The Art of Rebellion", discResult.getName());
         Assert.assertEquals(12, discResult.getTrackList().size());
-        Assert.assertEquals(DiscType.LIVE_ALBUM, discResult.getType());
+        Assert.assertEquals(DiscType.VIDEO, discResult.getType());
         Assert.assertEquals("Metal Mind Productions", discResult.getLabel().getName());
         Assert.assertNull(discResult.getArtwork());
         Assert.assertFalse(discResult.getArtworkURL().isEmpty());
@@ -107,7 +107,7 @@ public class DiscSearchServiceTest {
         query.setReleaseName("Return to Yggdrasill", false);
         final Disc discResult = service.performSearch(query).get(0);
         Assert.assertEquals("Enslaved", discResult.getBandName());
-        Assert.assertEquals("Return to Yggdrasill", discResult.getName());
+        Assert.assertEquals("Return to Yggdrasill - Live in Bergen", discResult.getName());
         Assert.assertEquals(11, discResult.getTrackList().size());
         Assert.assertEquals(DiscType.VIDEO, discResult.getType());
         Assert.assertEquals("Tabu Recordings", discResult.getLabel().getName());
@@ -317,7 +317,7 @@ public class DiscSearchServiceTest {
         Assert.assertEquals("Alongside Death", discResult.getName());
         Assert.assertEquals(8, discResult.getTrackList().size());
         Assert.assertEquals(DiscType.FULL_LENGTH, discResult.getType());
-        Assert.assertEquals("Pulverised Records", discResult.getLabel().getName());
+        Assert.assertEquals("Hells Cargo", discResult.getLabel().getName());
         Assert.assertNull(discResult.getArtwork());
         Assert.assertFalse(discResult.getArtworkURL().isEmpty());
         Assert.assertFalse(discResult.getAddedBy().isEmpty());

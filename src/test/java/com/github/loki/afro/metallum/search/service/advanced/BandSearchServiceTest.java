@@ -136,7 +136,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getStatus(), BandStatus.ACTIVE);
         assertEquals(resultBand.getYearFormedIn(), 1994);
         assertEquals(resultBand.getGenre(), "Doom Metal");
-        assertEquals(resultBand.getLyricalThemes(), "Horror (early), Depression, Relationships");
+        assertEquals(resultBand.getLyricalThemes(), "Horror (early); Depression, Relationships (later)");
         assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
         assertTrue(resultBand.getLabel().getId() == 0);
         assertTrue(resultBand.getInfo().startsWith("Formed by Patrick"));
@@ -217,8 +217,8 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getCountry(), Country.SWEDEN);
         assertEquals(resultBand.getProvince(), "");
         Assert.assertNull(resultBand.getStatus());
-        assertTrue(resultBand.getYearFormedIn() == 1991);
-        assertEquals(resultBand.getGenre(), "Doom/Death Metal (early), Depressive Rock/Metal (later)");
+        assertEquals(resultBand.getYearFormedIn(), 1991);
+        assertEquals(resultBand.getGenre(), "Doom/Death Metal (early); Gothic/Alternative/Progressive Rock/Metal (later)");
         assertTrue(resultBand.getLyricalThemes().isEmpty());
         assertTrue(resultBand.getLabel().getName().isEmpty());
         assertTrue(resultBand.getInfo().isEmpty());
@@ -304,7 +304,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getLabel().getName(), "Sun & Moon Records");
         assertTrue(resultBand.getLabel().getId() != 0);
         assertTrue(resultBand.getInfo().startsWith("Herr Suizid "));
-        assertTrue(resultBand.getInfo().endsWith("band."));
+        assertTrue(resultBand.getInfo().endsWith("performances."));
         assertFalse(resultBand.hasLogo());
         assertFalse(resultBand.hasPhoto());
         assertFalse(resultBand.getPhotoUrl().isEmpty());
@@ -408,7 +408,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getName(), "Merciless");
         assertTrue(resultBand.getId() != 0);
         assertEquals(resultBand.getCountry(), Country.SWEDEN);
-        assertEquals(resultBand.getProvince(), "Strängnäs");
+        assertEquals(resultBand.getProvince(), "Strängnäs, Södermanland");
         Assert.assertNull(resultBand.getStatus());
         assertTrue(resultBand.getYearFormedIn() == 0);
         assertEquals(resultBand.getGenre(), "Death/Thrash Metal");
@@ -536,7 +536,7 @@ public class BandSearchServiceTest {
         assertFalse(resultBand.getLogoUrl().isEmpty());
         checkDefaultDisc(resultBand.getDiscs(), 3, resultBand, true);
 
-        assertTrue(resultBand.getInfo().endsWith("(2009)"));
+        assertTrue(resultBand.getInfo().endsWith("(2009)."));
         assertTrue(resultBand.getInfo().startsWith("Additional discograp"));
         assertFalse(resultBand.getAddedBy().isEmpty());
         assertFalse(resultBand.getAddedOn().isEmpty());
