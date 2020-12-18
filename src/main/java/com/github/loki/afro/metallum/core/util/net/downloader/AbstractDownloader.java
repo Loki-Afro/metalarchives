@@ -29,7 +29,7 @@ abstract class AbstractDownloader {
                 request.setUnsuccessfulResponseHandler((request1, response, supportsRetry) -> {
                     boolean isRetryCode = retryResponseCodes.contains(response.getStatusCode());
                     if (isRetryCode) {
-                        logger.debug("retrying because of response status code: {}", response.getStatusCode());
+                        logger.warn("retrying because of response status code: {}", response.getStatusCode());
                     }
                     return isRetryCode;
                 });
