@@ -1,26 +1,40 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.*;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.common.collect.Lists;
+import com.google.common.io.ByteStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 abstract class AbstractDownloader {
     private final String urlString;
     private final static Logger logger = LoggerFactory.getLogger(AbstractDownloader.class);
 
     private static final String USER_AGENT_PROPERTY = "de.loki.metallum.useragent";
-    private static final HttpTransport httpTransport;
+    private static final HttpRequestFactory REQUEST_FACTORY;
+    private static final int MAX_TRIES = 5;
+    private static final List<Integer> retryResponseCodes = Lists.newArrayList(403, 520);
 
     static {
-        httpTransport = new NetHttpTransport.Builder().build();
+        NetHttpTransport transport = new NetHttpTransport.Builder().build();
+        REQUEST_FACTORY = transport.createRequestFactory(new HttpRequestInitializer() {
+            @Override
+            public void initialize(HttpRequest request) {
+                request.setUnsuccessfulResponseHandler((request1, response, supportsRetry) -> {
+                    boolean isRetryCode = retryResponseCodes.contains(response.getStatusCode());
+                    if (isRetryCode) {
+                        logger.debug("retrying because of response status code: {}", response.getStatusCode());
+                    }
+                    return isRetryCode;
+                });
+            }
+        });
     }
 
 
@@ -29,34 +43,35 @@ abstract class AbstractDownloader {
     }
 
     final byte[] getDownloadEntity() throws IOException {
-        HttpResponse response = getIntern();
-        if (response.getStatusCode() == 403) {
-            response = getIntern();
-        }
 
-        try (InputStream is = response.getContent();
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            int nRead;
-            byte[] data = new byte[16384];
-
-            while ((nRead = is.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-            logger.info("... download finished");
-            return buffer.toByteArray();
-        }
-
-
-    }
-
-    private HttpResponse getIntern() throws IOException {
         logger.info("downloaded Content from " + this.urlString + " ...");
 
-        HttpRequest httpRequest = httpTransport.createRequestFactory()
-                .buildGetRequest(new GenericUrl(this.urlString));
-        httpRequest.getHeaders().setUserAgent(getUserAgent());
 
-        return httpRequest.execute();
+        HttpRequest httpRequest = REQUEST_FACTORY
+                .buildGetRequest(new GenericUrl(this.urlString));
+
+        httpRequest.getHeaders().setUserAgent(getUserAgent());
+        httpRequest.setNumberOfRetries(MAX_TRIES);
+
+        HttpResponse response = null;
+        try {
+            response = httpRequest.execute();
+            return getContentAsByteArray(response);
+        } catch (HttpResponseException e) {
+            throw new IOException(e);
+        } finally {
+            if (response != null) {
+                response.disconnect();
+            }
+        }
+    }
+
+    private byte[] getContentAsByteArray(HttpResponse response) throws IOException {
+        try (InputStream is = response.getContent()) {
+            byte[] bytes = ByteStreams.toByteArray(is);
+            logger.info("... download finished");
+            return bytes;
+        }
     }
 
     private final String getUserAgent() {
