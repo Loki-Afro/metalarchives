@@ -4,15 +4,10 @@ import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static com.github.loki.afro.metallum.core.util.net.MetallumURL.BASEURL;
 
 public final class MetallumUtil {
     private final static String LINE_SEPARATOR = System.getProperty("line.separator");

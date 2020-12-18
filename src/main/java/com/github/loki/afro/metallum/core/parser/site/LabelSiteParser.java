@@ -197,7 +197,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     private Label parseParentLabel(final String upperRightPart) {
         String labelName = upperRightPart.substring(upperRightPart.indexOf("\">") + 2, upperRightPart.indexOf("</a></dd>"));
         String labelId = upperRightPart.substring(0, upperRightPart.indexOf("\">" + labelName));
-        labelId = labelId.substring(labelId.lastIndexOf("/") + 1, labelId.length());
+        labelId = labelId.substring(labelId.lastIndexOf("/") + 1);
         return new Label(Long.parseLong(labelId), labelName);
     }
 
@@ -215,7 +215,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
             String labelName = Jsoup.parse(parseAbleString).text();
             // id
             String labelId = parseAbleString.substring(0, parseAbleString.length() - (labelName.length() + 6));
-            labelId = labelId.substring(labelId.lastIndexOf("/") + 1, labelId.length());
+            labelId = labelId.substring(labelId.lastIndexOf("/") + 1);
             labelList.add(new Label(Long.parseLong(labelId), labelName));
         }
         return labelList;
@@ -310,7 +310,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     }
 
     private Label parseContactData(final Label label) {
-        String contactHtml = this.html.substring(this.html.indexOf("<p id=\"label_contact\">") + 22, this.html.length());
+        String contactHtml = this.html.substring(this.html.indexOf("<p id=\"label_contact\">") + 22);
         contactHtml = contactHtml.substring(0, contactHtml.indexOf("</p>"));
 
         label.setWebSiteURL(parseLabelWebsiteURL(contactHtml));
@@ -345,9 +345,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     private String parseLabelEmail(final String htmlPart) {
         String htmlString = htmlPart;
         if (htmlString.contains("title=\"Email\"")) {
-            htmlString = htmlString.substring(htmlString.indexOf("title=\"Email\""), htmlString.length());
+            htmlString = htmlString.substring(htmlString.indexOf("title=\"Email\""));
             String mail = htmlString.substring(0, htmlString.indexOf("</a>"));
-            mail = mail.substring(mail.lastIndexOf("\">") + 2, mail.length());
+            mail = mail.substring(mail.lastIndexOf("\">") + 2);
             // the mail is in this structure "hidden":
             // geil@google.com -> moc\elgoog\\lieg
             mail = new StringBuffer(mail).reverse().toString();

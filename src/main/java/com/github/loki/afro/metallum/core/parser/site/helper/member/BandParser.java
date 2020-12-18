@@ -71,10 +71,10 @@ public class BandParser {
         final String titleString = " title=\"";
         String bandName;
         if (html.contains(titleString)) {
-            bandName = html.substring(html.indexOf(titleString) + titleString.length(), html.length());
+            bandName = html.substring(html.indexOf(titleString) + titleString.length());
             bandName = bandName.substring(0, bandName.indexOf("\">"));
         } else {
-            bandName = html.substring(html.indexOf("class=\"member_in_band_name\">") + 28, html.length());
+            bandName = html.substring(html.indexOf("class=\"member_in_band_name\">") + 28);
             bandName = bandName.substring(0, bandName.indexOf("</h3>"));
         }
         return bandName;
@@ -106,12 +106,12 @@ public class BandParser {
 
     private String parseDiscYear(final String html) {
         String year = html.substring(0, html.indexOf("</td>"));
-        year = year.substring(year.lastIndexOf(">") + 1, year.length());
+        year = year.substring(year.lastIndexOf(">") + 1);
         return year;
     }
 
     private String parseDiscName(final String html) {
-        String discName = html.substring(html.indexOf(" title=\"") + 8, html.length());
+        String discName = html.substring(html.indexOf(" title=\"") + 8);
         discName = discName.substring(0, discName.indexOf("\">"));
         return discName;
     }

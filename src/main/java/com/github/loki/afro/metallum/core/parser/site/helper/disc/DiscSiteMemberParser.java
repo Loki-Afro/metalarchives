@@ -73,7 +73,7 @@ public class DiscSiteMemberParser {
         Element memberLink = memberRow.getElementsByAttribute("href").first();
         if (memberLink != null) {
             memberIdStr = memberLink.attr("href");
-            memberIdStr = memberIdStr.substring(memberIdStr.lastIndexOf("/") + 1, memberIdStr.length());
+            memberIdStr = memberIdStr.substring(memberIdStr.lastIndexOf("/") + 1);
         } else {
             LOGGER.warn("Member without Link detected, please report that; Member = " + memberRow.text());
         }

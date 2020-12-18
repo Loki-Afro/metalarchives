@@ -48,7 +48,7 @@ public class SimilarArtistsParser {
 
     private long parseBandId(final String htmlPart) {
         String strId = htmlPart.substring(0, htmlPart.lastIndexOf("\">"));
-        strId = strId.substring(strId.lastIndexOf("/") + 1, strId.length());
+        strId = strId.substring(strId.lastIndexOf("/") + 1);
         return Long.parseLong(strId);
     }
 

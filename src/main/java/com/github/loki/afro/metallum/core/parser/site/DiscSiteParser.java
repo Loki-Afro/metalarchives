@@ -117,7 +117,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         if (link != null) {
             labelIdStr = link.attr("href");
             labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
-            labelIdStr = labelIdStr.substring(labelIdStr.lastIndexOf("/") + 1, labelIdStr.length());
+            labelIdStr = labelIdStr.substring(labelIdStr.lastIndexOf("/") + 1);
             if (labelIdStr.contains("#")) {
                 labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
             }
@@ -188,7 +188,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         for (Element bandElem : bands) {
             String bandLink = bandElem.toString();
             String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandElem.text()));
-            bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
+            bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
             Band band = new Band(Long.parseLong(bandId), bandElem.text());
             splitBands[bands.indexOf(bandElem)] = band;
         }

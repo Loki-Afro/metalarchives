@@ -89,7 +89,7 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
         }
         index = hit.lastIndexOf(name) - i;
         String id = hit.substring(0, index - 1);
-        id = id.substring(id.lastIndexOf("/") + 1, id.length());
+        id = id.substring(id.lastIndexOf("/") + 1);
         return Long.parseLong(id);
     }
 

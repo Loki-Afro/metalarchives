@@ -47,9 +47,9 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
         final String[] strBandArray = bandData.split("</a>");
         Band[] bandArray = new Band[strBandArray.length];
         for (int i = 0; i < strBandArray.length; i++) {
-            String bandName = strBandArray[i].substring(strBandArray[i].indexOf("\">") + 2, strBandArray[i].length());
+            String bandName = strBandArray[i].substring(strBandArray[i].indexOf("\">") + 2);
             String bandId = strBandArray[i].substring(0, strBandArray[i].length() - (bandName.length() + 2));
-            bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
+            bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
             bandArray[i] = new Band(Long.parseLong(bandId), bandName);
         }
         return bandArray;

@@ -63,7 +63,7 @@ public class LinkParser {
 
     private String parseLinkURL(final String html) {
         String linkURL = prepareHtml(html);
-        linkURL = linkURL.substring(linkURL.indexOf("href=\"") + 6, linkURL.length());
+        linkURL = linkURL.substring(linkURL.indexOf("href=\"") + 6);
         linkURL = linkURL.substring(0, linkURL.indexOf("\" "));
         return linkURL;
     }
@@ -75,6 +75,6 @@ public class LinkParser {
     }
 
     private String prepareHtml(final String html) {
-        return "<a " + html.substring(html.indexOf("href"), html.length());
+        return "<a " + html.substring(html.indexOf("href"));
     }
 }
