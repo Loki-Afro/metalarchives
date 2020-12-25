@@ -242,7 +242,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getGenre(), "Death Metal");
         assertEquals(resultBand.getLyricalThemes(), "Satanism, Occultism, Anti-Christianity, Death");
         assertEquals(resultBand.getLabel().getName(), "Unsigned/independent");
-        assertTrue(resultBand.getLabel().getId() == 0);
+        assertEquals(0, resultBand.getLabel().getId());
         assertTrue(resultBand.getInfo().startsWith("Compilation "));
         assertTrue(resultBand.getInfo().endsWith("..."));
         assertFalse(resultBand.hasLogo());
