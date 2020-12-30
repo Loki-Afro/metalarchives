@@ -77,7 +77,7 @@ public class BandSearchServiceTest {
         assertEquals(resultBand.getLyricalThemes(), "Egyptian mythology, Death, Rituals, Lovecraft");
         assertEquals("Nuclear Blast", resultBand.getLabel().getName());
         assertTrue(resultBand.getLabel().getId() != 0);
-        assertThat(resultBand.getInfo(), startsWith("In the late 1980s, prior to forming Nile"));
+        assertThat(resultBand.getInfo(), startsWith("In the late 1980s way prior to forming Nile"));
         assertTrue(resultBand.getInfo().endsWith("..."));
         assertFalse(resultBand.hasLogo());
         assertFalse(resultBand.hasPhoto());
