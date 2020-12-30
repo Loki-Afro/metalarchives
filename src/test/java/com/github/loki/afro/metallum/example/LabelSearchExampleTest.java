@@ -3,15 +3,16 @@ package com.github.loki.afro.metallum.example;
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.search.query.LabelSearchQuery;
 import com.github.loki.afro.metallum.search.service.LabelSearchService;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class LabelSearchExampleTest {
 
-    @Ignore
+    @Disabled
     public void test() throws MetallumException {
         List<String> stringList = new ArrayList<>();
         stringList.add("Deathlike Silence");
@@ -26,7 +27,7 @@ public class LabelSearchExampleTest {
             LabelSearchService service = new LabelSearchService();
             query.setLabelName(labelName);
             service.performSearch(query);
-            Assert.assertFalse(service.getResultAsList().isEmpty());
+            assertThat(service.getResultAsList()).isNotEmpty();
         }
 
     }

@@ -3,15 +3,16 @@ package com.github.loki.afro.metallum.example;
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.search.query.MemberSearchQuery;
 import com.github.loki.afro.metallum.search.service.MemberSearchService;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class MemberSearchExampleTest {
 
-    @Ignore
+    @Disabled
     public void test() throws MetallumException {
 
         List<String> stringList = new ArrayList<>();
@@ -28,7 +29,7 @@ public class MemberSearchExampleTest {
             MemberSearchService service = new MemberSearchService();
             query.setMemberName(memberName);
             service.performSearch(query);
-            Assert.assertFalse(service.getResultAsList().isEmpty());
+            assertThat(service.getResultAsList()).isNotEmpty();
         }
 
     }

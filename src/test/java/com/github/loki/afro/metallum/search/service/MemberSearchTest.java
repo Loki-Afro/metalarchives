@@ -6,11 +6,13 @@ import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LinkCategory;
 import com.github.loki.afro.metallum.search.query.MemberSearchQuery;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MemberSearchTest {
     // TODO to test: -objectToLoad
@@ -20,12 +22,7 @@ public class MemberSearchTest {
         final MemberSearchService searchService = new MemberSearchService();
         final MemberSearchQuery query = new MemberSearchQuery();
         query.setMemberName("");
-        try {
-            searchService.performSearch(query);
-            Assert.fail();
-        } catch (MetallumException e) {
-            Assert.assertFalse(e.getMessage().isEmpty());
-        }
+        assertThatThrownBy(() -> searchService.performSearch(query)).isInstanceOf(MetallumException.class);
     }
 
     @Test
@@ -34,7 +31,7 @@ public class MemberSearchTest {
         final MemberSearchQuery query = new MemberSearchQuery();
         query.setMemberName("Fenriz");
         final List<Member> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result.isEmpty()).isFalse();
         defaultSearchMemberCheck(result);
     }
 
@@ -44,11 +41,11 @@ public class MemberSearchTest {
         final MemberSearchQuery query = new MemberSearchQuery();
         query.setMemberName("Eicca Toppinen");
         final List<Member> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result.isEmpty()).isFalse();
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
-        Assert.assertFalse(member.getPhotoUrl().isEmpty());
-        Assert.assertNotNull(member.getPhoto());
+        assertThat(member.getPhotoUrl().isEmpty()).isFalse();
+        assertThat(member.getPhoto()).isNotNull();
     }
 
     @Test
@@ -57,12 +54,12 @@ public class MemberSearchTest {
         final MemberSearchQuery query = new MemberSearchQuery();
         query.setMemberName("George \"Corpsegrinder\" Fisher");
         final List<Member> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result.isEmpty()).isFalse();
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
-        Assert.assertFalse(member.getPhotoUrl().isEmpty());
-        Assert.assertTrue(member.getDetails().startsWith("George"));
-        Assert.assertTrue(member.getDetails().endsWith("Forgotten."));
+        assertThat(member.getPhotoUrl().isEmpty()).isFalse();
+        assertThat(member.getDetails().startsWith("George")).isTrue();
+        assertThat(member.getDetails().endsWith("Forgotten.")).isTrue();
     }
 
     @Test
@@ -71,26 +68,26 @@ public class MemberSearchTest {
         final MemberSearchQuery query = new MemberSearchQuery();
         query.setMemberName("Tom G. Warrior");
         final List<Member> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result.isEmpty()).isFalse();
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
-        Assert.assertFalse(member.getPhotoUrl().isEmpty());
+        assertThat(member.getPhotoUrl().isEmpty()).isFalse();
         defaulLinkTest(member.getLinks());
     }
 
     private void defaulLinkTest(final Collection<Link> links) {
         for (final Link link : links) {
-            Assert.assertFalse(link.getName().isEmpty());
-            Assert.assertFalse(link.getURL().isEmpty());
-            Assert.assertNotSame(link.getCategory(), LinkCategory.ANY);
+            assertThat(link.getName().isEmpty()).isFalse();
+            assertThat(link.getURL().isEmpty()).isFalse();
+            assertThat(LinkCategory.ANY).isNotSameAs(link.getCategory());
         }
     }
 
     private void defaultSearchMemberCheck(final Member member) {
-        Assert.assertNotSame(0L, member.getId());
-        Assert.assertFalse(member.getName().isEmpty());
-        Assert.assertNotNull(member.getRealName());
-        Assert.assertNotSame(Country.ANY, member.getCountry());
+        assertThat(member.getId()).isNotSameAs(0L);
+        assertThat(member.getName().isEmpty()).isFalse();
+        assertThat(member.getRealName()).isNotNull();
+        assertThat(member.getCountry()).isNotSameAs(Country.ANY);
     }
 
     private void defaultSearchMemberCheck(final Collection<Member> membersToTest) {

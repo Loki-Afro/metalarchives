@@ -6,11 +6,12 @@ import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.query.DiscSearchQuery;
 import com.github.loki.afro.metallum.search.service.advanced.DiscSearchService;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DiscSearchExampleTest {
-    @Ignore
+    @Disabled
     public void test() throws MetallumException {
         DiscSearchService dss = new DiscSearchService();
         DiscSearchQuery dsq = new DiscSearchQuery();
@@ -22,17 +23,15 @@ public class DiscSearchExampleTest {
         dsq.setReleaseTypes(DiscType.SPLIT);
         dsq.setReleaseYearFrom(2006);
         dss.performSearch(dsq);
-        Assert.assertFalse(dss.isResultEmpty());
-        if (!dss.isResultEmpty()) {
-            // should be just one
-            for (Disc disc : dss.getResultAsList()) {
-                Assert.assertEquals(disc.getName(), "Under the Sign of the Wolf");
-                Assert.assertTrue(disc.getId() == 135928);
-                Assert.assertTrue(disc.isSplit());
-                Assert.assertEquals("[Reverend Bizarre [745], Mannhai [8915]]", disc.getSplitBands().toString());
-                Assert.assertEquals(disc.getLabel().getName(), "The Church Within Records");
-                Assert.assertEquals(disc.getReleaseDate(), "November 4th, 2006");
-            }
+        assertThat(dss.isResultEmpty()).isFalse();
+        // should be just one
+        for (Disc disc : dss.getResultAsList()) {
+            assertThat(disc.getName()).isEqualTo("Under the Sign of the Wolf");
+            assertThat(disc.getId() == 135928).isTrue();
+            assertThat(disc.isSplit()).isTrue();
+            assertThat("[Reverend Bizarre [745], Mannhai [8915]]").isEqualTo(disc.getSplitBands().toString());
+            assertThat(disc.getLabel().getName()).isEqualTo("The Church Within Records");
+            assertThat(disc.getReleaseDate()).isEqualTo("November 4th, 2006");
         }
     }
 }

@@ -1,24 +1,26 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
+import com.github.loki.afro.metallum.MetallumException;
 import org.jsoup.Jsoup;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class DownloaderTest {
 
-    @Ignore
+    @Disabled
     @Test
     public void downloadImage() throws IOException, ExecutionException {
         final BufferedImage testImage = Downloader.getImage("http://i.imgur.com/4Hkmk.png");
         final BufferedImage controlimage = ImageIO.read(getClass().getClassLoader().getResource("de/loki/metallum/core/util/net/downloader/gnu.png"));
-        Assert.assertTrue(compareImages(controlimage, testImage));
+        assertThat(compareImages(controlimage, testImage)).isTrue();
     }
 
     private boolean compareImages(final BufferedImage controlImage, final BufferedImage testImage) {
@@ -38,19 +40,16 @@ public class DownloaderTest {
     }
 
     @Test
-    public void downloadHtml() throws URISyntaxException, ExecutionException {
+    public void downloadHtml() throws ExecutionException {
         final String downloadedHtml = Downloader.getHTML("http://pastebin.com/raw.php?i=iEjw3swD").replaceAll("[\r|\n]", "");
-        Assert.assertEquals("<html><head><title>Riesenzwerg</title></head><body><h1>Hallo Welt!</h1><strong>Fett</strong><em>Kursiv</em></body></html>", downloadedHtml);
-        Assert.assertEquals("Riesenzwerg Hallo Welt!FettKursiv", Jsoup.parse(downloadedHtml).text());
+        assertThat(downloadedHtml).isEqualTo("<html><head><title>Riesenzwerg</title></head><body><h1>Hallo Welt!</h1><strong>Fett</strong><em>Kursiv</em></body></html>");
+        assertThat(Jsoup.parse(downloadedHtml).text()).isEqualTo("Riesenzwerg Hallo Welt!FettKursiv");
     }
 
     @Test
-    public void downloadExceptionTest() throws URISyntaxException {
-        try {
-            Downloader.getHTML("http://past7878787877878787ebin.com/raw.php?i=iEjw3swD");
-        } catch (ExecutionException e) {
-            Assert.assertNotNull(e);
-        }
+    public void downloadExceptionTest() {
+        assertThatThrownBy(() -> Downloader.getHTML("http://past7878787877878787ebin.com/raw.php?i=iEjw3swD"))
+                .isInstanceOf(ExecutionException.class);
     }
 
 }

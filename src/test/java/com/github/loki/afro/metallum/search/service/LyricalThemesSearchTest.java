@@ -4,10 +4,12 @@ import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.LyricalThemesSearchQuery;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class LyricalThemesSearchTest {
     // TODO to test: -objectToLoad
@@ -17,12 +19,8 @@ public class LyricalThemesSearchTest {
         final LyricalThemesSearchService searchService = new LyricalThemesSearchService();
         final LyricalThemesSearchQuery query = new LyricalThemesSearchQuery();
         query.setLyricalThemes("");
-        try {
-            searchService.performSearch(query);
-            Assert.fail();
-        } catch (MetallumException e) {
-            Assert.assertFalse(e.getMessage().isEmpty());
-        }
+
+        assertThatThrownBy(() -> searchService.performSearch(query)).isInstanceOf(MetallumException.class);
     }
 
     @Test
@@ -31,13 +29,13 @@ public class LyricalThemesSearchTest {
         final LyricalThemesSearchQuery query = new LyricalThemesSearchQuery();
         query.setLyricalThemes("Love Sex");
         final List<Band> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         for (final Band band : result) {
-            Assert.assertNotSame(0L, band.getId());
-            Assert.assertFalse(band.getName().isEmpty());
-            Assert.assertFalse(band.getGenre().isEmpty());
-            Assert.assertFalse(band.getLyricalThemes().isEmpty());
-            Assert.assertNotSame(Country.ANY, band.getCountry());
+            assertThat(band.getId()).isNotEqualTo(0L);
+            assertThat(band.getName()).isNotEmpty();
+            assertThat(band.getGenre()).isNotEmpty();
+            assertThat(band.getLyricalThemes()).isNotEmpty();
+            assertThat(band.getCountry()).isNotEqualTo(Country.ANY);
         }
     }
 }

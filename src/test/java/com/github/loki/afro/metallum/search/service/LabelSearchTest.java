@@ -3,10 +3,12 @@ package com.github.loki.afro.metallum.search.service;
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.search.query.LabelSearchQuery;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class LabelSearchTest {
     // TODO to test: -objectToLoad
@@ -16,12 +18,7 @@ public class LabelSearchTest {
         final LabelSearchService searchService = new LabelSearchService();
         final LabelSearchQuery query = new LabelSearchQuery();
         query.setLabelName("");
-        try {
-            searchService.performSearch(query);
-            Assert.fail();
-        } catch (MetallumException e) {
-            Assert.assertFalse(e.getMessage().isEmpty());
-        }
+        assertThatThrownBy(() -> searchService.performSearch(query)).isInstanceOf(MetallumException.class);
     }
 
     @Test
@@ -30,12 +27,12 @@ public class LabelSearchTest {
         final LabelSearchQuery query = new LabelSearchQuery();
         query.setLabelName("Nuclear");
         final List<Label> result = searchService.performSearch(query);
-        Assert.assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         for (final Label label : result) {
-            Assert.assertNotSame(0L, label.getId());
-            Assert.assertFalse(label.getName().isEmpty());
-            Assert.assertFalse(label.getSpecialisation().isEmpty());
-            Assert.assertNotNull(label.getCountry());
+            assertThat(label.getId()).isNotSameAs(0L);
+            assertThat(label.getName().isEmpty()).isFalse();
+            assertThat(label.getSpecialisation().isEmpty()).isFalse();
+            assertThat(label.getCountry()).isNotNull();
         }
     }
 
@@ -51,14 +48,14 @@ public class LabelSearchTest {
         final LabelSearchQuery query = new LabelSearchQuery();
         query.setLabelName("Spinefarm Records");
         final Label label = searchService.performSearch(query).get(0);
-        Assert.assertNotSame(0L, label.getId());
-        Assert.assertFalse(label.getName().isEmpty());
-        Assert.assertFalse(label.getSpecialisation().isEmpty());
-        Assert.assertNotNull(label.getCountry());
-        Assert.assertFalse(label.getAddedBy().isEmpty());
-        Assert.assertFalse(label.getAddedOn().isEmpty());
-        Assert.assertFalse(label.getModifiedBy().isEmpty());
-        Assert.assertFalse(label.getLastModifiedOn().isEmpty());
+        assertThat(label.getId()).isNotSameAs(0L);
+        assertThat(label.getName().isEmpty()).isFalse();
+        assertThat(label.getSpecialisation().isEmpty()).isFalse();
+        assertThat(label.getCountry()).isNotNull();
+        assertThat(label.getAddedBy().isEmpty()).isFalse();
+        assertThat(label.getAddedOn().isEmpty()).isFalse();
+        assertThat(label.getModifiedBy().isEmpty()).isFalse();
+        assertThat(label.getLastModifiedOn().isEmpty()).isFalse();
     }
 
     @Test
@@ -67,16 +64,16 @@ public class LabelSearchTest {
         final LabelSearchQuery query = new LabelSearchQuery();
         query.setLabelName("Deathlike Silence");
         final Label result = searchService.performSearch(query).get(0);
-        Assert.assertNotSame(0L, result.getId());
-        Assert.assertFalse(result.getName().isEmpty());
-        Assert.assertFalse(result.getSpecialisation().isEmpty());
-        Assert.assertNotNull(result.getCountry());
-        Assert.assertFalse(result.getAddedBy().isEmpty());
-        Assert.assertFalse(result.getAddedOn().isEmpty());
-        Assert.assertFalse(result.getModifiedBy().isEmpty());
-        Assert.assertFalse(result.getLastModifiedOn().isEmpty());
-        Assert.assertNotNull(result.getLogo());
-        Assert.assertFalse(result.getLogoUrl().isEmpty());
+        assertThat(result.getId()).isNotSameAs(0L);
+        assertThat(result.getName().isEmpty()).isFalse();
+        assertThat(result.getSpecialisation().isEmpty()).isFalse();
+        assertThat(result.getCountry()).isNotNull();
+        assertThat(result.getAddedBy().isEmpty()).isFalse();
+        assertThat(result.getAddedOn().isEmpty()).isFalse();
+        assertThat(result.getModifiedBy().isEmpty()).isFalse();
+        assertThat(result.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(result.getLogo()).isNotNull();
+        assertThat(result.getLogoUrl().isEmpty()).isFalse();
 
     }
 }

@@ -3,15 +3,16 @@ package com.github.loki.afro.metallum.example;
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.search.query.LyricalThemesSearchQuery;
 import com.github.loki.afro.metallum.search.service.LyricalThemesSearchService;
-import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class LyricalThemesExampleTest {
 
-    @Ignore
+    @Disabled
     public void test() throws MetallumException {
 
         List<String> stringList = new ArrayList<>();
@@ -22,7 +23,7 @@ public class LyricalThemesExampleTest {
             LyricalThemesSearchService service = new LyricalThemesSearchService();
             query.setLyricalThemes(lyricalThemes);
             service.performSearch(query);
-            Assert.assertFalse(service.getResultAsList().isEmpty());
+            assertThat(service.getResultAsList()).isNotEmpty();
         }
 
     }
