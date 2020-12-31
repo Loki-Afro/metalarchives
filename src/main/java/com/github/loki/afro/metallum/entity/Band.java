@@ -35,6 +35,7 @@ public class Band extends AbstractEntity {
     private Map<Integer, List<Band>> similarArtist = new HashMap<>();
     private String photoUrl = null;
     private String logoUrl = null;
+    private TreeSet<YearRange> yearsActive = new TreeSet<>();
 
     /**
      * DummyBand Constructor
@@ -412,4 +413,11 @@ public class Band extends AbstractEntity {
         return this.photoUrl;
     }
 
+    public TreeSet<YearRange> getYearsActive() {
+        return yearsActive;
+    }
+
+    public void setYearsActive(TreeSet<YearRange> yearsActive) {
+        this.yearsActive = yearsActive;
+    }
 }

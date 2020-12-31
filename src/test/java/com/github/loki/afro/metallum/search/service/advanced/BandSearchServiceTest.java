@@ -1,19 +1,18 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Label;
-import com.github.loki.afro.metallum.entity.Review;
+import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.BandSearchQuery;
 import org.junit.jupiter.api.Test;
 
+import com.github.loki.afro.metallum.entity.YearRange.Year;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.*;
+import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BandSearchServiceTest {
 
@@ -654,6 +653,98 @@ public class BandSearchServiceTest {
         Label label = resultBand.getLabel();
         assertThat(label.getName()).isEqualTo("Unknown");
         assertThat(label.getId()).isEqualTo(0L);
+    }
+
+    @Test
+    public void yearsActiveTest() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(189L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(1989), of(1990), "Ulceration", null),
+                YearRange.of(of(1990), of(1990), "Fear the Factory", null),
+                YearRange.of(of(1990), of(2002), "Fear Factory", 189L),
+                YearRange.of(of(2002), of(2006), "Fear Factory", 189L),
+                YearRange.of(of(2009), of(2017), "Fear Factory", 189L),
+                YearRange.of(of(2020), present(), "Fear Factory", 189L)
+        );
+
+    }
+
+    @Test
+    public void yearsActiveWithLinksTest() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(7L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(1987), of(1989), "Nihilist", 14076L),
+                YearRange.of(of(1989), of(2014), "Entombed", 7L),
+                YearRange.of(of(2016), present(), "Entombed", 7L)
+        );
+    }
+
+    @Test
+    public void yearsActiveWithQuestionMark() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(4515L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(1998), unknown(), "Abandoned Grave", 4515L)
+        );
+    }
+
+    @Test
+    public void yearsActiveWithNotAvailable() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(3540477583L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+        assertThat(resultBand.getYearsActive()).isEmpty();
+    }
+
+   @Test
+    public void yearsActiveMultipleQuestionMarks() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(81844L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+       assertThat(resultBand.getYearsActive()).containsExactly(
+               YearRange.of(of(2001), unknown(), "1000 A.D.", 81844L),
+               YearRange.of(unknown(), present(), "Growing", null)
+       );
+    }
+
+    @Test
+    public void yearsActiveStartWithQuestionMark() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(3540413935L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+       assertThat(resultBand.getYearsActive()).containsExactly(
+               YearRange.of(unknown(), of(2017), "12:06", 3540413935L)
+       );
+    }
+
+    @Test
+    public void yearsActiveChangedNameWithReferenceAtEnd() throws MetallumException {
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(3540293316L));
+        final Band resultBand = service.performSearch(query).get(0);
+
+       assertThat(resultBand.getYearsActive()).containsExactly(
+               YearRange.of(of(1993), of(2003), "1369", 3540293316L),
+               YearRange.of(of(2003), present(), "Blood Tribe", 106025L)
+       );
     }
 
 }

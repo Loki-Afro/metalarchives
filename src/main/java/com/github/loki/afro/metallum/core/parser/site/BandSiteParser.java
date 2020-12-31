@@ -17,17 +17,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BandSiteParser extends AbstractSiteParser<Band> {
     private final boolean loadReviews;
     private final boolean loadSimilarArtists;
     private final boolean loadReadMore;
     private static final Logger logger = LoggerFactory.getLogger(BandSiteParser.class);
+    private static final Pattern periodMatcher = Pattern.compile("(\\d\\d\\d\\d|\\?)(?:-(\\d\\d\\d\\d|present|\\?))?(?:\\s\\(as\\s(.+)\\))?");
 
     public BandSiteParser(final Band band, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) throws ExecutionException {
         super(band, loadImages, loadLinks);
@@ -43,6 +43,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
         parseLeftHtmlPart(band);
         parseRightHtmlPart(band);
+        parseYearsActive(band);
 
         band = parseBandImages(band);
 
@@ -99,6 +100,72 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             band.setProvince(valueElements.get(1).text().trim());
             band.setStatus(BandStatus.getTypeBandStatusForString(valueElements.get(2).text()));
             band.setYearFormedIn(parseYearOfCreation(valueElements.get(3).text()));
+        }
+    }
+
+    private void parseYearsActive(Band band) {
+        Elements select = this.doc.select("#band_stats > dl.clear > dd:nth-child(2)");
+        if (!select.isEmpty()) {
+            Element yearsActiveElement = select.get(0);
+            Map<String, Long> referencedBands = new HashMap<>();
+            for (Element href : yearsActiveElement.getElementsByTag("a")) {
+                String urlStr = href.attr("href");
+                String bandId = urlStr.substring(urlStr.lastIndexOf("/") + 1);
+                String bandName = href.text();
+                referencedBands.put(bandName, Long.parseLong(bandId));
+            }
+            String yearsActiveFullText = yearsActiveElement.text();
+            if ("N/A".contains(yearsActiveFullText)) {
+                band.setYearsActive(new TreeSet<>());
+            } else {
+                band.setYearsActive(getYearsActive(band, referencedBands, yearsActiveFullText));
+            }
+
+        } else {
+            band.setYearsActive(new TreeSet<>());
+        }
+    }
+
+    private TreeSet<YearRange> getYearsActive(Band band, Map<String, Long> referencedBands, String yearsActiveFullText) {
+        TreeSet<YearRange> yearsActive = new TreeSet<>();
+        for (String period : yearsActiveFullText.split(",\\s?")) {
+            Matcher matcher = periodMatcher.matcher(period);
+            if (matcher.matches()) {
+                String start = matcher.group(1);
+                String end = matcher.group(2);
+                if (end == null) {
+                    // 1989-1990 (as Ulceration), 1990 (as Fear the Factory), 1990-2002
+                    // only in 1990 they called themselves "Fear the Factory" therefore the period also ends in 1990
+                    end = start;
+                }
+                String bandName = matcher.group(3);
+
+                final Long bandId;
+                if (bandName != null) {
+                    bandId = referencedBands.get(bandName);
+                } else {
+                    bandId = band.getId();
+                    bandName = band.getName();
+                }
+
+                YearRange.Year startYear = yearFromString(start);
+                YearRange.Year endYear = yearFromString(end);
+
+                yearsActive.add(YearRange.of(startYear, endYear, bandName, bandId));
+            } else {
+                logger.error("Unknown period pattern: {}", period);
+            }
+        }
+        return yearsActive;
+    }
+
+    private YearRange.Year yearFromString(String strYear) {
+        if ("?".equals(strYear)) {
+            return YearRange.Year.unknown();
+        } else if ("present".equals(strYear)) {
+            return YearRange.Year.present();
+        } else {
+            return YearRange.Year.of(Integer.parseInt(strYear));
         }
     }
 
