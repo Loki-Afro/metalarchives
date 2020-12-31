@@ -63,6 +63,22 @@ public class YearRange implements Comparable<YearRange> {
         return Objects.hash(start, end, asBandName, asBandId);
     }
 
+    @Override
+    public String toString() {
+        boolean startEndEquals = start.equals(end);
+
+        String asBandIdSubString = "";
+        if (asBandName != null) {
+            String sub = asBandId != null ? "$" + asBandId : "";
+            asBandIdSubString = " (as " + asBandName + sub + ")";
+        }
+
+        if (startEndEquals) {
+            return start.getYear().toString() + asBandIdSubString;
+        }
+        return start.toString() + "-" + end.toString() + asBandIdSubString;
+    }
+
     public static class Year implements Comparable<Year> {
         private final Integer year;
         private final boolean unknown;
@@ -114,6 +130,17 @@ public class YearRange implements Comparable<YearRange> {
         @Override
         public int hashCode() {
             return Objects.hash(year, unknown);
+        }
+
+        @Override
+        public String toString() {
+            if (unknown) {
+                return "?";
+            } else if (year != null) {
+                return year.toString();
+            } else {
+                return "present";
+            }
         }
     }
 }
