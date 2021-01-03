@@ -101,7 +101,7 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
     }
 
     private Country parseCountry(final String hit) {
-        return Country.getRightCountryForString(hit);
+        return Country.ofMetallumDisplayName(hit);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Mournful Congregation").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.AUSTRALIA).isEqualTo(resultBand.getCountry());
+        assertThat(Country.AU).isEqualTo(resultBand.getCountry());
         assertThat("Adelaide, South Australia").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1993).isEqualTo(resultBand.getYearFormedIn());
@@ -65,7 +65,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Nile").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.UNITED_STATES).isEqualTo(resultBand.getCountry());
+        assertThat(Country.US).isEqualTo(resultBand.getCountry());
         assertThat("Greenville, South Carolina").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1993).isEqualTo(resultBand.getYearFormedIn());
@@ -127,7 +127,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Warning").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.UNITED_KINGDOM).isEqualTo(resultBand.getCountry());
+        assertThat(Country.GB).isEqualTo(resultBand.getCountry());
         assertThat(resultBand.getProvince()).isEqualTo("Harlow, Essex, England");
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1994).isEqualTo(resultBand.getYearFormedIn());
@@ -153,11 +153,11 @@ public class BandSearchServiceTest {
         final BandSearchService service = new BandSearchService();
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("40 Watt Sun", false);
-        query.addCountry(Country.UNITED_KINGDOM);
+        query.addCountry(Country.GB);
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("40 Watt Sun").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.UNITED_KINGDOM).isEqualTo(resultBand.getCountry());
+        assertThat(Country.GB).isEqualTo(resultBand.getCountry());
         assertThat("London, England").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2009).isEqualTo(resultBand.getYearFormedIn());
@@ -184,11 +184,11 @@ public class BandSearchServiceTest {
         service.setObjectsToLoad(0);
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Lifelover", false);
-        query.addCountry(Country.SWEDEN);
+        query.addCountry(Country.SE);
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Lifelover").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SWEDEN).isEqualTo(resultBand.getCountry());
+        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
         assertThat("Stockholm").isEqualTo(resultBand.getProvince());
         assertThat(resultBand.getStatus()).isNull();
         assertThat(resultBand.getYearFormedIn() == 0).isTrue();
@@ -210,7 +210,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Katatonia").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SWEDEN).isEqualTo(resultBand.getCountry());
+        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
         assertThat(resultBand.getProvince()).isEmpty();
         assertThat(resultBand.getStatus()).isNull();
         assertThat(1991).isEqualTo(resultBand.getYearFormedIn());
@@ -231,7 +231,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Vital Remains").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.UNITED_STATES).isEqualTo(resultBand.getCountry());
+        assertThat(Country.US).isEqualTo(resultBand.getCountry());
         assertThat("Providence, Rhode Island").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1988).isEqualTo(resultBand.getYearFormedIn());
@@ -262,7 +262,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Triptykon").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SWITZERLAND).isEqualTo(resultBand.getCountry());
+        assertThat(Country.CH).isEqualTo(resultBand.getCountry());
         assertThat("Zürich").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
@@ -291,7 +291,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Nocturnal Depression").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.FRANCE).isEqualTo(resultBand.getCountry());
+        assertThat(Country.FR).isEqualTo(resultBand.getCountry());
         assertThat("Grenoble, Auvergne-Rhône-Alpes").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2004).isEqualTo(resultBand.getYearFormedIn());
@@ -321,7 +321,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Nagelfar").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.GERMANY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
         assertThat("Aachen, North Rhine-Westphalia").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.SPLIT_UP).isEqualTo(resultBand.getStatus());
         assertThat(1993).isEqualTo(resultBand.getYearFormedIn());
@@ -351,7 +351,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.GERMANY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
         assertThat("Rhineland-Palatinate").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ON_HOLD).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
@@ -381,7 +381,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Nocturnal").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.GERMANY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
         assertThat(resultBand.getProvince()).isEmpty();
         assertThat(resultBand.getStatus()).isNull();
         assertThat(resultBand.getYearFormedIn() == 0).isTrue();
@@ -403,7 +403,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Merciless").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SWEDEN).isEqualTo(resultBand.getCountry());
+        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
         assertThat("Strängnäs, Södermanland").isEqualTo(resultBand.getProvince());
         assertThat(resultBand.getStatus()).isNull();
         assertThat(resultBand.getYearFormedIn() == 0).isTrue();
@@ -425,7 +425,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.GERMANY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
         assertThat("Rhineland-Palatinate").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ON_HOLD).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
@@ -455,7 +455,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.GERMANY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
         assertThat("Rhineland-Palatinate").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ON_HOLD).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
@@ -518,7 +518,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Madness").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.BRAZIL).isEqualTo(resultBand.getCountry());
+        assertThat(Country.BR).isEqualTo(resultBand.getCountry());
         assertThat("Piracicaba, São Paulo").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2005).isEqualTo(resultBand.getYearFormedIn());
@@ -561,7 +561,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Warning").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.UNITED_KINGDOM).isEqualTo(resultBand.getCountry());
+        assertThat(Country.GB).isEqualTo(resultBand.getCountry());
         assertThat(resultBand.getProvince()).isEqualTo("Harlow, Essex, England");
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1994).isEqualTo(resultBand.getYearFormedIn());
@@ -602,7 +602,7 @@ public class BandSearchServiceTest {
         final Band resultBand = service.performSearch(query).get(0);
         assertThat("Black Jester").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() == 666).isTrue();
-        assertThat(Country.ITALY).isEqualTo(resultBand.getCountry());
+        assertThat(Country.IT).isEqualTo(resultBand.getCountry());
         assertThat("Treviso, Veneto").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1986).isEqualTo(resultBand.getYearFormedIn());

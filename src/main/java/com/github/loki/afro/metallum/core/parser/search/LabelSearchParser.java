@@ -34,7 +34,7 @@ public class LabelSearchParser extends AbstractSearchParser<Label> {
     }
 
     private Country parseLabelCountry(final String hit) {
-        return Country.getRightCountryForString(hit);
+        return Country.ofMetallumDisplayName(hit);
     }
 
     private String parseSpecialisation(final String hit) {

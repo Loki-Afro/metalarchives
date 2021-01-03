@@ -18,7 +18,7 @@ public class DiscSearchExampleTest {
         dsq.setBandName("Reverend Bizarre", false);
         // actually its a Split with Mannhai
         dsq.setReleaseName("Under the Sign of the Wolf", true);
-        dsq.setCountries(Country.FINLAND);
+        dsq.setCountries(Country.FI);
         dsq.setLabel("The Church Within Records", false);
         dsq.setReleaseTypes(DiscType.SPLIT);
         dsq.setReleaseYearFrom(2006);

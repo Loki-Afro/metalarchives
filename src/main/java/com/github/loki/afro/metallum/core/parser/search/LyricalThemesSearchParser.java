@@ -39,7 +39,7 @@ public class LyricalThemesSearchParser extends AbstractSearchParser<Band> {
     }
 
     private Country parseCountry(String hit) {
-        return Country.getRightCountryForString(hit);
+        return Country.ofMetallumDisplayName(hit);
     }
 
     private String parseLyricalThemes(String hit) {

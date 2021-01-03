@@ -27,7 +27,7 @@ public class BandSearchExampleTest {
         assertThat(bandSearchService.isResultEmpty()).isFalse();
 
         for (Band band : bandSearchService.getResultAsList()) {
-            assertThat(band.getCountry()).isEqualTo(Country.SWEDEN);
+            assertThat(band.getCountry()).isEqualTo(Country.SE);
             assertThat(band.getName()).isEqualTo(bandToSearchFor);
             assertThat(band.getProvince()).isEqualTo("Stockholm");
             assertThat(band.getLyricalThemes()).isEqualTo("Anti-Christ, Satan (old), Norse Mythology, Odinism");

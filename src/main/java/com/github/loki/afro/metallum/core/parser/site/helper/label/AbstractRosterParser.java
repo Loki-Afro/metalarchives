@@ -102,6 +102,6 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
     }
 
     Country parseBandCountry(final String hit) {
-        return Country.getRightCountryForString(hit);
+        return Country.ofMetallumDisplayName(hit);
     }
 }

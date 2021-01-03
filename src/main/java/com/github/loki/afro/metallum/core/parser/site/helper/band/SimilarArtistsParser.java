@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 
 public class SimilarArtistsParser {
+    @Deprecated
     private final String html;
 
     public SimilarArtistsParser(final long id) throws ExecutionException {
@@ -58,7 +59,7 @@ public class SimilarArtistsParser {
 
     private Country parseCountry(final String htmlPart) {
         String strCounty = Jsoup.parse(htmlPart).text();
-        return Country.getRightCountryForString(strCounty);
+        return Country.ofMetallumDisplayName(strCounty);
     }
 
     private String parseGenre(final String htmlPart) {

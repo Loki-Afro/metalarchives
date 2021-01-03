@@ -28,7 +28,7 @@ public final class MetallumURL {
     public enum SearchTyp {
         BAND("bands"), TRACK("songs"), DISC("albums");
 
-        private String searchString;
+        private final String searchString;
 
         SearchTyp(String searchString) {
             this.searchString = searchString;

@@ -103,7 +103,7 @@ public class BandSearchQuery extends AbstractSearchQuery<Band> {
      * @return true if the Country was added to the list
      */
     public final boolean addCountry(final String country) {
-        Country c = Country.getRightCountryForString(country);
+        Country c = Country.ofMetallumDisplayName(country);
         if (c != Country.ANY) {
             this.countries.add(c);
             return true;

@@ -96,7 +96,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         Element secondPart = this.doc.select("dl[class]").get(0);
         if (secondPart.hasClass("float_left")) {
             Elements valueElements = secondPart.getElementsByTag("dd");
-            band.setCountry(Country.getRightCountryForString(valueElements.get(0).text()));
+            band.setCountry(Country.ofMetallumDisplayName(valueElements.get(0).text()));
             band.setProvince(valueElements.get(1).text().trim());
             band.setStatus(BandStatus.getTypeBandStatusForString(valueElements.get(2).text()));
             band.setYearFormedIn(parseYearOfCreation(valueElements.get(3).text()));

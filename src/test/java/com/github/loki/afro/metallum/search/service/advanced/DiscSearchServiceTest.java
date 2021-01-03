@@ -267,13 +267,13 @@ public class DiscSearchServiceTest {
         final DiscSearchService service = new DiscSearchService();
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setReleaseName("Autumn Aurora", false);
-        query.setCountries(Country.UKRAINE);
+        query.setCountries(Country.UA);
         final Disc discResult = service.performSearch(query).get(0);
         assertThat(discResult.getBandName()).isEqualTo("Drudkh");
         assertThat(discResult.getName()).isEqualTo("Autumn Aurora");
         assertThat(discResult.getTrackList()).hasSize(6);
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
-        assertThat(discResult.getBand().getCountry()).isEqualTo(Country.UKRAINE);
+        assertThat(discResult.getBand().getCountry()).isEqualTo(Country.UA);
         assertThat(discResult.getLabel().getName()).isEqualTo("Supernal Music");
         assertThat(discResult.getArtwork()).isNull();
         assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
@@ -289,7 +289,7 @@ public class DiscSearchServiceTest {
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setReleaseName("The Somberlain", false);
         query.setReleaseTypes(DiscType.FULL_LENGTH);
-        query.setCountries(Country.UKRAINE, Country.GERMANY, Country.SWEDEN, Country.TAIWAN);
+        query.setCountries(Country.UA, Country.DE, Country.SE, Country.TW);
         final Disc discResult = service.performSearch(query).get(0);
         assertThat(discResult.getBandName()).isEqualTo("Dissection");
         assertThat(discResult.getName()).isEqualTo("The Somberlain");

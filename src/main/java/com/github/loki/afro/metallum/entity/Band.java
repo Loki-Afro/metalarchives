@@ -83,7 +83,7 @@ public class Band extends AbstractEntity {
 
     public void setCountry(final String countryStr) {
         if (!countryStr.trim().isEmpty()) {
-            this.country = Country.getRightCountryForString(countryStr);
+            this.country = Country.ofMetallumDisplayName(countryStr);
         }
     }
 

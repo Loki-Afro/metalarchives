@@ -174,7 +174,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     private Country parseCountry(final String upperLeftPart) {
         String countryStr = upperLeftPart.substring(upperLeftPart.indexOf(">") + 1, upperLeftPart.indexOf("</dd>"));
-        return Country.getRightCountryForString(countryStr);
+        return Country.ofMetallumDisplayName(countryStr);
     }
 
     private String parsePhoneNumber(final String upperLeftPart) {

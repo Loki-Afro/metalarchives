@@ -38,7 +38,7 @@ public class GenreSearchParser extends AbstractSearchParser<Band> {
     }
 
     private Country parseCountry(final String hit) {
-        return Country.getRightCountryForString(hit);
+        return Country.ofMetallumDisplayName(hit);
     }
 
 }

@@ -84,7 +84,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
             return Country.ANY;
         }
         final String country = memberDetails[1].substring(memberDetails[1].indexOf("\">") + 2, memberDetails[1].indexOf("</a>"));
-        return Country.getRightCountryForString(country);
+        return Country.ofMetallumDisplayName(country);
     }
 
     private String parseProvince() {

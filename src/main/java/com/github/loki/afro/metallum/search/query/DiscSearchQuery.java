@@ -94,7 +94,7 @@ public class DiscSearchQuery extends AbstractSearchQuery<Disc> {
      * @return true if the country was added, false otherwise
      */
     public boolean setCountry(final String country) {
-        final Country c = Country.getRightCountryForString(country);
+        final Country c = Country.ofMetallumDisplayName(country);
         if (c != Country.ANY) {
             this.countries.add(c);
             return true;
