@@ -747,4 +747,19 @@ public class BandSearchServiceTest {
        );
     }
 
+    @Test
+    public void yearsActiveToString() throws MetallumException{
+        final BandSearchService service = new BandSearchService();
+        final BandSearchQuery query = new BandSearchQuery();
+        query.setSearchObject(new Band(98226L));
+        final Band resultBand = service.performSearch(query).get(0);
+        
+        assertThat(resultBand.getYearsActive().stream()
+                .map(YearRange::toString))
+                .containsExactly(
+                        "1992-1994 (as Crashcat)",
+                        "1994-? (as Crash for Excess)",
+                        "?-? (as 44 X ES$98226)");
+    }
+
 }

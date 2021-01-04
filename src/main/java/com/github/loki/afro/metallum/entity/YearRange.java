@@ -73,7 +73,7 @@ public class YearRange implements Comparable<YearRange> {
             asBandIdSubString = " (as " + asBandName + sub + ")";
         }
 
-        if (startEndEquals) {
+        if (startEndEquals && !start.isUnknown()) {
             return start.getYear().toString() + asBandIdSubString;
         }
         return start.toString() + "-" + end.toString() + asBandIdSubString;
