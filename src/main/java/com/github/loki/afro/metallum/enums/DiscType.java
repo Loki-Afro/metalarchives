@@ -11,12 +11,22 @@ import org.slf4j.LoggerFactory;
  * @author zarathustra
  */
 public enum DiscType {
-    FULL_LENGTH("Full-length", 1, false), LIVE_ALBUM("Live album", 2, false), DEMO("Demo", 3, false), SINGLE("Single", 4, false), EP("EP", 5, false), VIDEO("Video", 6, false), BOXED_SET("Boxed Set", 7, false), SPLIT("Split", 8, true),
+    FULL_LENGTH("Full-length", 1, false),
+    LIVE_ALBUM("Live album", 2, false),
+    DEMO("Demo", 3, false),
+    SINGLE("Single", 4, false),
+    EP("EP", 5, false),
+    VIDEO("Video", 6, false),
+    BOXED_SET("Boxed Set", 7, false),
+    SPLIT("Split", 8, true),
     /**
      * will be removed in the future? its marked as legacy at metal-archives?
      */
     @Deprecated
-    VHS("Video/VHS", 9, false), COMPILATION("Compilation", 10, false), SPLIT_VIDEO("Split video", 12, true);
+    VHS("Video/VHS", 9, false),
+    COMPILATION("Compilation", 10, false),
+    SPLIT_VIDEO("Split video", 12, true),
+    COLLABORATION("Collaboration", 13, true);
 
     private final String realName;
     private final int searchNumber;
@@ -27,6 +37,10 @@ public enum DiscType {
         this.realName = realName;
         this.searchNumber = searchNumber;
         this.isSplit = isSplitType;
+    }
+
+    public boolean isSplit() {
+        return isSplit;
     }
 
     public static DiscType getTypeDiscTypeForString(String possibleDiscType) {

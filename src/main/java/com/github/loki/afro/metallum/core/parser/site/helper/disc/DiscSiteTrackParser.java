@@ -3,6 +3,7 @@ package com.github.loki.afro.metallum.core.parser.site.helper.disc;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.enums.DiscType;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,12 +20,12 @@ public final class DiscSiteTrackParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscSiteTrackParser.class);
     private CountDownLatch doneSignal;
     private final Document doc;
-    private final boolean isSplit;
+    private final DiscType discType;
     private final boolean loadLyrics;
 
-    public DiscSiteTrackParser(final Document doc, final boolean isSplit, final boolean loadLyrics) {
+    public DiscSiteTrackParser(final Document doc, final DiscType discType, final boolean loadLyrics) {
         this.doc = doc;
-        this.isSplit = isSplit;
+        this.discType = discType;
         this.loadLyrics = loadLyrics;
     }
 
@@ -102,7 +103,7 @@ public final class DiscSiteTrackParser {
             final String trackIdStr = parseTrackId(row);
             final long trackId = Long.parseLong(trackIdStr.replaceAll("[\\D]", ""));
             Track track = new Track(trackId);
-            track.setName(parseTrackTitle(row, this.isSplit));
+            track.setName(parseTrackTitle(row, this.discType.isSplit()));
             track.setPlayTime(parsePlayTime(row));
             int trackNumber = parseTrackNumber(row);
             track.setTrackNumber(trackNumber);
@@ -113,8 +114,8 @@ public final class DiscSiteTrackParser {
             }
             track.setDiscNumber(counter);
 //			because otherwise the bandName is always the same
-            if (this.isSplit) {
-                track.setBandName(parseBandName(row));
+            if (discType != DiscType.COLLABORATION && this.discType.isSplit()) {
+                track.setSplitBandName(parseBandName(row));
             }
             track.setInstrumental(parseIsInstrumental(row));
             if (this.loadLyrics && row.getElementById("lyricsButton" + trackIdStr) != null) {

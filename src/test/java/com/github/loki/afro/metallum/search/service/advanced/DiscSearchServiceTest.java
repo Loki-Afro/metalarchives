@@ -1,20 +1,17 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Member;
-import com.github.loki.afro.metallum.entity.Review;
-import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.query.DiscSearchQuery;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class DiscSearchServiceTest {
 
@@ -168,6 +165,8 @@ public class DiscSearchServiceTest {
         final Disc discResult = service.performSearch(query).get(0);
         assertThat(discResult.getSplitBands().get(0).getName()).isEqualTo("Emperor");
         assertThat(discResult.getSplitBands().get(1).getName()).isEqualTo("Enslaved");
+        assertThat(discResult.getBandName()).isEmpty();
+        assertThat(discResult.getBand().getId()).isEqualTo(0L);
         assertThat(discResult.getName()).isEqualTo("Emperor / Hordanes Land");
         assertThat(discResult.getTrackList()).hasSize(7);
         assertThat(discResult.getType()).isEqualTo(DiscType.SPLIT);
@@ -652,6 +651,31 @@ public class DiscSearchServiceTest {
         assertThat(disc.getName()).isEqualTo("Demon's Night");
         assertThat(disc.getBandName()).isEqualTo("Accept");
 
+    }
+
+    @Test
+    public void testCollaboration() throws MetallumException {
+        final DiscSearchService service = new DiscSearchService();
+        final DiscSearchQuery query = new DiscSearchQuery();
+        query.setSearchObject(new Disc(586338L));
+        Disc disc = service.performSearch(query).get(0);
+
+        assertThat(disc.getType()).isEqualTo(DiscType.COLLABORATION);
+        assertThat(disc.getName()).isEqualTo("Chthonic Libations");
+        assertThat(disc.getSplitBands())
+                .extracting(Band::getId, Band::getName)
+                .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L,"Acherontas"));
+        assertThat(disc.getBandName()).isEmpty();
+        assertThat(disc.getBand().getId()).isEqualTo(0L);
+
+        List<Track> trackList = disc.getTrackList();
+        assertThat(trackList).hasSize(5);
+        for (Track track : trackList) {
+            Band band = track.getBand();
+            assertThat(band.getId()).isEqualTo(0L);
+            assertThat(band.getName()).isEmpty();
+            assertThat(track.getBandName()).isEqualTo("Nåstrond / Acherontas");
+        }
     }
 
 

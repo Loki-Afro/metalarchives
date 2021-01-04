@@ -8,7 +8,7 @@ public enum BandStatus {
 
     private final int searchNumber;
     private final String asString;
-    private static Logger logger = LoggerFactory.getLogger(BandStatus.class);
+    private static final Logger logger = LoggerFactory.getLogger(BandStatus.class);
 
     BandStatus(final int searchNumber, final String asString) {
         this.searchNumber = searchNumber;

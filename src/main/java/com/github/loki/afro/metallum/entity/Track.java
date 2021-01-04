@@ -2,6 +2,9 @@ package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.DiscType;
 
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
 public class Track extends AbstractEntity {
 
     private Disc discFromTrack = new Disc();
@@ -34,7 +37,11 @@ public class Track extends AbstractEntity {
     }
 
     public String getBandName() {
-        if (this.discFromTrack.isSplit()) {
+        if (discFromTrack.getType() == DiscType.COLLABORATION) {
+            return discFromTrack.getSplitBands().stream()
+                    .map(Band::getName)
+                    .collect(Collectors.joining(" / "));
+        } else if (this.discFromTrack.isSplit()) {
             return this.splitBandName;
         } else {
             return this.discFromTrack.getBand().getName();
@@ -43,11 +50,6 @@ public class Track extends AbstractEntity {
 
     // exists because there are also split discs, and we have no chance to determine which track is
     // from which band
-    @Deprecated
-    public void setBandName(final String bandName) {
-        this.splitBandName = bandName;
-    }
-
     public void setSplitBandName(final String bandName) {
         this.splitBandName = bandName;
     }
