@@ -678,5 +678,17 @@ public class DiscSearchServiceTest {
         }
     }
 
+    @Test
+    public void testImageUrlWithoutFileSuffix() throws MetallumException {
+        final DiscSearchService service = new DiscSearchService();
+        service.setLoadImages(true);
+        final DiscSearchQuery query = new DiscSearchQuery();
+        query.setSearchObject(new Disc(64384L));
+        Disc disc = service.performSearch(query).get(0);
+
+        assertThat(disc.getArtworkURL()).isNotEmpty();
+        assertThat(disc.getArtwork()).isNotNull();
+    }
+
 
 }

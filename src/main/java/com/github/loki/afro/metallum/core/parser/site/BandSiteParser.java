@@ -72,11 +72,11 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     }
 
     private String parseLogoUrl() {
-        return parseImageURL(this.doc, "band_name_img");
+        return parseImageURL("band_name_img");
     }
 
     private String parsePhotoUrl() {
-        return parseImageURL(this.doc, "band_img");
+        return parseImageURL("band_img");
     }
 
     private void parseRightHtmlPart(final Band band) {

@@ -18,8 +18,6 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     final boolean loadLinks;
     protected final T entity;
 
-    private static final String imageCssQuery = "img[src~=(?i)\\.(png|jpe?g|gif|bmp)]";
-
     AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
         this.entity = entity;
         this.loadImage = loadImage;
@@ -59,17 +57,17 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     /**
      * Convenience Method to extract an image URL from html.
      *
-     * @param element  the wrapping Element.
      * @param cssClass where the image link is in.
      */
-    final String parseImageURL(final Element element, final String cssClass) {
-        String imageURL = null;
-        Elements elements = this.doc.getElementsByClass(cssClass);
-        if (!elements.isEmpty()) {
-            Element imgElement = elements.first().select(imageCssQuery).first();
-            imageURL = imgElement.attr("src");
+    final String parseImageURL(final String cssClass) {
+        String imageURL = this.doc.getElementsByClass(cssClass)
+                .select("img")
+                .attr("src");
+        if ("".equals(imageURL)) {
+            return null;
+        } else {
+            return imageURL;
         }
-        return imageURL;
     }
 
 }

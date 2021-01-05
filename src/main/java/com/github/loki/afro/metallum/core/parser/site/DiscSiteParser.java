@@ -156,7 +156,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     }
 
     private final String parseArtworkURL() {
-        return parseImageURL(this.doc, "album_img");
+        return parseImageURL("album_img");
     }
 
     /**
