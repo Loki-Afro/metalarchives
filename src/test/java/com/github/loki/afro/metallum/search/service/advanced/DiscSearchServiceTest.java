@@ -22,10 +22,10 @@ public class DiscSearchServiceTest {
         final DiscSearchQuery query = new DiscSearchQuery();
         query.setBandName("Lantlôs", false);
         final List<Disc> discListResult = service.performSearch(query);
-        assertThat(discListResult.isEmpty()).isFalse();
+        assertThat(discListResult).isNotEmpty();
         for (final Disc discResult : discListResult) {
             assertThat(discResult.getBandName()).isEqualTo("Lantlôs");
-            assertThat(discResult.getName().isEmpty()).isFalse();
+            assertThat(discResult.getName()).isNotEmpty();
             assertThat(discResult.getTrackList().isEmpty()).isTrue();
             assertThat(discResult.getType()).isNotNull();
             assertThat(discResult.getLabel()).isNotNull();
@@ -46,11 +46,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Peaceville Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -66,11 +66,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.VIDEO);
         assertThat(discResult.getLabel().getName()).isEqualTo("Metal Mind Productions");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -87,12 +87,12 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.EP);
         assertThat(discResult.getLabel().getName()).isEqualTo("Candlelight Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
-        assertThat(discResult.getTrackList().get(1).getLyrics().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
+        assertThat(discResult.getTrackList().get(1).getLyrics()).isNotEmpty();
     }
 
     @Test
@@ -108,11 +108,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.VIDEO);
         assertThat(discResult.getLabel().getName()).isEqualTo("Tabu Recordings");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -129,11 +129,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.LIVE_ALBUM);
         assertThat(discResult.getLabel().getName()).isEqualTo("Steamhammer");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -149,11 +149,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.BOXED_SET);
         assertThat(discResult.getLabel().getName()).isEqualTo("Black Mark Production");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -173,11 +173,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getLabel().getName()).isEqualTo("Candlelight Records");
         assertThat(discResult.isSplit()).isTrue();
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -194,11 +194,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.COMPILATION);
         assertThat(discResult.getLabel().getName()).isEqualTo("Peaceville Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -216,11 +216,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getLabel().getName()).isEqualTo("Nuclear Blast");
         assertThat(discResult.isSplit()).isTrue();
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -236,10 +236,10 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.DEMO);
         assertThat(discResult.getLabel().getName()).isEqualTo("Independent");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -254,11 +254,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Merciless Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -275,11 +275,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getBand().getCountry()).isEqualTo(Country.UA);
         assertThat(discResult.getLabel().getName()).isEqualTo("Supernal Music");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -297,11 +297,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getLabel().getName()).isEqualTo("No Fashion Records");
         assertThat(discResult.getBand().getCountry()).isNotNull();
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -317,11 +317,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Hells Cargo");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -337,11 +337,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Cacophonous Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
         assertThat("January 25th, 1996").isEqualTo(discResult.getReleaseDate());
     }
 
@@ -360,11 +360,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Cymophane Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -382,11 +382,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Deathlike Silence Productions");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -403,11 +403,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Spikefarm Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -423,11 +423,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.DEMO);
         assertThat(discResult.getLabel().getName()).isEqualTo("Independent");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     // NOT possible because there is a bug at metal-archives, exactMatch dosn't work
@@ -444,11 +444,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Sinister Figure");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     // NOT possible because there is a bug at metal-archives, exactMatch dosn't work
@@ -467,11 +467,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Spikefarm Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -487,11 +487,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Nuclear Blast");
         assertThat(discResult.getArtwork()).isNotNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -503,7 +503,7 @@ public class DiscSearchServiceTest {
         query.setReleaseName("Eaten Back to Life", false);
         final Disc discResult = service.performSearch(query).get(0);
         for (final Track resultTrack : discResult.getTrackList()) {
-            assertThat(resultTrack.getLyrics().isEmpty()).isFalse();
+            assertThat(resultTrack.getLyrics()).isNotEmpty();
         }
         assertThat(discResult.getBandName()).isEqualTo("Cannibal Corpse");
         assertThat(discResult.getName()).isEqualTo("Eaten Back to Life");
@@ -511,11 +511,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Metal Blade Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -526,12 +526,12 @@ public class DiscSearchServiceTest {
         query.setBandName("Cannibal Corpse", false);
         query.setReleaseName("The Wretched Spawn", false);
         final Disc discResult = service.performSearch(query).get(0);
-        assertThat(discResult.getReviews().isEmpty()).isFalse();
+        assertThat(discResult.getReviews()).isNotEmpty();
         for (final Review resultReview : discResult.getReviews()) {
-            assertThat(resultReview.getAuthor().isEmpty()).isFalse();
-            assertThat(resultReview.getContent().isEmpty()).isFalse();
-            assertThat(resultReview.getName().isEmpty()).isFalse();
-            assertThat(resultReview.getDate().isEmpty()).isFalse();
+            assertThat(resultReview.getAuthor()).isNotEmpty();
+            assertThat(resultReview.getContent()).isNotEmpty();
+            assertThat(resultReview.getName()).isNotEmpty();
+            assertThat(resultReview.getDate()).isNotEmpty();
             assertThat(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100).isTrue();
             assertThat(resultReview.getId() != 0).isTrue();
             assertThat(discResult).isSameAs(resultReview.getDisc());
@@ -542,11 +542,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Metal Blade Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -559,16 +559,16 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getName()).isEqualTo("At the Gate of Sethu");
         assertThat(discResult.getTrackList()).hasSize(11);
         for (final Track track : discResult.getTrackList()) {
-            assertThat(track.getPlayTime().isEmpty()).isFalse();
+            assertThat(track.getPlayTime()).isNotEmpty();
         }
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Nuclear Blast");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -590,11 +590,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("R/C Records");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -610,11 +610,11 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("Deathlike Silence Productions");
         assertThat(discResult.getArtwork()).isNull();
-        assertThat(discResult.getArtworkURL().isEmpty()).isFalse();
-        assertThat(discResult.getAddedBy().isEmpty()).isFalse();
-        assertThat(discResult.getAddedOn().isEmpty()).isFalse();
-        assertThat(discResult.getModifiedBy().isEmpty()).isFalse();
-        assertThat(discResult.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(discResult.getArtworkURL()).isNotEmpty();
+        assertThat(discResult.getAddedBy()).isNotEmpty();
+        assertThat(discResult.getAddedOn()).isNotEmpty();
+        assertThat(discResult.getModifiedBy()).isNotEmpty();
+        assertThat(discResult.getLastModifiedOn()).isNotEmpty();
         Track lastTrack = trackList.get(trackList.size() - 1);
         assertThat(lastTrack.isInstrumental()).isTrue();
     }

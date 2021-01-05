@@ -36,13 +36,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("Solitude Productions)")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 13, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
         List<Disc> discs = resultBand.getDiscs();
         boolean found = false;
         boolean found2 = false;
@@ -77,13 +77,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 15, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -101,11 +101,11 @@ public class BandSearchServiceTest {
     }
 
     private synchronized void checkDefaultDisc(final List<Disc> discList, final int expectedSize, final Band bandFromDisc, final boolean percentAverage) {
-        assertThat(discList.isEmpty()).isFalse();
+        assertThat(discList).isNotEmpty();
         assertThat(discList.size() >= expectedSize).isTrue();
         for (Disc disc : discList) {
             assertThat(bandFromDisc).isSameAs(disc.getBand());
-            assertThat(disc.getName().isEmpty()).isFalse();
+            assertThat(disc.getName()).isNotEmpty();
             assertThat(disc.getId() > 0).isTrue();
             assertThat(disc.getType()).isNotNull();
             assertThat(!disc.getReleaseDate().isEmpty()).isTrue();
@@ -139,13 +139,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -169,13 +169,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("\"Emerald Lies\".")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 1, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -243,13 +243,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 14, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -273,13 +273,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().startsWith("Formed by Tom G. Warrior after his")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 3, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -303,13 +303,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("performances.")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 16, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -333,13 +333,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 8, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -362,13 +362,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().isEmpty()).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 4, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -436,13 +436,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().isEmpty()).isTrue();
         assertThat(resultBand.hasLogo()).isTrue();
         assertThat(resultBand.hasPhoto()).isTrue();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 4, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -473,18 +473,18 @@ public class BandSearchServiceTest {
         }
 
         checkDefaultDisc(resultBand.getDiscs(), 4, resultBand, true);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     private void defaultReviewTest(final Review review, final Band band) {
-        assertThat(review.getAuthor().isEmpty()).isFalse();
-        assertThat(review.getContent().isEmpty()).isFalse();
-        assertThat(review.getDate().isEmpty()).isFalse();
+        assertThat(review.getAuthor()).isNotEmpty();
+        assertThat(review.getContent()).isNotEmpty();
+        assertThat(review.getDate()).isNotEmpty();
         assertThat(review.getId() != 0).isTrue();
-        assertThat(review.getName().isEmpty()).isFalse();
+        assertThat(review.getName()).isNotEmpty();
 //		some jerk said: Over hyped. - 0% 
         assertThat(review.getPercent() >= 0).isTrue();
         // final Disc reviewDisc = review.getDisc();
@@ -522,22 +522,22 @@ public class BandSearchServiceTest {
         assertThat("Piracicaba, São Paulo").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2005).isEqualTo(resultBand.getYearFormedIn());
-        assertThat(resultBand.getGenre().isEmpty()).isFalse();
-        assertThat(resultBand.getLyricalThemes().isEmpty()).isFalse();
+        assertThat(resultBand.getGenre()).isNotEmpty();
+        assertThat(resultBand.getLyricalThemes()).isNotEmpty();
         assertThat(resultBand.getLabel().getName()).isEqualTo("Murdher Records");
         assertThat(resultBand.getLabel().getId()).isEqualTo(36846L);
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 3, resultBand, true);
 
         assertThat(resultBand.getInfo().endsWith("(2009).")).isTrue();
         assertThat(resultBand.getInfo().startsWith("Additional discograp")).isTrue();
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
@@ -547,7 +547,7 @@ public class BandSearchServiceTest {
         try {
             service.performSearch(query);
         } catch (final MetallumException e) {
-            assertThat(e.getMessage().isEmpty()).isFalse();
+            assertThat(e.getMessage()).isNotEmpty();
         }
     }
 
@@ -565,31 +565,31 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getProvince()).isEqualTo("Harlow, Essex, England");
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1994).isEqualTo(resultBand.getYearFormedIn());
-        assertThat(resultBand.getGenre().isEmpty()).isFalse();
-        assertThat(resultBand.getLyricalThemes().isEmpty()).isFalse();
+        assertThat(resultBand.getGenre()).isNotEmpty();
+        assertThat(resultBand.getLyricalThemes()).isNotEmpty();
         assertThat("Unsigned/independent").isEqualTo(resultBand.getLabel().getName());
         assertThat(resultBand.getLabel().getId() == 0).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         assertThat(!resultBand.getInfo().isEmpty()).isTrue();
         checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
         final Map<Integer, List<Band>> similarArtists = resultBand.getSimilarArtists();
         checkSimilarArtists(similarArtists);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     private synchronized void checkSimilarArtists(final Map<Integer, List<Band>> similarArtists) {
         for (final List<Band> bandList : similarArtists.values()) {
             for (final Band similarBand : bandList) {
                 assertThat(similarBand.getId() != 0).isTrue();
-                assertThat(similarBand.getName().isEmpty()).isFalse();
+                assertThat(similarBand.getName()).isNotEmpty();
                 assertThat(similarBand.getCountry() == Country.ANY).isFalse();
-                assertThat(similarBand.getGenre().isEmpty()).isFalse();
+                assertThat(similarBand.getGenre()).isNotEmpty();
             }
         }
     }
@@ -612,13 +612,13 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getLabel().getId() != 0).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl().isEmpty()).isFalse();
-        assertThat(resultBand.getLogoUrl().isEmpty()).isFalse();
+        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
+        assertThat(resultBand.getLogoUrl()).isNotEmpty();
         checkDefaultDisc(resultBand.getDiscs(), 3, resultBand);
-        assertThat(resultBand.getAddedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getAddedOn().isEmpty()).isFalse();
-        assertThat(resultBand.getModifiedBy().isEmpty()).isFalse();
-        assertThat(resultBand.getLastModifiedOn().isEmpty()).isFalse();
+        assertThat(resultBand.getAddedBy()).isNotEmpty();
+        assertThat(resultBand.getAddedOn()).isNotEmpty();
+        assertThat(resultBand.getModifiedBy()).isNotEmpty();
+        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
     @Test
