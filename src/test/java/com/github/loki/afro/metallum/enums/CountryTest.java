@@ -1,15 +1,14 @@
 package com.github.loki.afro.metallum.enums;
 
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
+import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -17,8 +16,10 @@ import static org.assertj.core.api.Assertions.fail;
 class CountryTest {
 
     @Test
-    public void testCountries() throws IOException {
-        Document doc = Jsoup.parse(new URL(MetallumURL.BASEURL + "search/advanced/searching/bands"), (int) TimeUnit.SECONDS.toMillis(20));
+    public void testCountries() throws ExecutionException {
+        // this way we get the same error handing
+        String html = Downloader.getHTML(MetallumURL.BASEURL + "search/advanced/searching/bands");
+        Document doc = Jsoup.parse(html);
         Elements options = doc.getElementById("country").getElementsByTag("option");
         if (options.isEmpty()) {
             fail("no countries found at all");
