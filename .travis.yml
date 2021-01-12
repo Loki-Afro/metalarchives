@@ -3,7 +3,7 @@ language: java
 addons:
   sonarcloud:
     organization: "loki-afro-github"
-script: "mvn org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar install deploy --settings target/travis/settings.xml"
+script: "mvn org.jacoco:jacoco-maven-plugin:prepare-agent install install deploy --settings target/travis/settings.xml"
 jdk:
         - openjdk8
 branches:
