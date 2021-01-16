@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public enum LabelStatus {
-    ANY(""), ACTIVE("active"), UNKNOWN("unknown"), CLOSED("closed"), CHANGED_NAME("changed name");
+    ACTIVE("active"), UNKNOWN("unknown"), CLOSED("closed"), CHANGED_NAME("changed name");
     private final String asString;
 
     private static final Logger logger = LoggerFactory.getLogger(LabelStatus.class);
@@ -21,7 +21,7 @@ public enum LabelStatus {
             }
         }
         logger.error("Unrecognized LabelStatus: " + possibleStatus);
-        return ANY;
+        return null;
     }
 
     public String asString() {

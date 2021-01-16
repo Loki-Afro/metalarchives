@@ -34,9 +34,7 @@ public final class DiscParser {
             for (int i = 1; i < rows.size(); i++) {
                 Element row = rows.get(i);
                 Elements cols = row.getElementsByTag("td");
-                Disc disc = new Disc();
-                disc.setId(parseDiscId(cols.first()));
-                disc.setName(cols.first().text());
+                Disc disc = new Disc(parseDiscId(cols.first()), cols.first().text());
                 disc.setDiscType(parseDiscType(cols.get(1)));
                 disc.setReleaseDate(cols.get(2).text());
                 disc.setHasReview(parseReview(cols.get(3)));

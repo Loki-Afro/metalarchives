@@ -3,6 +3,7 @@ package com.github.loki.afro.metallum.core.parser.site.helper.band;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +62,9 @@ public class MemberParser {
                 final String[] membersArray = catHtml.split("class=\"lineupTab\">");
                 for (int i = 1; i < membersArray.length; i++) {
                     final String[] memInfo = membersArray[i].split("</td>");
-                    final Member member = new Member(parseMemberId(memInfo[0]));
-                    member.setName(parseMemberName(memInfo[0]));
+                    long memberId = parseMemberId(memInfo[0]);
+                    String memberName = parseMemberName(memInfo[0]);
+                    final Member member = new Member(memberId, memberName);
                     final String role = parseMemberRole(memInfo[1]);
                     if (memInfo.length > 2) {
                         member.setUncategorizedBands(parseMemberBands(memInfo[2]));
@@ -111,22 +113,21 @@ public class MemberParser {
         return Jsoup.parse(htmlPart).text();
     }
 
-    private final List<Band> parseMemberBands(final String htmlPart) {
-        final List<Band> mBands = new ArrayList<>();
+    private final List<Partial> parseMemberBands(final String htmlPart) {
+        final List<Partial> mBands = new ArrayList<>();
         if (!htmlPart.contains("See also:")) {
             return mBands;
         }
 
         final String[] bands = htmlPart.split("<a");
         for (int i = 1; i < bands.length; i++) {
-            final Band band = new Band(0);
-            band.setName(bands[i].substring(bands[i].indexOf(">") + 1, bands[i].indexOf("</a>")));
+            String name = bands[i].substring(bands[i].indexOf(">") + 1, bands[i].indexOf("</a>"));
 
             String idStr = bands[i].substring(bands[i].indexOf("/bands/") + 7);
             idStr = idStr.substring(idStr.indexOf("/") + 1, idStr.indexOf("\">"));
-            band.setId(Long.parseLong(idStr));
+            long id = Long.parseLong(idStr);
 
-            mBands.add(band);
+            mBands.add(new Partial(id, name));
         }
 
         return mBands;

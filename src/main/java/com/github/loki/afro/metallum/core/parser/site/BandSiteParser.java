@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.site.helper.ReviewParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.band.BandLinkParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.band.DiscParser;
@@ -11,6 +12,7 @@ import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -29,8 +31,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     private static final Logger logger = LoggerFactory.getLogger(BandSiteParser.class);
     private static final Pattern periodMatcher = Pattern.compile("(\\d\\d\\d\\d|\\?)(?:-(\\d\\d\\d\\d|present|\\?))?(?:\\s\\(as\\s(.+)\\))?");
 
-    public BandSiteParser(final Band band, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) throws ExecutionException {
-        super(band, loadImages, loadLinks);
+    public BandSiteParser(final long entityId, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) {
+        super(entityId, loadImages, loadLinks);
         this.loadReviews = loadReviews;
         this.loadSimilarArtists = loadSimilarArtists;
         this.loadReadMore = loadReadMore;
@@ -38,8 +40,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     @Override
     public final Band parse() {
-        Band band = new Band(this.entity.getId());
-        band.setName(parseBandName());
+        Band band = new Band(entityId, parseBandName());
 
         parseLeftHtmlPart(band);
         parseRightHtmlPart(band);
@@ -49,7 +50,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
         band.setInfo(parseInfo());
         for (final Disc disc : parseDiscography()) {
-            disc.setBand(band);
+            disc.setBand(new Partial(band.getId(), band.getName()));
             band.addToDiscography(disc);
         }
         parseMember(band);
@@ -191,11 +192,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         } else {
             labelId = "0";
         }
-        final Label label = new Label(Long.parseLong(labelId));
 
-        // name
-        label.setName(labelElement.text().trim());
-        return label;
+        return new Label(Long.parseLong(labelId), labelElement.text().trim());
 
     }
 
@@ -203,14 +201,12 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         Element bandComment = this.doc.getElementsByClass("band_comment").get(0);
         String info = MetallumUtil.parseHtmlWithLineSeparators(bandComment.html()).replaceAll(" Read more$", "");
 
-        if (this.entity.getInfo().length() > info.length()) {
-            return this.entity.getInfo();
-        } else if (this.loadReadMore && !this.doc.getElementsByClass("btn_read_more").isEmpty()) {
+        if (this.loadReadMore && !this.doc.getElementsByClass("btn_read_more").isEmpty()) {
             try {
-                final String downloadedReadMore = Downloader.getHTML(MetallumURL.assembleMoreInfoURL(this.entity.getId()));
+                final String downloadedReadMore = Downloader.getHTML(MetallumURL.assembleMoreInfoURL(this.entityId));
                 return MetallumUtil.parseHtmlWithLineSeparators(downloadedReadMore);
-            } catch (ExecutionException e) {
-                logger.error("error in parsing additional information for band: " + this.entity, e);
+            } catch (MetallumException e) {
+                logger.error("error in parsing additional information for band: " + this.entityId, e);
             }
         }
         return info;
@@ -218,17 +214,12 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     // we do not specify complete /main/live/demo/misc -> BandGeneric
     private final Disc[] parseDiscography() {
-        final List<Disc> discs = this.entity.getDiscs();
-        if (discs.isEmpty()) {
-            try {
-                final DiscParser discParser = new DiscParser(this.entity.getId());
-                return discParser.parse();
-            } catch (final ExecutionException e) {
-                logger.error("error in parsing the discography for band: " + this.entity, e);
-            }
+        try {
+            final DiscParser discParser = new DiscParser(this.entityId);
+            return discParser.parse();
+        } catch (final ExecutionException e) {
+            throw new MetallumException("error in parsing the discography for band: " + this.entityId, e);
         }
-        final Disc[] discArray = new Disc[discs.size()];
-        return discs.toArray(discArray);
     }
 
     private void parseMember(final Band band) {
@@ -242,11 +233,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     }
 
     private final Review[] parseReviews(final Band band) {
-        final List<Review> reviews = this.entity.getReviews();
-        if (!reviews.isEmpty()) {
-            final Review[] reviewArr = new Review[reviews.size()];
-            return reviews.toArray(reviewArr);
-        } else if (this.loadReviews) {
+        if (this.loadReviews) {
             final List<Review> parsedReviewList = new ArrayList<>();
             for (final Disc disc : band.getDiscs()) {
                 try {
@@ -264,81 +251,59 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         } else {
             return new Review[0];
         }
-
     }
 
-    private final Map<Integer, List<Band>> parseSimilarArtists() {
-        final Map<Integer, List<Band>> similarArtists = this.entity.getSimilarArtists();
-        if (!similarArtists.isEmpty()) {
-            return similarArtists;
-        } else if (this.loadSimilarArtists) {
+    private final Map<Integer, List<Band.SimilarBand>> parseSimilarArtists() {
+        if (this.loadSimilarArtists) {
             try {
-                final SimilarArtistsParser sap = new SimilarArtistsParser(this.entity.getId());
+                final SimilarArtistsParser sap = new SimilarArtistsParser(this.entityId);
                 return sap.parse();
             } catch (final ExecutionException e) {
-                logger.error("error in parsing similar Artists for band: " + this.entity, e);
+                throw new MetallumException("error in parsing similar Artists for band: " + this.entityId, e);
             }
         }
         return new HashMap<>();
     }
 
     private final Link[] parseLinks() {
-        final List<Link> links = this.entity.getLinks();
-        if (!links.isEmpty()) {
-            return links.toArray(new Link[links.size()]);
-        }
         if (this.loadLinks) {
             try {
-                final BandLinkParser parser = new BandLinkParser(this.entity.getId());
+                final BandLinkParser parser = new BandLinkParser(this.entityId);
                 return parser.parse();
             } catch (final ExecutionException e) {
-                logger.error("error in parsing " + Link.class + " for band: " + this.entity, e);
+                throw new MetallumException("error in parsing similar Artists for band: " + this.entityId, e);
             }
+        } else {
+            return new Link[0];
         }
-        return new Link[0];
     }
 
-    /**
-     * If the previous entity, may from cache, has already the band logo,
-     * this method will return the BufferedImage of the entity, otherwise if loadImage is true
-     * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-     *
-     * @return null if loadImage is false or if there is no logo.
-     */
     private final BufferedImage parseBandLogo(final String imageUrl) {
-        BufferedImage imageLogo = this.entity.getLogo();
-        if (imageLogo == null && this.loadImage && imageUrl != null) {
+        if (this.loadImage && imageUrl != null) {
             try {
-                imageLogo = Downloader.getImage((imageUrl));
-            } catch (final ExecutionException e) {
-                logger.error("Exception while downloading an image from \"" + imageUrl + "\" ," + this.entity, e);
+                return Downloader.getImage((imageUrl));
+            } catch (final MetallumException e) {
+                throw new MetallumException("Exception while downloading an image from \"" + imageUrl + "\" ," + this.entityId,e);
             }
+        } else {
+            return null;
         }
-        // with other words, null
-        return imageLogo;
     }
 
-    /**
-     * If the previous entity, may from cache, has already the band photo,
-     * this method will return the BufferedImage of the entity, otherwise if loadImage is true
-     * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-     *
-     * @return null if loadImage is false or if there is no photo.
-     */
     private final BufferedImage parseBandPhoto(final String photoUrl) {
-        BufferedImage imagePhoto = this.entity.getPhoto();
-        if (imagePhoto == null && this.loadImage && photoUrl != null) {
+        if (this.loadImage && photoUrl != null) {
             try {
-                imagePhoto = Downloader.getImage(photoUrl);
-            } catch (ExecutionException e) {
-                logger.error("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entity, e);
+                return Downloader.getImage(photoUrl);
+            } catch (MetallumException e) {
+                throw new MetallumException("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entityId,e);
             }
+        } else {
+            return null;
         }
-        return imagePhoto;
     }
 
     @Override
     protected final String getSiteURL() {
-        return MetallumURL.assembleBandURL(this.entity.getId());
+        return MetallumURL.assembleBandURL(this.entityId);
     }
 }

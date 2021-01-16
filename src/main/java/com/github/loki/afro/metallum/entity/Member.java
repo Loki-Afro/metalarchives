@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -10,26 +11,22 @@ public class Member extends AbstractEntity {
 
     private Country country;
     private String realName;
-    private List<Band> uncategorizedBands = new ArrayList<>();
-    private int age = 0;
-    private String province = "";
-    private String gender = "";
+    private List<Partial> uncategorizedBands = new ArrayList<>();
+    private Integer age;
+    private String province;
+    private String gender;
     private BufferedImage photo = null;
-    private String alternativeName = "";
-    private Map<Band, Map<Disc, String>> guestSessionBands = new LinkedHashMap<>();
-    private Map<Band, Map<Disc, String>> activeInBands = new LinkedHashMap<>();
-    private Map<Band, Map<Disc, String>> pastBands = new LinkedHashMap<>();
-    private Map<Band, Map<Disc, String>> miscBands = new LinkedHashMap<>();
+    private String alternativeName;
+    private Map<Partial, Map<Partial, String>> guestSessionBands = new LinkedHashMap<>();
+    private Map<Partial, Map<Partial, String>> activeInBands = new LinkedHashMap<>();
+    private Map<Partial, Map<Partial, String>> pastBands = new LinkedHashMap<>();
+    private Map<Partial, Map<Partial, String>> miscBands = new LinkedHashMap<>();
     private final List<Link> linkList = new ArrayList<>();
-    private String details = "";
-    private String photoUrl = "";
+    private String details;
+    private String photoUrl;
 
-    public Member(final long id) {
-        super(id);
-    }
-
-    public Member() {
-        super(0);
+    public Member(long id, String name) {
+        super(id, name);
     }
 
     public void setCountry(final Country country) {
@@ -45,7 +42,7 @@ public class Member extends AbstractEntity {
      *
      * @return uncategorizedBands
      */
-    public final List<Band> getUncategorizedBands() {
+    public final List<Partial> getUncategorizedBands() {
         return this.uncategorizedBands;
     }
 
@@ -57,7 +54,7 @@ public class Member extends AbstractEntity {
         return this.country;
     }
 
-    public final void setUncategorizedBands(final List<Band> memberBands) {
+    public final void setUncategorizedBands(final List<Partial> memberBands) {
         this.uncategorizedBands = memberBands;
     }
 
@@ -78,7 +75,7 @@ public class Member extends AbstractEntity {
     }
 
     @Deprecated
-    public void setGuestIn(final Map<Band, Map<Disc, String>> map) {
+    public void setGuestIn(final Map<Partial, Map<Partial, String>> map) {
         this.guestSessionBands = map;
     }
 
@@ -87,17 +84,17 @@ public class Member extends AbstractEntity {
     }
 
     @Deprecated
-    public void setMiscActivities(final Map<Band, Map<Disc, String>> parseMiscBands) {
+    public void setMiscActivities(final Map<Partial, Map<Partial, String>> parseMiscBands) {
         this.miscBands = parseMiscBands;
     }
 
     @Deprecated
-    public void setPastBands(final Map<Band, Map<Disc, String>> parsePastBands) {
+    public void setPastBands(final Map<Partial, Map<Partial, String>> parsePastBands) {
         this.pastBands = parsePastBands;
     }
 
     @Deprecated
-    public void setActiveIn(final Map<Band, Map<Disc, String>> parseActiveBands) {
+    public void setActiveIn(final Map<Partial, Map<Partial, String>> parseActiveBands) {
         this.activeInBands = parseActiveBands;
     }
 
@@ -144,22 +141,22 @@ public class Member extends AbstractEntity {
      * @return the guestSessionBands
      */
     @Deprecated
-    public Map<Band, Map<Disc, String>> getGuestSessionBands() {
+    public Map<Partial, Map<Partial, String>> getGuestSessionBands() {
         return this.guestSessionBands;
     }
 
     @Deprecated
-    public Map<Band, Map<Disc, String>> getActiveInBands() {
+    public Map<Partial, Map<Partial, String>> getActiveInBands() {
         return this.activeInBands;
     }
 
     @Deprecated
-    public Map<Band, Map<Disc, String>> getPastBands() {
+    public Map<Partial, Map<Partial, String>> getPastBands() {
         return this.pastBands;
     }
 
     @Deprecated
-    public Map<Band, Map<Disc, String>> getMiscBands() {
+    public Map<Partial, Map<Partial, String>> getMiscBands() {
         return this.miscBands;
     }
 

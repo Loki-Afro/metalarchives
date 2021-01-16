@@ -1,8 +1,7 @@
 package com.github.loki.afro.metallum.example;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.search.query.MemberSearchQuery;
-import com.github.loki.afro.metallum.search.service.MemberSearchService;
+import com.github.loki.afro.metallum.search.API;
 import org.junit.jupiter.api.Disabled;
 
 import java.util.ArrayList;
@@ -25,11 +24,7 @@ public class MemberSearchExampleTest {
         stringList.add("Varg Vikernes");
         for (String memberName : stringList) {
             // System.out.println("searching with: " + memberName);
-            MemberSearchQuery query = new MemberSearchQuery();
-            MemberSearchService service = new MemberSearchService();
-            query.setMemberName(memberName);
-            service.performSearch(query);
-            assertThat(service.getResultAsList()).isNotEmpty();
+            assertThat(API.getMemberByName(memberName)).isNotEmpty();
         }
 
     }

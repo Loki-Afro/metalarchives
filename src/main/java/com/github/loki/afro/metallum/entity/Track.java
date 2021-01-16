@@ -1,57 +1,71 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.DiscType;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 public class Track extends AbstractEntity {
 
-    private Disc discFromTrack = new Disc();
+    private final PartialDisc partialDisc;
+    private final Partial bandPartial;
     private boolean instrumental = false;
 
-    private String lyrics = "";
+    private String lyrics;
     private String playTime;
     private int trackNumber;
-    private String splitBandName = "";
-    /**
-     * 1 by default.
-     */
     private int discNumber = 1;
+    private String collaborationBandName;
 
-    /**
-     * the Track will always have the id from the Disc!
-     *
-     * @param id id of the track
-     */
-    public Track(final long id) {
-        super(id);
+
+    public Track(Disc disc, String bandName, long id, String name) {
+        this(disc, disc.getBand().getId(), bandName, id, name);
     }
 
-    public Track() {
-        super(0);
+    private Track(Disc disc, long bandId, String bandName, long id, String name) {
+        this(PartialDisc.of(disc),
+                new Partial(bandId, bandName),
+                id, name);
     }
 
-    public void setDiscName(final String discName) {
-        this.discFromTrack.setName(discName);
+    public Track(PartialDisc disc, Partial bandPartial, long id, String name) {
+        super(id, name);
+        this.partialDisc = disc;
+        this.bandPartial = bandPartial;
     }
 
-    public String getBandName() {
-        if (discFromTrack.getType() == DiscType.COLLABORATION) {
-            return discFromTrack.getSplitBands().stream()
-                    .map(Band::getName)
-                    .collect(Collectors.joining(" / "));
-        } else if (this.discFromTrack.isSplit()) {
-            return this.splitBandName;
+    public static Track createCollaborationTrack(Disc disc, long trackId, String name) {
+        if (disc.getType() != DiscType.COLLABORATION) {
+            throw new IllegalStateException();
+        }
+        PartialDisc partialDisc = new PartialDisc(disc.getId(), disc.getName(), disc.getType());
+        Track track = new Track(partialDisc, null, trackId, name);
+        track.collaborationBandName = disc.getBandName();
+        return track;
+    }
+
+    public static Track createSplitTrack(Disc disc, String bandName, long trackId, String trackTitle) {
+        List<Partial> splitBands = disc.getSplitBands();
+        Optional<Partial> first = splitBands.stream()
+                .filter(pb -> pb.getName().equals(bandName))
+                .findFirst();
+        if (first.isPresent()) {
+            return new Track(disc, first.get().getId(), bandName, trackId, trackTitle);
         } else {
-            return this.discFromTrack.getBand().getName();
+            throw new IllegalStateException("could not find split band from previously parsed disc");
         }
     }
 
-    // exists because there are also split discs, and we have no chance to determine which track is
-    // from which band
-    public void setSplitBandName(final String bandName) {
-        this.splitBandName = bandName;
+
+    public String getBandName() {
+        if (partialDisc.getDiscType() == DiscType.COLLABORATION) {
+            return this.collaborationBandName;
+        } else if (this.partialDisc.getDiscType().isSplit()) {
+            return this.bandPartial.getName();
+        } else {
+            return this.bandPartial.getName();
+        }
     }
 
     public String getPlayTime() {
@@ -66,36 +80,12 @@ public class Track extends AbstractEntity {
         return this.instrumental;
     }
 
-    public void setDiscType(final DiscType discType) {
-        this.discFromTrack.setDiscType(discType);
-    }
-
-    public Disc getDiscOfThisTrack() {
-        return this.discFromTrack;
-    }
-
-    public void setGenre(final String genre) {
-        this.discFromTrack.getBand().setGenre(genre);
-    }
-
     public void setLyrics(final String lyrics) {
         this.lyrics = lyrics;
     }
 
-    public Band getBand() {
-        return this.discFromTrack.getBand();
-    }
-
-    public String getGenre() {
-        return this.discFromTrack.getGenre();
-    }
-
     public String getLyrics() {
         return this.lyrics;
-    }
-
-    public DiscType getDiscTyp() {
-        return this.discFromTrack.getType();
     }
 
     public void setPlayTime(final String playTime) {
@@ -112,9 +102,6 @@ public class Track extends AbstractEntity {
 
     public void setDiscNumber(final int discNumber) {
         this.discNumber = discNumber;
-        if (this.discFromTrack.getDiscCount() < discNumber) {
-            this.discFromTrack.setDiscCount(discNumber);
-        }
     }
 
     public int getDiscNumber() {
@@ -122,15 +109,33 @@ public class Track extends AbstractEntity {
     }
 
     public String getDiscName() {
-        return this.discFromTrack.getName();
+        return partialDisc.getName();
     }
 
-    public void setDisc(final Disc disc) {
-        this.discFromTrack = disc;
+    public PartialDisc getDisc() {
+        return partialDisc;
     }
 
-    public Disc getDisc() {
-        return this.discFromTrack;
+    public Partial getBand() {
+        return bandPartial;
+    }
+
+    public static final class PartialDisc extends Partial {
+
+        private final DiscType discType;
+
+        public PartialDisc(long id, String name, DiscType discType) {
+            super(id, name);
+            this.discType = discType;
+        }
+
+        public DiscType getDiscType() {
+            return discType;
+        }
+
+        static PartialDisc of(Disc disc) {
+            return new PartialDisc(disc.getId(), disc.getName(), disc.getType());
+        }
     }
 
 }

@@ -16,10 +16,11 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     final Document doc;
     final boolean loadImage;
     final boolean loadLinks;
-    protected final T entity;
+//    protected final T entity;
+    protected final long entityId;
 
-    AbstractSiteParser(final T entity, final boolean loadImage, final boolean loadLinks) throws ExecutionException {
-        this.entity = entity;
+    AbstractSiteParser(final long entityId, final boolean loadImage, final boolean loadLinks) {
+        this.entityId = entityId;
         this.loadImage = loadImage;
         this.loadLinks = loadLinks;
         this.html = Downloader.getHTML(getSiteURL());

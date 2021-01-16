@@ -3,76 +3,56 @@ package com.github.loki.afro.metallum.search.service.advanced;
 import com.github.loki.afro.metallum.core.parser.search.DiscSearchParser;
 import com.github.loki.afro.metallum.core.parser.site.DiscSiteParser;
 import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
+import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
+import com.google.common.collect.Iterables;
 
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.SortedMap;
 
-/**
- * Represents the advanced search for bands Here we'll search and try to parse the Result of our
- * Search.
- *
- * How to use this: Setup a DiscSearchQuery and just call performSearch(DiscSearchQuery query)
- *
- * This will also call the Parser to finally get a clear result. <br>
- * <br>
- * <b>What this class does not do:</b> It does not fill the resultList with the whole data what you
- * can get from the metal-archives<br>
- * <br>
- * <b>Actually it does just search!</b>
- *
- * @author Zarathustra
- */
-public class DiscSearchService extends AbstractSearchService<Disc> {
+import static com.github.loki.afro.metallum.core.util.MetallumUtil.isNotBlank;
 
-    private boolean loadImages = false;
-    private boolean loadReviews = false;
-    private boolean loadLyrics = false;
+public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, SearchDiscResult> {
+
+    private boolean loadImages;
+    private boolean loadReviews;
+    private boolean loadLyrics;
 
     /**
      * Constructs a default DiscSearchService.
-     * - object to load = 5
      * - load review = false
      * - load image = false
      */
     public DiscSearchService() {
-        this(5, false, false, false);
+        this(false, false, false);
     }
 
     /**
      * Constructs a DiscSearchService, where<br>
-     * - object to load = 5<br>
-     * and load Reviews as false
+     * load Reviews is false
      *
      * @param loadImages see {@code setLoadImages}
      */
     public DiscSearchService(final boolean loadImages) {
-        this(5, loadImages, false, false);
+        this(loadImages, false, false);
     }
 
     /**
      * Constructs a DiscSearchService.<br>
      * <br>
      *
-     * @param objectToLoad see {@code setObjectsToLoad}
      * @param loadImages   see {@code setLoadImages}
      * @param loadReviews  see {@code setLoadReviews}
      * @param loadLyrics see {@code setLoadLyrics}
      */
-    public DiscSearchService(final int objectToLoad, final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
-        this.objectToLoad = objectToLoad;
+    public DiscSearchService(final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
         this.loadImages = loadImages;
         this.loadReviews = loadReviews;
         this.loadLyrics = loadLyrics;
-    }
-
-    @Override
-    protected DiscSiteParser getSiteParser(final Disc disc) throws ExecutionException {
-        return new DiscSiteParser(disc, this.loadImages, this.loadReviews, this.loadLyrics);
-    }
-
-    @Override
-    protected DiscSearchParser getSearchParser() {
-        return new DiscSearchParser();
     }
 
     public void setLoadImages(boolean loadImages) {
@@ -88,8 +68,43 @@ public class DiscSearchService extends AbstractSearchService<Disc> {
     }
 
     @Override
-    public void setObjectsToLoad(final int objectToLoad) {
-        super.setObjectsToLoad(objectToLoad);
+    protected DiscSiteParser getSiteParser(final long entityId) {
+        return new DiscSiteParser(entityId, this.loadImages, this.loadReviews, this.loadLyrics);
+    }
+
+    @Override
+    protected DiscSearchParser getSearchParser(DiscQuery discQuery) {
+        DiscSearchParser discSearchParser = new DiscSearchParser();
+        discSearchParser.setIsAbleToParseDate(discQuery.isAbleToParseDate());
+
+        discSearchParser.setIsAbleToParseDiscType(discQuery.isAbleToParseDiscType());
+        discSearchParser.setIsAbleToParseGenre(isNotBlank(discQuery.getGenre()));
+        discSearchParser.setIsAbleToParseLabel(isNotBlank(discQuery.getLabelName()));
+        discSearchParser.setIsAbleToParseCountry(discQuery.isAbleToParseCountry());
+        discSearchParser.setIsAbleToParseProvince(isNotBlank(discQuery.getBandProvince()));
+        return discSearchParser;
+    }
+
+    @Override
+    protected SortedMap<SearchRelevance, List<SearchDiscResult>> enrichParsedEntity(DiscQuery query, final SortedMap<SearchRelevance, List<SearchDiscResult>> resultMap) {
+        if (query.getDiscTypes().size() == 1) {
+            final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
+            for (final List<SearchDiscResult> discList : resultMap.values()) {
+                for (final SearchDiscResult disc : discList) {
+                    // if there is a discType we are overwriting it!
+                    disc.setDiscType(discType);
+                }
+            }
+        }
+        if (query.getCountries().size() == 1) {
+            final Country country = Iterables.getOnlyElement(query.getCountries());
+            for (final List<SearchDiscResult> discList : resultMap.values()) {
+                for (final SearchDiscResult disc : discList) {
+                    disc.setBandCountry(country);
+                }
+            }
+        }
+        return resultMap;
     }
 
 }

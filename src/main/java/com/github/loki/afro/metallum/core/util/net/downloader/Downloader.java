@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IContentDownloader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +21,15 @@ public class Downloader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Downloader.class);
 
-    public static BufferedImage getImage(final String urlString) throws ExecutionException {
+    public static BufferedImage getImage(final String urlString) throws MetallumException {
         return get(urlString, new ImageDownloader(urlString));
     }
 
-    public static String getHTML(final String urlString) throws ExecutionException {
+    public static String getHTML(final String urlString) throws MetallumException {
         return get(urlString, new HTMLDownloader(urlString));
     }
 
-    private static <T> T get(final String request, final IContentDownloader<T> downloader) throws ExecutionException {
+    private static <T> T get(final String request, final IContentDownloader<T> downloader) throws MetallumException {
         try {
             LOGGER.debug("Task count: " + THREAD_POOL_EXECUTOR.getTaskCount());
             LOGGER.debug("Queue size: " + THREAD_POOL_EXECUTOR.getQueue().size());
@@ -38,6 +39,8 @@ public class Downloader {
         } catch (final InterruptedException e) {
             LOGGER.error("Failed to download: " + request, e);
             Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new MetallumException(e);
         }
         return null;
     }

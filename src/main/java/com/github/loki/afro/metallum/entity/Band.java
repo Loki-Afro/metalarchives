@@ -2,6 +2,7 @@ package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,16 +13,16 @@ public class Band extends AbstractEntity {
 
     private static final Logger logger = LoggerFactory.getLogger(Band.class);
 
-    private String genre = "";
-    private Country country = Country.ANY;
-    private String province = "";
+    private String genre;
+    private Country country;
+    private String province;
     private BandStatus status = null;
-    private String lyricalThemes = "";
-    private Label label = new Label(0);
-    private int yearFormedIn = 0;
+    private String lyricalThemes;
+    private Label label;
+    private Integer yearFormedIn;
     private BufferedImage photo = null;
     private BufferedImage logo = null;
-    private String info = "";
+    private String info;
     private List<Disc> discs = new ArrayList<>();
     private Map<Member, String> currentMember = new HashMap<>();
     private Map<Member, String> lastMember = new HashMap<>();
@@ -32,21 +33,10 @@ public class Band extends AbstractEntity {
     private List<Link> unofficialLinks = new ArrayList<>();
     private List<Link> tablatureLinks = new ArrayList<>();
     private List<Link> labelLinks = new ArrayList<>();
-    private Map<Integer, List<Band>> similarArtist = new HashMap<>();
+    private Map<Integer, List<SimilarBand>> similarArtist = new HashMap<>();
     private String photoUrl = null;
     private String logoUrl = null;
     private TreeSet<YearRange> yearsActive = new TreeSet<>();
-
-    /**
-     * DummyBand Constructor
-     */
-    public Band() {
-        super(0);
-    }
-
-    public Band(final long id) {
-        super(id);
-    }
 
     public Band(final long id, final String name) {
         super(id, name);
@@ -251,8 +241,8 @@ public class Band extends AbstractEntity {
         Collections.addAll(this.tablatureLinks, links);
     }
 
-    public void addSimilarArtists(final Band band, final int score) {
-        List<Band> bandListFromMap = this.similarArtist.get(score);
+    public void addSimilarArtists(final SimilarBand band, final int score) {
+        List<SimilarBand> bandListFromMap = this.similarArtist.get(score);
         if (bandListFromMap == null) {
             bandListFromMap = new ArrayList<>();
             bandListFromMap.add(band);
@@ -310,48 +300,11 @@ public class Band extends AbstractEntity {
         return reviewList;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + new Long(this.id).hashCode();
-        result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
-        return result;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Band other = (Band) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return this.name.equals(other.name);
-    }
-
-    public void setSimilarArtists(final Map<Integer, List<Band>> similarArtists) {
+    public void setSimilarArtists(final Map<Integer, List<SimilarBand>> similarArtists) {
         this.similarArtist = similarArtists;
     }
 
-    public Map<Integer, List<Band>> getSimilarArtists() {
+    public Map<Integer, List<SimilarBand>> getSimilarArtists() {
         return this.similarArtist;
     }
 
@@ -419,5 +372,24 @@ public class Band extends AbstractEntity {
 
     public void setYearsActive(TreeSet<YearRange> yearsActive) {
         this.yearsActive = yearsActive;
+    }
+
+    public static class SimilarBand extends Partial {
+        private final Country country;
+        private final String genre;
+
+        public SimilarBand(long id, String name, Country country, String genre) {
+            super(id, name);
+            this.country = country;
+            this.genre = genre;
+        }
+
+        public Country getCountry() {
+            return country;
+        }
+
+        public String getGenre() {
+            return genre;
+        }
     }
 }

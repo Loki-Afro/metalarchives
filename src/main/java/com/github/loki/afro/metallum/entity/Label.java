@@ -8,35 +8,27 @@ import java.util.*;
 
 public class Label extends AbstractEntity {
 
-    private String specialisation = "";
-    private Country country = Country.ANY;
+    private String specialisation;
+    private Country country;
     private Label parentLabel = null;
-    private String address = "";
-    private String phoneNumber = "";
-    private LabelStatus status = LabelStatus.ANY;
-    private String foundingDate = "";
+    private String address;
+    private String phoneNumber;
+    private LabelStatus status;
+    private String foundingDate;
     private List<Label> subLabels = new ArrayList<>();
     private boolean onlineShopping = false;
-    private Link websiteURL = new Link();
-    private String email = "";
+    private Link websiteURL;
+    private String email;
     private List<Band> currentRoster = new ArrayList<>();
     private Map<Band, List<Disc>> releases = new LinkedHashMap<>();
     private Map<Band, Integer> pastRoster = new LinkedHashMap<>();
-    private String details = "";
+    private String details;
     private List<Link> links = new ArrayList<>();
     private BufferedImage logo = null;
     private String logoUrl = null;
 
-    public Label(final long id) {
-        super(id);
-    }
-
     public Label(final long id, final String labelName) {
         super(id, labelName);
-    }
-
-    public Label() {
-        super(0, "");
     }
 
     /**

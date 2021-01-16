@@ -4,6 +4,7 @@ import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.Jsoup;
 
 import java.util.ArrayList;
@@ -20,23 +21,25 @@ public class SimilarArtistsParser {
         this.html = Downloader.getHTML(MetallumURL.assembleBandRecommendationsURL(id, 1));
     }
 
-    public Map<Integer, List<Band>> parse() {
-        final Map<Integer, List<Band>> returnMap = new TreeMap<>();
+    public Map<Integer, List<Band.SimilarBand>> parse() {
+        final Map<Integer, List<Band.SimilarBand>> returnMap = new TreeMap<>();
         final String[] bandStringArray = this.html.split("<tr id=\"recRow_");
         for (int i = 1; i < bandStringArray.length; i++) {
             final String[] bandInformationStringArray = bandStringArray[i].split("<td>");
             int index = 1;
-            final Band band = new Band(parseBandId(bandInformationStringArray[index]));
-            band.setName(parseBandName(bandInformationStringArray[index++]));
-            band.setCountry(parseCountry(bandInformationStringArray[index++]));
-            band.setGenre(parseGenre(bandInformationStringArray[index++]));
-            addToMap(returnMap, parseScore(bandInformationStringArray[index]), band);
+            long id = parseBandId(bandInformationStringArray[index]);
+            String name = parseBandName(bandInformationStringArray[index++]);
+            Country country = parseCountry(bandInformationStringArray[index++]);
+            String genre = parseGenre(bandInformationStringArray[index++]);
+            int score = parseScore(bandInformationStringArray[index]);
+            final Band.SimilarBand band = new Band.SimilarBand(id, name, country, genre);
+            addToMap(returnMap, score, band);
         }
         return returnMap;
     }
 
-    private static Map<Integer, List<Band>> addToMap(final Map<Integer, List<Band>> theMap, final int key, final Band value) {
-        List<Band> bandListFromMap = theMap.get(key);
+    private static Map<Integer, List<Band.SimilarBand>> addToMap(final Map<Integer, List<Band.SimilarBand>> theMap, final int key, final Band.SimilarBand value) {
+        List<Band.SimilarBand> bandListFromMap = theMap.get(key);
         if (bandListFromMap == null) {
             bandListFromMap = new ArrayList<>();
             bandListFromMap.add(value);

@@ -5,6 +5,9 @@ import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
+import com.google.api.client.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -22,19 +25,19 @@ import java.util.List;
  *
  * @author Zarathustra
  */
-public class MemberSearchParser extends AbstractSearchParser<Member> {
+public class MemberSearchParser extends AbstractSearchParser<SearchMemberResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberSearchParser.class);
 
     @Override
-    protected Member useSpecificSearchParser(final JSONArray hits) throws JSONException {
-        Member member = new Member(0);
-        member.setId(parseId(hits.getString(0)));
-        member.setName(parseName(hits.getString(0)));
+    protected SearchMemberResult useSpecificSearchParser(final JSONArray hits) throws JSONException {
+        long id = parseId(hits.getString(0));
+        String name = parseName(hits.getString(0));
+        SearchMemberResult member = new SearchMemberResult(id, name);
         member.setAlternativeName(parseAlternativeName(hits.getString(0)));
         member.setRealName(parseRealName(hits.getString(1)));
         member.setCountry(parseCountry(hits.getString(2)));
-        member.setUncategorizedBands(parseBands(hits.getString(3)));
+        member.setBands(parseBands(hits.getString(3)));
         return member;
     }
 
@@ -49,23 +52,22 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
 
     private long parseId(String hit) {
         hit = hit.substring(0, hit.indexOf("\">"));
-        hit = hit.substring(hit.lastIndexOf("/") + 1, hit.length());
+        hit = hit.substring(hit.lastIndexOf("/") + 1);
         return Long.parseLong(hit);
     }
 
-    private List<Band> parseBands(final String hit) {
+    private List<Partial> parseBands(final String hit) {
         LOGGER.debug("new hit: " + hit);
-        List<Band> bandList = new ArrayList<>();
+        List<Partial> bandList = new ArrayList<>();
         Document doc = Jsoup.parse(hit);
         Elements links = doc.getElementsByAttribute("href");
         for (Element link : links) {
             String hrefAttr = link.attr("href");
-            String bandId = hrefAttr.substring(hrefAttr.lastIndexOf("/") + 1, hrefAttr.length());
+            String bandId = hrefAttr.substring(hrefAttr.lastIndexOf("/") + 1);
 //			because there are Members which do not have any band O.o 
 //			see FENRIZ - http://www.metal-archives.com/artists/FENRIZ/407865
             if (!bandId.isEmpty()) {
-                Band band = new Band(Long.parseLong(bandId));
-                band.setName(MetallumUtil.trimNoBreakSpaces(link.text()));
+                Partial band = new Partial(Long.parseLong(bandId), MetallumUtil.trimNoBreakSpaces(link.text()));
                 LOGGER.debug("adding new Band to Member: " + band);
                 bandList.add(band);
             }
@@ -101,7 +103,11 @@ public class MemberSearchParser extends AbstractSearchParser<Member> {
     }
 
     private Country parseCountry(final String hit) {
-        return Country.ofMetallumDisplayName(hit);
+        if (Strings.isNullOrEmpty(hit) || hit.contains("&nbsp;")) {
+            return null;
+        } else {
+            return Country.ofMetallumDisplayName(hit);
+        }
     }
 
     @Override

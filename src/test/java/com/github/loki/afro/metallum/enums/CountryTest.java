@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.fail;
 class CountryTest {
 
     @Test
-    public void testCountries() throws ExecutionException {
+    public void testCountries() {
         // this way we get the same error handing
         String html = Downloader.getHTML(MetallumURL.BASEURL + "search/advanced/searching/bands");
         Document doc = Jsoup.parse(html);
@@ -30,7 +30,7 @@ class CountryTest {
             if (!countryName.contains("Any")) {
                 Country result = Country.ofMetallumDisplayName(countryName);
                 assertThat(result.getShortForm()).isEqualTo(isoCode);
-                assertThat(result).isNotEqualTo(Country.ANY);
+                assertThat(result).isNotNull();
             }
         }
     }

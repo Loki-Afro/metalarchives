@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
-import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
+import com.github.loki.afro.metallum.enums.Country;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -9,7 +10,7 @@ import org.json.JSONException;
  *
  * @author Zarathustra
  */
-public class BandSearchParser extends AbstractSearchParser<Band> {
+public class BandSearchParser extends AbstractSearchParser<SearchBandResult> {
 
     private boolean isAbleToParseProvince = false;
     private boolean isAbleToParseLabel = false;
@@ -38,21 +39,28 @@ public class BandSearchParser extends AbstractSearchParser<Band> {
     }
 
     @Override
-    protected final Band useSpecificSearchParser(final JSONArray hits) throws JSONException {
-        Band band = new Band(parseId(hits.getString(0)));
-        band.setName(parseName(hits.getString(0)));
-        band.setGenre(parseGenres(hits.getString(1)));
-        return parseOptionalFields(hits, band);
-    }
+    protected final SearchBandResult useSpecificSearchParser(final JSONArray hits) throws JSONException {
+        SearchBandResult searchBandResult = new SearchBandResult(parseId(hits.getString(0)), parseName(hits.getString(0)));
+        searchBandResult.setGenre(parseGenres(hits.getString(1)));
 
-    private final Band parseOptionalFields(final JSONArray hits, final Band band) throws JSONException {
         int index = 2;
-        band.setCountry(this.isAbleToParseCountry ? parseCountry(hits.getString(index++)) : "");
-        band.setProvince((this.isAbleToParseProvince ? parseProvince(hits.getString(index++)) : ""));
-        band.setLyricalThemes((this.isAbleToParseLyricalThemes ? parseLyricalThemes(hits.getString(index++)) : ""));
-        band.setYearFormedIn((this.isAbleToParseYear ? parseYear((hits.getString(index++))) : 0));
-        band.getLabel().setName(this.isAbleToParseLabel ? parseLabel(hits.getString(index)) : "");
-        return band;
+        if (isAbleToParseCountry) {
+            searchBandResult.setCountry(parseCountry(hits.getString(index++)));
+        }
+        if (isAbleToParseProvince) {
+            searchBandResult.setProvince(parseProvince(hits.getString(index++)));
+        }
+        if (isAbleToParseLyricalThemes) {
+            searchBandResult.setLyricalThemes(parseLyricalThemes(hits.getString(index++)));
+        }
+        if (isAbleToParseYear) {
+            searchBandResult.setYearFormedIn(parseYear((hits.getString(index++))));
+        }
+        if (isAbleToParseLabel) {
+            searchBandResult.setLabelName(parseLabel(hits.getString(index)));
+        }
+
+        return searchBandResult;
     }
 
     private String parseProvince(final String hit) {
@@ -80,9 +88,9 @@ public class BandSearchParser extends AbstractSearchParser<Band> {
         return hitPart;
     }
 
-    private String parseCountry(final String hitPart) {
+    private Country parseCountry(final String hitPart) {
         // currently we do not really have to parse
-        return hitPart;
+        return Country.ofMetallumDisplayName(hitPart);
     }
 
     private String parseName(String hitPart) {

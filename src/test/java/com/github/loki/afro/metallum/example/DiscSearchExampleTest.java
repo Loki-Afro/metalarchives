@@ -4,28 +4,29 @@ import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.DiscSearchQuery;
-import com.github.loki.afro.metallum.search.service.advanced.DiscSearchService;
+import com.github.loki.afro.metallum.search.API;
+import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
 import org.junit.jupiter.api.Disabled;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DiscSearchExampleTest {
     @Disabled
     public void test() throws MetallumException {
-        DiscSearchService dss = new DiscSearchService();
-        DiscSearchQuery dsq = new DiscSearchQuery();
-        dsq.setBandName("Reverend Bizarre", false);
-        // actually its a Split with Mannhai
-        dsq.setReleaseName("Under the Sign of the Wolf", true);
-        dsq.setCountries(Country.FI);
-        dsq.setLabel("The Church Within Records", false);
-        dsq.setReleaseTypes(DiscType.SPLIT);
-        dsq.setReleaseYearFrom(2006);
-        dss.performSearch(dsq);
-        assertThat(dss.isResultEmpty()).isFalse();
+        List<Disc> result = API.getDiscsFully(DiscQuery.builder()
+                .bandName("Reverend Bizarre")
+                .name("Under the Sign of the Wolf")
+                .exactNameMatch(true)
+                .country(Country.FI)
+                .labelName("The Church Within Records")
+                .discType(DiscType.SPLIT)
+                .fromYear(2006)
+                .build());
+
         // should be just one
-        for (Disc disc : dss.getResultAsList()) {
+        for (Disc disc : result) {
             assertThat(disc.getName()).isEqualTo("Under the Sign of the Wolf");
             assertThat(disc.getId() == 135928).isTrue();
             assertThat(disc.isSplit()).isTrue();

@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
  */
 public enum Country {
 
-    ANY("ANY"),
     AF("Afghanistan"),
     AX("Åland Islands"),
     AL("Albania"),
@@ -295,7 +294,7 @@ public enum Country {
             }
         }
         logger.warn("Unrecognized Country: " + possiblecountry);
-        return Country.ANY;
+        return null;
     }
 
 }

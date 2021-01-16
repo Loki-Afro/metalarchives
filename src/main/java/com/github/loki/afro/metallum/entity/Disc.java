@@ -1,9 +1,14 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.DiscType;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Disc extends AbstractEntity {
 
@@ -11,16 +16,16 @@ public class Disc extends AbstractEntity {
     private List<Track> trackList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
     private String releaseDate;
-    private Band band = new Band();
-    private Label label = new Label();
+    private Partial band;
+    private Label label;
     private BufferedImage artwork = null;
-    private String details = "";
+    private String details;
     private String artworkURL = null;
     /**
      * Only filled if DiscType.isSplit(type) is true
      * Does only contain BandName and Id.
      */
-    private List<Band> splitBands = new ArrayList<>();
+    private final List<Partial> splitBands = new ArrayList<>();
 
     private Map<Member, String> lineup = new HashMap<>();
     private Map<Member, String> miscMember = new HashMap<>();
@@ -29,12 +34,8 @@ public class Disc extends AbstractEntity {
     private int discCount = 1;
     private boolean hasReviews = false;
 
-    public Disc(final long id) {
-        super(id);
-    }
-
-    public Disc() {
-        super(0);
+    public Disc(final long id, String name) {
+        super(id, name);
     }
 
     public final float getReviewPercentAverage() {
@@ -74,19 +75,11 @@ public class Disc extends AbstractEntity {
         return this.reviewList;
     }
 
-    public void setBandName(final String bandName) {
-        this.band.setName(bandName);
-    }
-
     public void setDiscType(final DiscType discType) {
         this.type = discType;
     }
 
-    public void setGenre(final String genre) {
-        this.band.setGenre(genre);
-    }
-
-    public Band getBand() {
+    public Partial getBand() {
         return this.band;
     }
 
@@ -98,10 +91,6 @@ public class Disc extends AbstractEntity {
         this.label = label;
     }
 
-    public String getGenre() {
-        return this.band.getGenre();
-    }
-
     public final void addReview(final Review... reviews) {
         for (final Review review : reviews) {
             review.setDisc(this);
@@ -110,20 +99,20 @@ public class Disc extends AbstractEntity {
         }
     }
 
-    public void setBand(final Band band) {
+    public void setBand(final Partial band) {
         this.band = band;
-        this.band.addToDiscography(this);
+//        this.band.addToDiscography(this);
     }
 
     public static List<Disc> setBandForEachDisc(final List<Disc> discList, final Band band) {
         for (final Disc disc : discList) {
-            disc.setBand(band);
+            disc.setBand(new Partial(band.getId(), band.getName()));
         }
         return discList;
     }
 
-    public void addTracks(final Track... tracks) {
-        Collections.addAll(this.trackList, tracks);
+    public void addTracks(final List<Track> tracks) {
+        trackList.addAll(tracks);
     }
 
     public void setArtwork(final BufferedImage artwork) {
@@ -146,12 +135,6 @@ public class Disc extends AbstractEntity {
         return this.details;
     }
 
-    public void addSplitBand(final Band... bands) {
-        for (final Band band : bands) {
-            band.addToDiscography(this);
-            this.splitBands.add(band);
-        }
-    }
 
     public void setLineup(final Map<Member, String> lineUp) {
         this.lineup = lineUp;
@@ -165,9 +148,6 @@ public class Disc extends AbstractEntity {
         this.guestMember = guestMember;
     }
 
-    /**
-     * @return the trackList
-     */
     public List<Track> getTrackList() {
         return this.trackList;
     }
@@ -183,28 +163,19 @@ public class Disc extends AbstractEntity {
         return trackListByDiscNumber;
     }
 
-    /**
-     * @return the lineup
-     */
     public Map<Member, String> getLineup() {
         return this.lineup;
     }
 
-    /**
-     * @return the miscMember
-     */
     public Map<Member, String> getMiscMember() {
         return this.miscMember;
     }
 
-    /**
-     * @return the guestMember
-     */
     public Map<Member, String> getGuestMember() {
         return this.guestMember;
     }
 
-    public List<Band> getSplitBands() {
+    public List<Partial> getSplitBands() {
         return this.splitBands;
     }
 
@@ -212,12 +183,24 @@ public class Disc extends AbstractEntity {
         return this.discCount;
     }
 
-    protected void setDiscCount(final int discCount) {
+    public void setDiscCount(final int discCount) {
         this.discCount = discCount;
     }
 
     public String getBandName() {
-        return this.band.getName();
+        if (this.type == DiscType.COLLABORATION) {
+            return getSplitBandsAsString();
+        } else if (this.type.isSplit()) {
+            return getSplitBandsAsString();
+        } else {
+            return this.band.getName();
+        }
+    }
+
+    private String getSplitBandsAsString() {
+        return getSplitBands().stream()
+                .map(Partial::getName)
+                .collect(Collectors.joining(" / "));
     }
 
     public final boolean hasArtwork() {
@@ -229,8 +212,8 @@ public class Disc extends AbstractEntity {
         this.hasReviews = !reviewList.isEmpty();
     }
 
-    public void setSplitBands(final List<Band> splitBands2) {
-        this.splitBands = splitBands2;
+    public void setSplitBands(final List<Partial> splitBands) {
+        this.splitBands.addAll(splitBands);
     }
 
     public final void setTrackList(final List<Track> newTrackList) {

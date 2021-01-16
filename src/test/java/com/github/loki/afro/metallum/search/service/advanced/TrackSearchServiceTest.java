@@ -2,8 +2,11 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.TrackSearchQuery;
+import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
+import com.github.loki.afro.metallum.search.query.entity.TrackSearchQuery;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,14 +21,11 @@ public class TrackSearchServiceTest {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setSongTitle("Fucking Wizard", false);
-        final Track resultTrack = service.performSearch(query).get(0);
+        final SearchTrackResult resultTrack = service.performSearch(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(resultTrack.getDiscName()).isEqualTo("II: Crush the Insects");
         assertThat(resultTrack.getName()).isEqualTo("Fucking Wizard");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDiscTyp()).isNotNull();
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertDefault(resultTrack);
     }
 
     @Test
@@ -33,14 +33,11 @@ public class TrackSearchServiceTest {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setSongTitle("Fucking Wizard", true);
-        final Track resultTrack = service.performSearch(query).get(0);
+        final SearchTrackResult resultTrack = service.performSearch(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(resultTrack.getDiscName()).isEqualTo("II: Crush the Insects");
         assertThat(resultTrack.getName()).isEqualTo("Fucking Wizard");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDiscTyp()).isNotNull();
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertDefault(resultTrack);
     }
 
     @Test
@@ -48,13 +45,10 @@ public class TrackSearchServiceTest {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setBandName("Drudkh", false);
-        final List<Track> resultTrackList = service.performSearch(query);
-        for (final Track resultTrack : resultTrackList) {
-            assertThat(resultTrack.getBandName().contains("Drudkh")).isTrue();
-            assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDiscTyp()).isNotNull();
-            assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        final List<SearchTrackResult> resultTrackList = service.performSearch(query);
+        for (final SearchTrackResult resultTrack : resultTrackList) {
+            assertThat(resultTrack.getResolvedBandName()).contains("Drudkh");
+            assertDefault(resultTrack);
         }
     }
 
@@ -64,14 +58,11 @@ public class TrackSearchServiceTest {
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setSongTitle("Cromwell", false);
         query.setBandName("Reverend Bizarre", true);
-        final Track resultTrack = service.performSearch(query).get(0);
+        final SearchTrackResult resultTrack = service.performSearch(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(resultTrack.getDiscName()).isEqualTo("II: Crush the Insects");
         assertThat(resultTrack.getName()).isEqualTo("Cromwell");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDiscTyp()).isNotNull();
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertDefault(resultTrack);
     }
 
     @Test
@@ -79,17 +70,10 @@ public class TrackSearchServiceTest {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setReleaseTitle("Vîrstele Pămîntului", false);
-        final List<Track> resultTrackList = service.performSearch(query);
-        assertVirstele(resultTrackList);
-    }
-
-    private void assertVirstele(List<Track> resultTrackList) {
-        for (final Track resultTrack : resultTrackList) {
+        final List<SearchTrackResult> resultTrackList = service.performSearch(query);
+        for (final SearchTrackResult resultTrack : resultTrackList) {
             assertThat(resultTrack.getDiscName().contains("Vîrstele pămîntului")).isTrue();
-            assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDiscTyp()).isNotNull();
-            assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+            assertDefault(resultTrack);
         }
     }
 
@@ -98,95 +82,110 @@ public class TrackSearchServiceTest {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
         query.setReleaseTitle("Vîrstele Pămîntului", true);
-        final List<Track> resultTrackList = service.performSearch(query);
-        assertVirstele(resultTrackList);
+        final List<SearchTrackResult> resultTrackList = service.performSearch(query);
+        for (final SearchTrackResult resultTrack : resultTrackList) {
+            assertThat(resultTrack.getDiscName().contains("Vîrstele pămîntului")).isTrue();
+            assertDefault(resultTrack);
+        }
     }
+
 
     @Test
     public void singleReleaseTypeTest() throws MetallumException {
-        final TrackSearchService service = new TrackSearchService();
-        final TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Ars Poetica", false);
-        query.setDiscType(DiscType.FULL_LENGTH);
-        final Track resultTrack = service.performSearch(query).get(0);
+        TrackQuery query = TrackQuery.builder()
+                .name("Ars Poetica")
+                .discType(DiscType.FULL_LENGTH)
+                .build();
+
+        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Drudkh");
         assertThat(resultTrack.getDiscName()).isEqualTo("Microcosmos");
         assertThat(resultTrack.getName()).isEqualTo("Ars Poetica");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(DiscType.FULL_LENGTH).isSameAs(resultTrack.getDiscTyp());
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertThat(resultTrack.getBandId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscType()).contains(DiscType.FULL_LENGTH);
+        assertThat(resultTrack.getLyrics()).isEmpty();
     }
 
     @Test
     public void multiReleaseTypeTest() throws MetallumException {
-        final TrackSearchService service = new TrackSearchService();
-        final TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Solitary Endless Path", false);
-        query.setDiscTypes(DiscType.FULL_LENGTH, DiscType.DEMO, DiscType.EP);
-        final Track resultTrack = service.performSearch(query).get(0);
+        TrackQuery query = TrackQuery.builder()
+                .name("Solitary Endless Path")
+                .discTypes(Sets.newHashSet(DiscType.FULL_LENGTH, DiscType.DEMO, DiscType.EP))
+                .build();
+
+        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Drudkh");
         assertThat(resultTrack.getDiscName()).isEqualTo("Відчуженість (Estrangement)");
         assertThat(resultTrack.getName()).isEqualTo("Самітня нескінченна тропа (Solitary Endless Path)");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDiscTyp()).isNotNull();
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertDefault(resultTrack);
+    }
+
+    private void assertDefault(SearchTrackResult resultTrack) {
+        assertThat(resultTrack.getBandId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscType()).isNotNull();
+        assertThat(resultTrack.getLyrics()).isEmpty();
     }
 
     @Test
     public void lyricsSearchTest() throws MetallumException {
-        final TrackSearchService service = new TrackSearchService();
-        final TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Fucking Wizard", false);
-        query.setDiscType(DiscType.FULL_LENGTH);
-        query.setLyrics("I'm your saviour, your");
-        final Track resultTrack = service.performSearch(query).get(0);
+
+        TrackQuery query = TrackQuery.builder()
+                .name("Fucking Wizard")
+                .discType(DiscType.FULL_LENGTH)
+                .lyrics("I'm your saviour, your")
+                .build();
+
+        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
+
         assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(resultTrack.getDiscName()).isEqualTo("II: Crush the Insects");
         assertThat(resultTrack.getName()).isEqualTo("Fucking Wizard");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(DiscType.FULL_LENGTH).isSameAs(resultTrack.getDiscTyp());
-        assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+        assertThat(resultTrack.getBandId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscId()).isNotSameAs(0);
+        assertThat(resultTrack.getDiscType()).contains(DiscType.FULL_LENGTH);
+        assertThat(resultTrack.getLyrics()).isEmpty();
     }
 
     @Test
     public void lyricsTest() throws MetallumException {
-        final TrackSearchService service = new TrackSearchService(true);
-        final TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("War", false);
-        query.setBandName("Burzum", false);
-        query.setReleaseTitle("Burzum", false);
-        query.setDiscType(DiscType.FULL_LENGTH);
-        final Track resultTrack = service.performSearch(query).get(0);
+        TrackQuery query = TrackQuery.builder()
+                .name("War")
+                .bandName("Burzum")
+                .discName("Burzum")
+                .discType(DiscType.FULL_LENGTH)
+                .build();
+
+        final Track resultTrack = new TrackSearchService(true).getFully(query).get(0);
         assertThat(resultTrack.getBandName()).isEqualTo("Burzum");
         assertThat(resultTrack.getDiscName()).isEqualTo("Burzum");
         assertThat(resultTrack.getName()).isEqualTo("War");
         assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
         assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-        assertThat(DiscType.FULL_LENGTH).isSameAs(resultTrack.getDiscTyp());
-        assertThat(resultTrack.getLyrics().isEmpty()).isFalse();
+        assertThat(resultTrack.getDisc().getDiscType()).isSameAs(DiscType.FULL_LENGTH);
         assertThat(resultTrack.getLyrics()).startsWith("This is war!");
         assertThat(resultTrack.getLyrics()).endsWith("War!");
     }
 
     @Test
     public void genreTest() throws MetallumException {
-        final TrackSearchService service = new TrackSearchService();
-        final TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Fucking Wizard", false);
-        query.setDiscType(DiscType.FULL_LENGTH);
-        query.setGenre("Doom Metal");
-        final List<Track> resultTrackList = service.performSearch(query);
+        TrackQuery query = TrackQuery.builder()
+                .name("Fucking Wizard")
+                .discType(DiscType.FULL_LENGTH)
+                .genre("Doom Metal")
+                .build();
+
+
+        final List<Track> resultTrackList = new TrackSearchService().getFully(query);
         for (final Track resultTrack : resultTrackList) {
             assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
             assertThat(resultTrack.getDiscName().isEmpty()).isFalse();
             assertThat(resultTrack.getName()).isEqualTo("Fucking Wizard");
             assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
             assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDiscTyp()).isNotNull();
-            assertThat(resultTrack.getLyrics().isEmpty()).isTrue();
+            assertThat(resultTrack.getDisc().getDiscType()).isNotNull();
+            assertThat(resultTrack.getLyrics()).isNull();
         }
     }
 
@@ -194,7 +193,7 @@ public class TrackSearchServiceTest {
     public void metallumExceptionTest() {
         final TrackSearchService service = new TrackSearchService();
         final TrackSearchQuery query = new TrackSearchQuery();
-        assertThatThrownBy(() -> service.performSearch(query)).isInstanceOf(MetallumException.class);
+        assertThatThrownBy(() -> service.performSearchAndLoadFully(query)).isInstanceOf(MetallumException.class);
     }
 
     /*
@@ -203,18 +202,19 @@ public class TrackSearchServiceTest {
      */
     @Test
     public void wasOnceAnIssue() throws MetallumException {
-        TrackSearchService service = new TrackSearchService();
-        TrackSearchQuery query = new TrackSearchQuery();
-        query.setSongTitle("Fatal Self-Inflicted Disfigurement", true);
-        query.setDiscType(DiscType.FULL_LENGTH);
-        service.performSearch(query);
-        List<Track> trackList = service.getResultAsList();
+        TrackQuery query = TrackQuery.builder()
+                .name("Fatal Self-Inflicted Disfigurement")
+                .exactNameMatch(true)
+                .discType(DiscType.FULL_LENGTH)
+                .build();
+        List<SearchTrackResult> trackList = new TrackSearchService().get(query);
         assertThat(trackList).hasSize(1);
-        Track track = trackList.get(0);
+        SearchTrackResult track = trackList.get(0);
 
         assertThat(track.getBandName()).isEqualTo("Defeated Sanity");
         assertThat(track.getDiscName()).isEqualTo("Psalms of the Moribund");
         assertThat(track.getName()).isEqualTo("Fatal Self-Inflicted Disfigurement");
+        assertThat(track.getGenre()).isNull();
     }
 
 }

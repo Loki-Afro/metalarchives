@@ -62,8 +62,8 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
      * @return A Disc with name and Id
      */
     Disc getADisc(final String hit) {
-        Disc disc = new Disc(parseId(hit));
-        disc.setName(parseName(hit));
+        String name = parseName(hit);
+        Disc disc = new Disc(parseId(hit), name);
         return disc;
     }
 
@@ -75,8 +75,8 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
         if (hit.contains("</a> / <a")) {
             return this.dummyBand;
         }
-        final Band band = new Band(parseId(hit));
-        band.setName(parseName(hit));
+        String name = parseName(hit);
+        final Band band = new Band(parseId(hit), name);
         return band;
     }
 

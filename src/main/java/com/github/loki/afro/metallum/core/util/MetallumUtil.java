@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.util;
 
+import com.google.api.client.util.Strings;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 
 public final class MetallumUtil {
     private final static String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -24,6 +26,15 @@ public final class MetallumUtil {
 
     private MetallumUtil() {
 
+    }
+
+    public static boolean isNotBlank(Optional<String> optional) {
+        if (optional.isPresent()) {
+            String s = optional.get();
+            return !Strings.isNullOrEmpty(s);
+        } else {
+            return false;
+        }
     }
 
     private final static String getDayOfMonthSuffix(final int day) {

@@ -1,7 +1,8 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
 import com.github.loki.afro.metallum.core.parser.IJSONParser;
-import com.github.loki.afro.metallum.entity.AbstractEntity;
+import com.github.loki.afro.metallum.entity.AbstractIdentifiable;
+import com.github.loki.afro.metallum.entity.Identifiable;
 import com.github.loki.afro.metallum.search.SearchRelevance;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +20,7 @@ import java.util.TreeMap;
  *
  * @author Zarathustra
  */
-public abstract class AbstractSearchParser<T extends AbstractEntity> implements IJSONParser {
+public abstract class AbstractSearchParser<S extends Identifiable> implements IJSONParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchParser.class);
 
@@ -29,8 +30,8 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
         return this.totalSearchResults;
     }
 
-    public final SortedMap<SearchRelevance, List<T>> parseSearchResults(final String jsonStr) {
-        final SortedMap<SearchRelevance, List<T>> resultMap = new TreeMap<>();
+    public final SortedMap<SearchRelevance, List<S>> parseSearchResults(final String jsonStr) {
+        final SortedMap<SearchRelevance, List<S>> resultMap = new TreeMap<>();
         try {
             final JSONObject json = new JSONObject(jsonStr);
             // the total results from the html.
@@ -39,12 +40,12 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
                 // only possible if totalSearchResults > 0, otherwise exception
                 final JSONArray hits = json.getJSONArray(MAIN_JSON_ARRAY_STRING);
                 for (int i = 0; i < hits.length(); i++) {
-                    final T parsedObject = useSpecificSearchParser(hits.getJSONArray(i));
+                    final S parsedObject = useSpecificSearchParser(hits.getJSONArray(i));
                     final SearchRelevance relevance = getSearchRelevance(hits.getJSONArray(i));
                     if (resultMap.containsKey(relevance)) {
                         resultMap.get(relevance).add(parsedObject);
                     } else {
-                        final List<T> newList = new ArrayList<>();
+                        final List<S> newList = new ArrayList<>();
                         newList.add(parsedObject);
                         resultMap.put(relevance, newList);
                     }
@@ -79,10 +80,10 @@ public abstract class AbstractSearchParser<T extends AbstractEntity> implements 
      */
     long parseBandId(final String hit) {
         String bandId = hit.substring(0, hit.indexOf("\" title"));
-        bandId = bandId.substring(bandId.lastIndexOf("/") + 1, bandId.length());
+        bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
         return Long.parseLong(bandId);
     }
 
-    protected abstract T useSpecificSearchParser(JSONArray hits) throws JSONException;
+    protected abstract S useSpecificSearchParser(JSONArray hits) throws JSONException;
 
 }

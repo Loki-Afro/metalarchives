@@ -9,8 +9,7 @@ public enum LinkCategory {
     UNOFFICIAL("Unofficial"),
     TABLATURES("Tablatures"),
     LABEL("Labels"),
-    UNLISTED_BANDS("Unlisted bands"),
-    ANY("");
+    UNLISTED_BANDS("Unlisted bands");
 
     private static final Logger logger = LoggerFactory.getLogger(LinkCategory.class);
 
@@ -27,7 +26,7 @@ public enum LinkCategory {
             }
         }
         logger.error("possible LinkCategory  " + possibleCategory);
-        return ANY;
+        return null;
     }
 
     public String asCategoryName() {

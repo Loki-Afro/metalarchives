@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.site.helper.LinkParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.member.BandParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
@@ -10,12 +11,12 @@ import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Link;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -25,15 +26,15 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 
     private final boolean loadReadMore;
 
-    public MemberSiteParser(final Member member, final boolean loadImages, final boolean loadMemberLinks, final boolean loadReadMore) throws ExecutionException {
-        super(member, loadImages, loadMemberLinks);
+    public MemberSiteParser(final long entityId, final boolean loadImages, final boolean loadMemberLinks, final boolean loadReadMore) {
+        super(entityId, loadImages, loadMemberLinks);
         this.loadReadMore = loadReadMore;
     }
 
     @Override
     public final Member parse() {
-        Member member = new Member(this.entity.getId());
-        member.setName(parseName());
+        String name = parseName();
+        Member member = new Member(this.entityId, name);
         member.setRealName(parseRealName());
         member.setAge(parseAge());
         member.setCountry(parseCountry());
@@ -60,7 +61,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         String[] discDetails = this.html.substring(this.html.indexOf("<dl class=\"float_left\"")).split("<dd>");
         String realName = discDetails[1];
         realName = realName.substring(0, realName.indexOf("</dd>"));
-        return realName;
+        return MetallumUtil.parseHtmlWithLineSeparators(realName);
     }
 
     private final int parseAge() {
@@ -81,7 +82,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         final String details = this.html.substring(this.html.indexOf("<dl class=\"float_right\""));
         final String[] memberDetails = details.split("<dd>");
         if (memberDetails[1].contains("N/A")) {
-            return Country.ANY;
+            return null;
         }
         final String country = memberDetails[1].substring(memberDetails[1].indexOf("\">") + 2, memberDetails[1].indexOf("</a>"));
         return Country.ofMetallumDisplayName(country);
@@ -104,39 +105,34 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         return memberDetails[2].substring(0, memberDetails[2].indexOf("</dd>"));
     }
 
-    private Map<Band, Map<Disc, String>> parseActiveBands() {
+    private Map<Partial, Map<Partial, String>> parseActiveBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.ACTIVE);
     }
 
-    private Map<Band, Map<Disc, String>> parsePastBands() {
+    private Map<Partial, Map<Partial, String>> parsePastBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.PAST);
     }
 
-    private Map<Band, Map<Disc, String>> parseGuestSessionBands() {
+    private Map<Partial, Map<Partial, String>> parseGuestSessionBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.GUEST);
     }
 
     // 2007 Equally Destructive (Single) Design, above the band name
-    private Map<Band, Map<Disc, String>> parseMiscBands() {
+    private Map<Partial, Map<Partial, String>> parseMiscBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.MISC);
     }
 
     private Link[] parseLinks() {
-        final List<Link> linksFromEntity = this.entity.getLinks();
-        if (!linksFromEntity.isEmpty()) {
-            final Link[] linkArray = new Link[linksFromEntity.size()];
-            linksFromEntity.toArray(linkArray);
-            return linkArray;
-        } else if (this.loadLinks) {
+        if (this.loadLinks) {
             try {
-                final LinkParser parser = new LinkParser(this.entity.getId(), LinkParser.MEMBER_PARSER);
+                final LinkParser parser = new LinkParser(this.entityId, LinkParser.MEMBER_PARSER);
                 return parser.parse();
             } catch (final ExecutionException e) {
-                LOGGER.error("Unable to parse links of " + this.entity.getId(), e);
+                LOGGER.error("Unable to parse links of " + this.entityId, e);
             }
         }
         return new Link[0];
@@ -154,27 +150,23 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
     }
 
     private final BufferedImage parseImage(final String imageUrl) {
-
-        BufferedImage imagePhoto = this.entity.getPhoto();
-        if (imagePhoto != null) {
-            return imagePhoto;
-        }
         if (this.loadImage && imageUrl != null) {
             try {
-                imagePhoto = Downloader.getImage(imageUrl);
-            } catch (final ExecutionException e) {
-                LOGGER.error("Unable get photo for " + entity.getId(), e);
+                return Downloader.getImage(imageUrl);
+            } catch (final MetallumException e) {
+                throw new MetallumException("Unable get photo for " + this.entityId, e);
+
             }
         }
-        return imagePhoto;
+        return null;
     }
 
     private String parseReadMore() {
         String html = "";
         try {
-            html = Downloader.getHTML(MetallumURL.assembleMemberReadMoreURL(this.entity.getId()));
-        } catch (final ExecutionException e) {
-            LOGGER.error("Unable get \"read more\" for " + entity.getId(), e);
+            html = Downloader.getHTML(MetallumURL.assembleMemberReadMoreURL(this.entityId));
+        } catch (final MetallumException e) {
+            throw new MetallumException("Unable get \"read more\" for " + this.entityId, e);
         }
         return MetallumUtil.parseHtmlWithLineSeparators(html);
     }
@@ -193,7 +185,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 
     @Override
     protected final String getSiteURL() {
-        return MetallumURL.assembleMemberURL(this.entity.getId());
+        return MetallumURL.assembleMemberURL(this.entityId);
     }
 
 }

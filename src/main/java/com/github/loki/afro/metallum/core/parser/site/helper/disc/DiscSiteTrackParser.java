@@ -1,7 +1,9 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.disc;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
+import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.enums.DiscType;
 import org.jsoup.nodes.Document;
@@ -12,8 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public final class DiscSiteTrackParser {
@@ -21,11 +23,13 @@ public final class DiscSiteTrackParser {
     private CountDownLatch doneSignal;
     private final Document doc;
     private final DiscType discType;
+    private final Disc disc;
     private final boolean loadLyrics;
 
-    public DiscSiteTrackParser(final Document doc, final DiscType discType, final boolean loadLyrics) {
+    public DiscSiteTrackParser(final Document doc, final Disc disc, final boolean loadLyrics) {
         this.doc = doc;
-        this.discType = discType;
+        this.discType = disc.getType();
+        this.disc = disc;
         this.loadLyrics = loadLyrics;
     }
 
@@ -65,7 +69,7 @@ public final class DiscSiteTrackParser {
                 String lyricsHTML = Downloader.getHTML(MetallumURL.assembleLyricsURL(this.trackId));
                 lyricsHTML = lyricsHTML.replaceAll("<br />", System.getProperty("line.separator")).replaceAll("(lyrics not available)", "");
                 this.trackToModify.setLyrics(lyricsHTML.trim());
-            } catch (final ExecutionException e) {
+            } catch (final MetallumException e) {
                 LOGGER.error("unable to get lyrics from \"" + this.trackId + "\"", e);
             } finally {
                 signalDoneCountDown();
@@ -93,7 +97,7 @@ public final class DiscSiteTrackParser {
         return Integer.parseInt(trackNo.replaceAll("\\.", ""));
     }
 
-    public Track[] parse() {
+    public List<Track> parse() {
         Element tableElement = this.doc.select("table[class$=table_lyrics]").first();
         int counter = 1;
         boolean foundFirstFirstTrack = false;
@@ -102,8 +106,20 @@ public final class DiscSiteTrackParser {
         for (final Element row : rows) {
             final String trackIdStr = parseTrackId(row);
             final long trackId = Long.parseLong(trackIdStr.replaceAll("[\\D]", ""));
-            Track track = new Track(trackId);
-            track.setName(parseTrackTitle(row, this.discType.isSplit()));
+            String trackTitle = parseTrackTitle(row, this.discType.isSplit());
+
+            // because otherwise the bandName is always the same
+            final Track track;
+            if (discType == DiscType.COLLABORATION) {
+                track = Track.createCollaborationTrack(this.disc, trackId, trackTitle);
+            } else if (this.discType.isSplit()) {
+                final String bandName = parseBandName(row);
+                track = Track.createSplitTrack(this.disc, bandName, trackId, trackTitle);
+            } else {
+                track = new Track(this.disc, this.disc.getBandName(), trackId, trackTitle);
+            }
+
+
             track.setPlayTime(parsePlayTime(row));
             int trackNumber = parseTrackNumber(row);
             track.setTrackNumber(trackNumber);
@@ -113,10 +129,7 @@ public final class DiscSiteTrackParser {
                 foundFirstFirstTrack = true;
             }
             track.setDiscNumber(counter);
-//			because otherwise the bandName is always the same
-            if (discType != DiscType.COLLABORATION && this.discType.isSplit()) {
-                track.setSplitBandName(parseBandName(row));
-            }
+
             track.setInstrumental(parseIsInstrumental(row));
             if (this.loadLyrics && row.getElementById("lyricsButton" + trackIdStr) != null) {
                 lazyInitLatch(rows.size());
@@ -128,7 +141,7 @@ public final class DiscSiteTrackParser {
 
         }
         waitUntilEverythingIsDone(rows.size());
-        return trackList.toArray(new Track[trackList.size()]);
+        return trackList;
     }
 
     private void waitUntilEverythingIsDone(final int trackCount) {

@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.site.helper.LinkParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.label.CurrentRosterParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.label.PastRosterParser;
@@ -85,10 +86,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * @param currentRooster If you care about the current Bands that are used by this Label.
      * @param pastRooster    If you care about the past Bands that were used by this Label.
      * @param releases       If you care about the releases that this Label published.
-     * @throws ExecutionException if there is any error occurred
      */
-    public LabelSiteParser(final Label label, final boolean loadImages, final boolean loadLinks, final PARSE_STYLE currentRooster, final PARSE_STYLE pastRooster, final PARSE_STYLE releases) throws ExecutionException {
-        super(label, loadImages, loadLinks);
+    public LabelSiteParser(final long entityId, final boolean loadImages, final boolean loadLinks, final PARSE_STYLE currentRooster, final PARSE_STYLE pastRooster, final PARSE_STYLE releases) {
+        super(entityId, loadImages, loadLinks);
         this.loadCurrentRooster = currentRooster;
         this.loadPastRooster = pastRooster;
         this.loadReleases = releases;
@@ -96,8 +96,8 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     @Override
     public final Label parse() {
-        Label label = new Label(this.entity.getId());
-        label.setName(parseLabelName());
+        String name = parseLabelName();
+        Label label = new Label(this.entityId, name);
 
         // upper part
         label = parseLeftSide(label);
@@ -149,17 +149,12 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
     }
 
     private Link[] parseLinks() {
-        final List<Link> linksFromEntity = this.entity.getLinks();
-        if (!linksFromEntity.isEmpty()) {
-            Link[] linkArray = new Link[linksFromEntity.size()];
-            linksFromEntity.toArray(linkArray);
-            return linkArray;
-        } else if (this.loadLinks) {
+        if (this.loadLinks) {
             try {
-                final LinkParser parser = new LinkParser(this.entity.getId(), LinkParser.LABEL_PARSER);
+                final LinkParser parser = new LinkParser(this.entityId, LinkParser.LABEL_PARSER);
                 return parser.parse();
             } catch (final ExecutionException e) {
-                LOGGER.error("unable to parse label links from " + this.entity, e);
+                throw new MetallumException("unable to parse label links from " + this.entityId, e);
             }
         }
         return new Link[0];
@@ -174,6 +169,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     private Country parseCountry(final String upperLeftPart) {
         String countryStr = upperLeftPart.substring(upperLeftPart.indexOf(">") + 1, upperLeftPart.indexOf("</dd>"));
+        countryStr = Jsoup.parse(countryStr).text();
         return Country.ofMetallumDisplayName(countryStr);
     }
 
@@ -234,12 +230,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * @return a List of Bands, if there are none, you'll get a empty List.
      */
     private List<Band> parseCurrentRoster() {
-        List<Band> roster = this.entity.getCurrentRoster();
-        if (!roster.isEmpty()) {
-            return roster;
-        } else if (this.loadCurrentRooster != PARSE_STYLE.NONE) {
+        if (this.loadCurrentRooster != PARSE_STYLE.NONE) {
             try {
-                final CurrentRosterParser parser = new CurrentRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadCurrentRooster);
+                final CurrentRosterParser parser = new CurrentRosterParser(this.entityId, Byte.MAX_VALUE, true, this.loadCurrentRooster);
                 return new ArrayList<>(parser.parse().values());
             } catch (final Exception e) {
                 LOGGER.error("Unable to parse current roster", e);
@@ -260,15 +253,12 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * If there are none you'll get a empty HashMap.
      */
     private Map<Band, Integer> parsePastRoster() {
-        final Map<Band, Integer> pastRoster = this.entity.getPastRoster();
-        if (!pastRoster.isEmpty()) {
-            return pastRoster;
-        } else if (this.loadPastRooster != PARSE_STYLE.NONE) {
+        if (this.loadPastRooster != PARSE_STYLE.NONE) {
             // try {
             try {
-                return new PastRosterParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadPastRooster).parse();
+                return new PastRosterParser(this.entityId, Byte.MAX_VALUE, true, this.loadPastRooster).parse();
             } catch (final Exception e) {
-                LOGGER.error("unable to parse past roster with " + this.loadPastRooster + " and " + this.entity, e);
+                LOGGER.error("unable to parse past roster with " + this.loadPastRooster + " and " + this.entityId, e);
             }
         }
         return new HashMap<>();
@@ -286,14 +276,11 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * @return a Map with Band as Key and a List with Discs.
      */
     private Map<Band, List<Disc>> parseReleases() {
-        Map<Band, List<Disc>> releases = this.entity.getReleases();
-        if (!releases.isEmpty()) {
-            return releases;
-        } else if (this.loadReleases != PARSE_STYLE.NONE) {
+        if (this.loadReleases != PARSE_STYLE.NONE) {
             try {
-                return new ReleaseParser(this.entity.getId(), Byte.MAX_VALUE, true, this.loadReleases).parse();
+                return new ReleaseParser(this.entityId, Byte.MAX_VALUE, true, this.loadReleases).parse();
             } catch (final Exception e) {
-                LOGGER.error("unable to parse label releases with " + this.loadReleases + " and " + this.entity, e);
+                throw new MetallumException("unable to parse label releases with " + this.loadReleases + " and " + this.entityId, e);
             }
         }
         return new HashMap<>();
@@ -377,8 +364,8 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         if (this.loadImage && logoUrl != null) {
             try {
                 return Downloader.getImage(logoUrl);
-            } catch (final ExecutionException e) {
-                LOGGER.error("Exception while downloading an image from \"" + logoUrl + "\" ," + this.entity, e);
+            } catch (final MetallumException e) {
+                throw new MetallumException("Exception while downloading an image from \"" + logoUrl + "\" ," + this.entityId, e);
             }
         }
         return null;
@@ -386,7 +373,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     @Override
     protected final String getSiteURL() {
-        return MetallumURL.assembleLabelURL(this.entity.getId());
+        return MetallumURL.assembleLabelURL(this.entityId);
     }
 
 }

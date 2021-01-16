@@ -1,26 +1,26 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.google.common.base.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ExecutionException;
 
 /**
  * Parses the data which was gained by the search
  *
  * @author Zarathustra
  */
-public class TrackSearchParser extends AbstractSearchParser<Track> {
+public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
 
-    private static Logger logger = LoggerFactory.getLogger(TrackSearchParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrackSearchParser.class);
     private boolean isAbleToParseGenre = false;
     private boolean isAbleToParseDiscType = false;
     private boolean loadLyrics = false;
@@ -34,40 +34,48 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
     }
 
     @Override
-    protected final Track useSpecificSearchParser(final JSONArray hits) throws JSONException {
-//		Tracks can't have a id here.
-        Track track = new Track();
-        track.getDisc().setId(parseDiscId(hits.getString(1)));
-        track.setDiscName(parseDiscName((hits.getString(1))));
-        if (this.isAbleToParseDiscType) {
-            track.setDiscType(parseAlbumType(hits.getString(2)));
-        }
+    protected final SearchTrackResult useSpecificSearchParser(final JSONArray hits) throws JSONException {
         // we have to do this because if we are searching with an DiscType it will not appear in the
         // JSONArray. So the position will change
-        track.setName(parseTitleName(hits.getString(this.isAbleToParseDiscType ? 3 : 2)));
+        String trackName = parseTitleName(hits.getString(this.isAbleToParseDiscType ? 3 : 2));
+
+        long trackId = parseTrackId(hits.getString(hits.length() - 1));
+        SearchTrackResult track = new SearchTrackResult(trackId, trackName);
+
+        track.setDiscId(parseDiscId(hits.getString(1)));
+        track.setDiscName(parseDiscName((hits.getString(1))));
         final String parsedBandName = parseBandName(hits.getString(0));
+        if (this.isAbleToParseDiscType) {
+            DiscType discType = parseAlbumType(hits.getString(2));
+            track.setDiscType(discType);
 //		if so we can set the band because we do only find the particular band.
-        if (this.isAbleToParseDiscType && DiscType.isSplit(track.getDiscTyp())) {
-            track.setSplitBandName(parsedBandName);
+            if (DiscType.isSplit(discType)) {
+                track.setSplitBandName(parsedBandName);
+            } else {
+                track.setBandName(parsedBandName);
+            }
         } else {
-            track.getBand().setName(parsedBandName);
+            track.setBandName(parsedBandName);
         }
-        track.getBand().setId(parseBandId(hits.getString(0)));
-        track.setId(parseTrackId(hits.getString(hits.length() - 1)));
+        track.setBandId(parseBandId(hits.getString(0)));
         return parseOptionalFields(track, hits);
     }
 
-    private Track parseOptionalFields(final Track track, final JSONArray jArray) throws JSONException {
-        track.setGenre(this.isAbleToParseGenre ? parseGenre(jArray.getString(jArray.length() - 2)) : "");
-        // must be at the last position ever!
-        track.setLyrics(this.loadLyrics ? parseLyrics(track) : "");
+    private SearchTrackResult parseOptionalFields(final SearchTrackResult track, final JSONArray jArray) throws JSONException {
+        if (this.isAbleToParseGenre) {
+            track.setGenre(parseGenre(jArray.getString(jArray.length() - 2)));
+        }
+        // must be always at the last position!
+        if (this.loadLyrics) {
+            track.setLyrics(parseLyrics(track));
+        }
         return track;
     }
 
     private final long parseTrackId(final String hit) {
         // getting the Lyrics Id!
         if (hit.contains("lyricsLink_")) {
-            String id = hit.substring(hit.indexOf("lyricsLink_") + 11, hit.length());
+            String id = hit.substring(hit.indexOf("lyricsLink_") + 11);
             id = id.substring(0, id.indexOf("\" title=\""));
             return Long.parseLong(id);
         } else {
@@ -82,19 +90,19 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
      *
      * @return the lyrics if existent
      */
-    private final String parseLyrics(final Track track) {
+    private final String parseLyrics(final SearchTrackResult track) {
         // downloading the Lyrics!
         try {
             if (this.loadLyrics) {
                 String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(track.getId())).trim();
                 // making it nice and if there are no lyrics there should be nothing to return!
                 lyricsHtml = MetallumUtil.parseHtmlWithLineSeparators(lyricsHtml);
-                return lyricsHtml.replaceAll("\\(lyrics not available\\)", "");
+                return Strings.emptyToNull(lyricsHtml.replaceAll("\\(lyrics not available\\)", ""));
             }
-        } catch (final ExecutionException e) {
-            logger.error("Unable to get the Lyrics from \"" + track, e);
+        } catch (final MetallumException e) {
+            logger.error("Unable to get the Lyrics from " + track, e);
         }
-        return "";
+        return null;
     }
 
     private String parseGenre(final String hit) {
@@ -103,7 +111,7 @@ public class TrackSearchParser extends AbstractSearchParser<Track> {
 
     private long parseDiscId(String hit) {
         hit = hit.substring(0, hit.lastIndexOf("\""));
-        hit = hit.substring(hit.lastIndexOf("/") + 1, hit.length());
+        hit = hit.substring(hit.lastIndexOf("/") + 1);
         return Long.parseLong(hit);
     }
 

@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
+import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.site.helper.ReviewParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteMemberParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteTrackParser;
@@ -8,12 +9,14 @@ import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.enums.DiscType;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -27,18 +30,23 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     /**
      * Creates a new DiscParser, just call parse
      */
-    public DiscSiteParser(final Disc disc, final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) throws ExecutionException {
-        super(disc, loadImages, false);
+    public DiscSiteParser(final long entityId, final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
+        super(entityId, loadImages, false);
         this.loadReviews = loadReviews;
         this.loadLyrics = loadLyrics;
     }
 
     @Override
     public Disc parse() {
-        Disc disc = new Disc(this.entity.getId());
+        Disc disc = new Disc(this.entityId, parseName());
         disc.setDiscType(parseDiscType());
+        if (disc.isSplit()) {
+            disc.setSplitBands(parseSplitBands());
+        } else {
+            disc.setBand(parseBand());
+        }
         disc.addTracks(parseTracks(disc));
-        disc.setName(parseName());
+
         final String artworkURL = parseArtworkURL();
         disc.setArtworkURL(artworkURL);
         disc.setArtwork(parseDiscArtwork(artworkURL));
@@ -46,11 +54,6 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         disc.setDetails(parseDetails());
         disc.setReleaseDate(parseReleaseDate());
         disc = parseMember(disc);
-        if (disc.isSplit()) {
-            disc.addSplitBand(parseSplitBands());
-        } else {
-            disc.setBand(parseBand());
-        }
         disc.addReview(parseReviewList(disc));
         disc = parseModifications(disc);
         return disc;
@@ -70,12 +73,14 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         return albumNameElement.text();
     }
 
-    private Track[] parseTracks(final Disc disc) {
-        DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc, disc.getType(), this.loadLyrics);
-        Track[] tracks = trackParser.parse();
-        for (final Track track : tracks) {
-            track.setDisc(disc);
-        }
+    private List<Track> parseTracks(final Disc disc) {
+        DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc, disc, this.loadLyrics);
+        List<Track> tracks = trackParser.parse();
+        int discCount = tracks.stream()
+                .mapToInt(Track::getDiscNumber)
+                .max()
+                .orElse(1);
+        disc.setDiscCount(discCount);
         return tracks;
     }
 
@@ -135,11 +140,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     }
 
     private Review[] parseReviewList(final Disc disc) {
-        final List<Review> reviews = this.entity.getReviews();
-        if (!reviews.isEmpty()) {
-            final Review[] reviewArr = new Review[reviews.size()];
-            return reviews.toArray(reviewArr);
-        } else if (this.loadReviews) {
+        if (this.loadReviews) {
             try {
                 ReviewParser parser = new ReviewParser(disc.getId());
                 final List<Review> parsedReviewList = parser.parse();
@@ -149,7 +150,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
                 }
                 return parsedReviewList.toArray(reviewArr);
             } catch (final ExecutionException e) {
-                logger.error("unable to parse reviews from: " + disc, e);
+                throw new MetallumException("unable to parse reviews from: " + disc, e);
             }
         }
         return new Review[0];
@@ -159,45 +160,33 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         return parseImageURL("album_img");
     }
 
-    /**
-     * If the previous entity, may from cache, has already the band artwork,
-     * this method will return the BufferedImage of the entity, otherwise if loadImage is true
-     * this method with try to get the Image, if it is in the Metal-Archives, via the Downloader.
-     *
-     * @return null if loadImage is false or if there is no artwork
-     */
     private final BufferedImage parseDiscArtwork(final String artworkURL) {
-        final BufferedImage previouslyParsedArtwork = this.entity.getArtwork();
-        if (previouslyParsedArtwork != null) {
-            return previouslyParsedArtwork;
-        }
         if (this.loadImage && artworkURL != null) {
             try {
                 return Downloader.getImage(artworkURL);
-            } catch (final ExecutionException e) {
-                logger.error("Exception while downloading an image from \"" + artworkURL + "\" ," + this.entity, e);
+            } catch (final MetallumException e) {
+                throw new MetallumException("Exception while downloading an image from \"" + artworkURL + "\" ," + this.entityId, e);
             }
         }
         return null;
     }
 
-    private final Band[] parseSplitBands() {
+    private final List<Partial> parseSplitBands() {
+        List<Partial> list = new ArrayList<>();
         Element bandsElement = this.doc.getElementsByClass("band_name").get(0);
         Elements bands = bandsElement.select(("a[href]"));
-        Band[] splitBands = new Band[bands.size()];
         for (Element bandElem : bands) {
             String bandLink = bandElem.toString();
             String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandElem.text()));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
-            Band band = new Band(Long.parseLong(bandId), bandElem.text());
-            splitBands[bands.indexOf(bandElem)] = band;
+            list.add(new Partial(Long.parseLong(bandId), bandElem.text()));
         }
-        logger.debug("SplitBands: " + Arrays.toString(splitBands));
-        return splitBands;
+        logger.debug("SplitBands: " + list);
+        return list;
     }
 
-    private Band parseBand() {
-        return new Band(parseBandId(), parseBandName());
+    private Partial parseBand() {
+        return new Partial(parseBandId(), parseBandName());
     }
 
     private String parseBandName() {
@@ -215,6 +204,6 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
     @Override
     protected String getSiteURL() {
-        return MetallumURL.assembleDiscURL(this.entity.getId());
+        return MetallumURL.assembleDiscURL(this.entityId);
     }
 }

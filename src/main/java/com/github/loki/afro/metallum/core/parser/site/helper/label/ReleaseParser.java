@@ -5,6 +5,7 @@ import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.enums.DiscType;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -34,25 +35,25 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
         disc.setDiscType(parseDiscType(hits.getString(2)));
         disc.setReleaseDate(parseYear(hits.getString(3)));
         if (disc.isSplit()) {
-            disc.addSplitBand(parseSplitBands(hits.getString(0)));
+            disc.setSplitBands(parseSplitBands(hits.getString(0)));
         } else {
-            disc.setBand(band);
+            disc.setBand(new Partial(band.getId(), band.getName()));
             band.addToDiscography(disc);
         }
         discList.add(disc);
         this.mainMap.put(band, discList);
     }
 
-    private Band[] parseSplitBands(final String bandData) {
+    private List<Partial> parseSplitBands(final String bandData) {
+        List<Partial> list = new ArrayList<>();
         final String[] strBandArray = bandData.split("</a>");
-        Band[] bandArray = new Band[strBandArray.length];
-        for (int i = 0; i < strBandArray.length; i++) {
-            String bandName = strBandArray[i].substring(strBandArray[i].indexOf("\">") + 2);
-            String bandId = strBandArray[i].substring(0, strBandArray[i].length() - (bandName.length() + 2));
+        for (String s : strBandArray) {
+            String bandName = s.substring(s.indexOf("\">") + 2);
+            String bandId = s.substring(0, s.length() - (bandName.length() + 2));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
-            bandArray[i] = new Band(Long.parseLong(bandId), bandName);
+            list.add(new Partial(Long.parseLong(bandId), bandName));
         }
-        return bandArray;
+        return list;
     }
 
     private List<Disc> getDiscList(final Band band) {

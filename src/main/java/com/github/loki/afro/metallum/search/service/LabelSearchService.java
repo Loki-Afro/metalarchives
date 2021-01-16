@@ -1,38 +1,35 @@
 package com.github.loki.afro.metallum.search.service;
 
+import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
 import com.github.loki.afro.metallum.core.parser.search.LabelSearchParser;
 import com.github.loki.afro.metallum.core.parser.site.LabelSiteParser;
 import com.github.loki.afro.metallum.entity.Label;
+import com.github.loki.afro.metallum.search.AbstractSearchQuery;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
+import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.LabelQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchLabelResult;
 
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.SortedMap;
 
-public class LabelSearchService extends AbstractSearchService<Label> {
+public class LabelSearchService extends AbstractSearchService<Label, LabelQuery, SearchLabelResult> {
 
-    private boolean loadImages = false;
+    private boolean loadImages;
     private LabelSiteParser.PARSE_STYLE loadCurrentRooster = LabelSiteParser.PARSE_STYLE.NONE;
     private LabelSiteParser.PARSE_STYLE loadPastRooster = LabelSiteParser.PARSE_STYLE.NONE;
     private LabelSiteParser.PARSE_STYLE loadReleases = LabelSiteParser.PARSE_STYLE.NONE;
     private boolean loadLinks = false;
 
     public LabelSearchService() {
-        this(0, false);
+        this(false);
     }
 
-    public LabelSearchService(final int objectToLoad, final boolean loadImages) {
-        this.objectToLoad = objectToLoad;
+    public LabelSearchService(final boolean loadImages) {
         this.loadImages = loadImages;
     }
 
-    @Override
-    protected LabelSearchParser getSearchParser() {
-        return new LabelSearchParser();
-    }
 
-    @Override
-    protected LabelSiteParser getSiteParser(final Label label) throws ExecutionException {
-        return new LabelSiteParser(label, this.loadImages, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases);
-    }
 
     public void setLoadImages(boolean loadImages) {
         this.loadImages = loadImages;
@@ -55,8 +52,13 @@ public class LabelSearchService extends AbstractSearchService<Label> {
     }
 
     @Override
-    public void setObjectsToLoad(final int objectToLoad) {
-        super.setObjectsToLoad(objectToLoad);
+    protected LabelSearchParser getSearchParser(LabelQuery query) {
+        return new LabelSearchParser();
+    }
+
+    @Override
+    protected LabelSiteParser getSiteParser(final long entityId) {
+        return new LabelSiteParser(entityId, this.loadImages, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases);
     }
 
 }

@@ -1,31 +1,22 @@
 package com.github.loki.afro.metallum.search.service;
 
+import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
 import com.github.loki.afro.metallum.core.parser.search.MemberSearchParser;
 import com.github.loki.afro.metallum.core.parser.site.MemberSiteParser;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
+import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.MemberQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
 
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import java.util.SortedMap;
 
-/**
- * <pre>
- * This class represents the simple Member search.
- *
- * This service is configurable to enhance the speed of the parser.
- * You'll also have less requests to the metal-archives.
- *
- * Configurable parameters:
- *  - if you want to have the related <b>links</b>, if available (default <i>true</i>)
- *  - if you want to have the member <b>details</b>, if available (default <i>true</i>)
- *  - if you want to have the member <b>photo</b>, if available (default <i>false</i>)
- * </pre>
- *
- * @author Zarathustra
- */
-public class MemberSearchService extends AbstractSearchService<Member> {
-    private boolean loadImages = false;
-    private boolean loadLinks = true;
-    private boolean loadDetails = true;
+
+public class MemberSearchService extends AbstractSearchService<Member, MemberQuery, SearchMemberResult> {
+    private boolean loadImages;
+    private boolean loadLinks;
+    private boolean loadDetails;
 
     /**
      * Constructs a default MemberSearchService.
@@ -34,30 +25,18 @@ public class MemberSearchService extends AbstractSearchService<Member> {
      * You'll download Member-details.
      */
     public MemberSearchService() {
-        this(0, false, true, true);
+        this(false, true, true);
     }
 
     /**
-     * @param objectToLoad the id of the member to load if known
      * @param loadImages  true if you care about the photo, false otherwise
      * @param loadLinks   true if you care about the links, false otherwise
      * @param loadDetails true if you care about the details, false otherwise
      */
-    public MemberSearchService(final int objectToLoad, final boolean loadImages, final boolean loadLinks, final boolean loadDetails) {
-        this.objectToLoad = objectToLoad;
+    public MemberSearchService(final boolean loadImages, final boolean loadLinks, final boolean loadDetails) {
         this.loadLinks = loadLinks;
         this.loadDetails = loadDetails;
         this.loadImages = loadImages;
-    }
-
-    @Override
-    protected final MemberSiteParser getSiteParser(Member member) throws ExecutionException {
-        return new MemberSiteParser(member, this.loadImages, this.loadLinks, this.loadDetails);
-    }
-
-    @Override
-    protected final MemberSearchParser getSearchParser() {
-        return new MemberSearchParser();
     }
 
     /**
@@ -95,6 +74,16 @@ public class MemberSearchService extends AbstractSearchService<Member> {
      */
     public final void setLoadDetails(final boolean loadDetails) {
         this.loadDetails = loadDetails;
+    }
+
+    @Override
+    protected final MemberSiteParser getSiteParser(final long entityId) {
+        return new MemberSiteParser(entityId, this.loadImages, this.loadLinks, this.loadDetails);
+    }
+
+    @Override
+    protected final MemberSearchParser getSearchParser(MemberQuery memberQuery) {
+        return new MemberSearchParser();
     }
 
 }

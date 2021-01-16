@@ -77,9 +77,8 @@ public class DiscSiteMemberParser {
         } else {
             LOGGER.warn("Member without Link detected, please report that; Member = " + memberRow.text());
         }
-        Member member = new Member(Long.parseLong(memberIdStr));
-        member.setName(memberLink != null ? memberLink.text() : memberRow.text());
-        return member;
+        String memberName = memberLink != null ? memberLink.text() : memberRow.text();
+        return new Member(Long.parseLong(memberIdStr), memberName);
     }
 
     private final void addToMemberList(final Member memberToAdd, final String role, final String category) {

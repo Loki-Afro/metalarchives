@@ -2,18 +2,14 @@ package com.github.loki.afro.metallum.entity;
 
 public class Review extends AbstractEntity {
 
-    private String author = "";
-    private int percent = 0;
-    private String content = "";
-    private String date = "";
-    private Disc discFromReview = new Disc();
+    private String author;
+    private int percent;
+    private String content;
+    private String date;
+    private Disc discFromReview;
 
-    public Review(final long id) {
-        super(id);
-    }
-
-    public Review() {
-        super(0);
+    public Review(long id, String name) {
+        super(id, name);
     }
 
     public void setPercent(final int percent) {

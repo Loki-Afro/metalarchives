@@ -1,20 +1,23 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Label;
+import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Parses the data which was gained by the search
  *
  * @author Zarathustra
  */
-public class DiscSearchParser extends AbstractSearchParser<Disc> {
+public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
 
     private boolean isAbleToParseDate = false;
     private boolean isAbleToParseLabel = false;
@@ -26,28 +29,26 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
     private boolean isAbleToParseProvince;
 
     @Override
-    protected Disc useSpecificSearchParser(final JSONArray hit) throws JSONException {
-        Disc disc = new Disc(parseDiscId(hit.getString(1)));
-        disc.setName(parseDiscName(hit.getString(1)));
+    protected SearchDiscResult useSpecificSearchParser(final JSONArray hit) throws JSONException {
+        SearchDiscResult disc = new SearchDiscResult(parseDiscId(hit.getString(1)), parseDiscName(hit.getString(1)));
         disc.setBandName(parseBandName(hit.getString(0)));
-        disc.getBand().setId((this.possibleSplitDisc ? 0 : parseBandId(hit.getString(0))));
+        disc.setBandId((this.possibleSplitDisc ? 0 : parseBandId(hit.getString(0))));
         if (this.possibleSplitDisc) {
-            disc.addSplitBand(parseSplitBands(hit.getString(0)));
+            disc.setSplitBands(parseSplitBands(hit.getString(0)));
         }
 
         return parseOptionalFields(disc, hit);
     }
 
-    private Band[] parseSplitBands(final String string) {
+    private List<Partial> parseSplitBands(final String string) {
+        List<Partial> list = new ArrayList<>();
         final String[] bandLinks = string.split("\\s\\|\\s");
-        Band[] bandArray = new Band[bandLinks.length];
-        for (int i = 0; i < bandLinks.length; i++) {
-            Band band = new Band();
-            band.setId(parseBandId(bandLinks[i]));
-            band.setName(parseBandName(bandLinks[i]));
-            bandArray[i] = band;
+        for (String bandLink : bandLinks) {
+            long id = parseBandId(bandLink);
+            String name = parseBandName(bandLink);
+            list.add(new Partial(id, name));
         }
-        return bandArray;
+        return list;
     }
 
     /**
@@ -60,14 +61,14 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
      * @return the disc with optional values
      * @throws JSONException will be thrown if a Field is not at the right place
      */
-    private Disc parseOptionalFields(final Disc disc, final JSONArray hit) throws JSONException {
+    private SearchDiscResult parseOptionalFields(final SearchDiscResult disc, final JSONArray hit) throws JSONException {
         int index = 2;
         disc.setDiscType((this.isAbleToParseDiscType ? parseDiscType(hit.getString(index++)) : null));
-        disc.setGenre((this.isAbleToParseGenre ? parseGenre(hit.getString(index++)) : ""));
-        disc.getBand().setCountry(this.isAbleToParseCountry ? parseCountry(hit.getString(index++)) : "");
-        disc.getBand().setProvince(this.isAbleToParseProvince ? parseBandProvince(hit.getString(index++)) : "");
-        disc.setReleaseDate((this.isAbleToParseDate ? parseDate(hit.getString(index++)) : ""));
-        disc.setLabel(this.isAbleToParseLabel ? parseLabel(hit.getString(index)) : new Label(0));
+        disc.setGenre((this.isAbleToParseGenre ? parseGenre(hit.getString(index++)) : null));
+        disc.setBandCountry(this.isAbleToParseCountry ? parseCountry(hit.getString(index++)) : null);
+        disc.setBandProvince(this.isAbleToParseProvince ? parseBandProvince(hit.getString(index++)) : null);
+        disc.setReleaseDate((this.isAbleToParseDate ? parseDate(hit.getString(index++)) : null));
+        disc.setLabelName(this.isAbleToParseLabel ? parseLabel(hit.getString(index)) : null);
         return disc;
     }
 
@@ -90,8 +91,8 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
      * @param hit the JSon hit.
      * @return the parsed Country.
      */
-    private String parseCountry(final String hit) {
-        return hit;
+    private Country parseCountry(final String hit) {
+        return Country.ofMetallumDisplayName(hit);
     }
 
     private DiscType parseDiscType(final String string) {
@@ -154,8 +155,8 @@ public class DiscSearchParser extends AbstractSearchParser<Disc> {
      * @param hit the JSon hit.
      * @return The parsed label with id 0.
      */
-    private Label parseLabel(final String hit) {
-        return new Label(0, hit);
+    private String parseLabel(final String hit) {
+        return hit;
     }
 
     /**

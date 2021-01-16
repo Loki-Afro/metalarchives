@@ -1,11 +1,17 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.entity.Review;
+import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.DiscSearchQuery;
-import org.assertj.core.groups.Tuple;
+import com.github.loki.afro.metallum.search.API;
+import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
+import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,29 +23,24 @@ public class DiscSearchServiceTest {
 
     @Test
     public void objectToLoadTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        service.setObjectsToLoad(0);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Lantlôs", false);
-        final List<Disc> discListResult = service.performSearch(query);
+        final List<SearchDiscResult> discListResult = new DiscSearchService().get(DiscQuery.builder()
+                .bandName("Lantlôs")
+                .build());
+
         assertThat(discListResult).isNotEmpty();
-        for (final Disc discResult : discListResult) {
-            assertThat(discResult.getBandName()).isEqualTo("Lantlôs");
+        for (final SearchDiscResult discResult : discListResult) {
+            assertThat(discResult.getBandName()).contains("Lantlôs");
             assertThat(discResult.getName()).isNotEmpty();
-            assertThat(discResult.getTrackList().isEmpty()).isTrue();
-            assertThat(discResult.getType()).isNotNull();
-            assertThat(discResult.getLabel()).isNotNull();
-            assertThat(discResult.getArtwork()).isNull();
         }
     }
 
     @Test
     public void fullLengthTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.FULL_LENGTH);
-        query.setReleaseName("Transilvanian Hunger", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Transilvanian Hunger")
+                .discType(DiscType.FULL_LENGTH)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Darkthrone");
         assertThat(discResult.getName()).isEqualTo("Transilvanian Hunger");
         assertThat(discResult.getTrackList()).hasSize(8);
@@ -55,11 +56,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void vhsTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.VIDEO);
-        query.setReleaseName("Live Εσχατον: The Art of Rebellion", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Live Εσχατον: The Art of Rebellion")
+                .discType(DiscType.VIDEO)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Behemoth");
         assertThat(discResult.getName()).isEqualTo("Live Εσχατον: The Art of Rebellion");
         assertThat(discResult.getTrackList()).hasSize(12);
@@ -76,11 +77,14 @@ public class DiscSearchServiceTest {
     @Test
     public void epTest() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.EP);
-        query.setReleaseName("Hordanes Land", false);
         service.setLoadLyrics(true);
-        final Disc discResult = service.performSearch(query).get(0);
+
+        DiscQuery query = DiscQuery.builder()
+                .name("Hordanes Land")
+                .discType(DiscType.EP)
+                .build();
+        final Disc discResult = service.getSingleUniqueByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Enslaved");
         assertThat(discResult.getName()).isEqualTo("Hordanes Land");
         assertThat(discResult.getTrackList()).hasSize(3);
@@ -97,11 +101,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void dvdTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.VIDEO);
-        query.setReleaseName("Return to Yggdrasill", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Return to Yggdrasill")
+                .discType(DiscType.VIDEO)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Enslaved");
         assertThat(discResult.getName()).isEqualTo("Return to Yggdrasill - Live in Bergen");
         assertThat(discResult.getTrackList()).hasSize(11);
@@ -117,11 +121,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void liveTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.LIVE_ALBUM);
-        query.setReleaseName("Live Kreation", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Live Kreation")
+                .discType(DiscType.LIVE_ALBUM)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Kreator");
         assertThat(discResult.getName()).isEqualTo("Live Kreation");
         assertThat(discResult.getTrackListOnDisc(1)).hasSize(13);
@@ -138,11 +142,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void boxedSetTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.BOXED_SET);
-        query.setReleaseName("In Memory of Quorthon", true);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("In Memory of Quorthon")
+                .discType(DiscType.BOXED_SET)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Bathory");
         assertThat(discResult.getName()).isEqualTo("In Memory of Quorthon");
         assertThat(discResult.getTrackListOnDisc(1)).hasSize(4);
@@ -158,15 +162,15 @@ public class DiscSearchServiceTest {
 
     @Test
     public void splitTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.SPLIT);
-        query.setReleaseName("Emperor / Hordanes Land", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Emperor / Hordanes Land")
+                .discType(DiscType.SPLIT)
+                .build());
+
         assertThat(discResult.getSplitBands().get(0).getName()).isEqualTo("Emperor");
         assertThat(discResult.getSplitBands().get(1).getName()).isEqualTo("Enslaved");
-        assertThat(discResult.getBandName()).isEmpty();
-        assertThat(discResult.getBand().getId()).isEqualTo(0L);
+        assertThat(discResult.getBandName()).isEqualTo("Emperor / Enslaved");
+        assertThat(discResult.getBand()).isNull();
         assertThat(discResult.getName()).isEqualTo("Emperor / Hordanes Land");
         assertThat(discResult.getTrackList()).hasSize(7);
         assertThat(discResult.getType()).isEqualTo(DiscType.SPLIT);
@@ -182,11 +186,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void compilationTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.COMPILATION);
-        query.setReleaseName("Abyssus Abyssum Invocat", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Abyssus Abyssum Invocat")
+                .discType(DiscType.COMPILATION)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Behemoth");
         assertThat(discResult.getName()).isEqualTo("Abyssus Abyssum Invocat");
         assertThat(discResult.getTrackListOnDisc(1)).hasSize(11);
@@ -203,13 +207,22 @@ public class DiscSearchServiceTest {
 
     @Test
     public void splitVideoTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.SPLIT_VIDEO);
-        query.setReleaseName("Live & Plugged vol.2", false);
-        final Disc discResult = service.performSearch(query).get(0);
-        assertThat(discResult.getSplitBands().get(0).getName()).isEqualTo("Dimmu Borgir");
-        assertThat(discResult.getSplitBands().get(1).getName()).isEqualTo("Dissection");
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Live & Plugged vol.2")
+                .discType(DiscType.SPLIT_VIDEO)
+                .build());
+
+        assertThat(discResult.getSplitBands())
+                .extracting(Partial::getId, Partial::getName)
+                .containsExactly(tuple(69L, "Dimmu Borgir"),
+                        tuple(183L, "Dissection"));
+
+        assertThat(discResult.getTrackList())
+                .extracting(Track::getName, t -> t.getBand().getId(), Track::getBandName)
+                .contains(
+                        tuple("Mourning Palace", 69L, "Dimmu Borgir"),
+                        tuple("The Somberlain", 183L, "Dissection"));
+
         assertThat(discResult.getName()).isEqualTo("Live & Plugged Vol. 2");
         assertThat(discResult.getTrackList()).hasSize(17);
         assertThat(discResult.getType()).isEqualTo(DiscType.SPLIT_VIDEO);
@@ -225,11 +238,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void demoTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.DEMO);
-        query.setReleaseName("Burzum", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Burzum")
+                .exactNameMatch(true)
+                .discType(DiscType.DEMO)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Burzum");
         assertThat(discResult.getName()).isEqualTo("Burzum");
         assertThat(discResult.getTrackList()).hasSize(2);
@@ -244,10 +258,10 @@ public class DiscSearchServiceTest {
 
     @Test
     public void cityTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("A Touch of Medieval Darkness", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("A Touch of Medieval Darkness")
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Desaster");
         assertThat(discResult.getName()).isEqualTo("A Touch of Medieval Darkness");
         assertThat(discResult.getTrackList()).hasSize(10);
@@ -263,16 +277,15 @@ public class DiscSearchServiceTest {
 
     @Test
     public void countryTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Autumn Aurora", false);
-        query.setCountries(Country.UA);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Autumn Aurora")
+                .country(Country.UA)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Drudkh");
         assertThat(discResult.getName()).isEqualTo("Autumn Aurora");
         assertThat(discResult.getTrackList()).hasSize(6);
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
-        assertThat(discResult.getBand().getCountry()).isEqualTo(Country.UA);
         assertThat(discResult.getLabel().getName()).isEqualTo("Supernal Music");
         assertThat(discResult.getArtwork()).isNull();
         assertThat(discResult.getArtworkURL()).isNotEmpty();
@@ -284,18 +297,17 @@ public class DiscSearchServiceTest {
 
     @Test
     public void multiCountryTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("The Somberlain", false);
-        query.setReleaseTypes(DiscType.FULL_LENGTH);
-        query.setCountries(Country.UA, Country.DE, Country.SE, Country.TW);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("The Somberlain")
+                .discType(DiscType.FULL_LENGTH)
+                .countries(Sets.newHashSet(Country.UA, Country.DE, Country.SE, Country.TW))
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Dissection");
         assertThat(discResult.getName()).isEqualTo("The Somberlain");
         assertThat(discResult.getTrackList()).hasSize(11);
         assertThat(discResult.getType()).isEqualTo(DiscType.FULL_LENGTH);
         assertThat(discResult.getLabel().getName()).isEqualTo("No Fashion Records");
-        assertThat(discResult.getBand().getCountry()).isNotNull();
         assertThat(discResult.getArtwork()).isNull();
         assertThat(discResult.getArtworkURL()).isNotEmpty();
         assertThat(discResult.getAddedBy()).isNotEmpty();
@@ -306,11 +318,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void multiDiscTypeTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Alongside Death", false);
-        query.setReleaseTypes(DiscType.FULL_LENGTH, DiscType.SPLIT);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Alongside Death")
+                .discTypes(Sets.newHashSet(DiscType.FULL_LENGTH, DiscType.SPLIT))
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("The Black");
         assertThat(discResult.getName()).isEqualTo("Alongside Death");
         assertThat(discResult.getTrackList()).hasSize(8);
@@ -326,11 +338,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void genreTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Stormblåst", false);
-        query.setGenre("Symphonic Black Metal");
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .name("Stormblåst")
+                .genre("Symphonic Black Metal")
+                .build();
+
+        final Disc discResult = API.getDiscsFully(query).get(0);
+
         assertThat(discResult.getBandName()).isEqualTo("Dimmu Borgir");
         assertThat(discResult.getName()).isEqualTo("Stormblåst");
         assertThat(discResult.getTrackList()).hasSize(10);
@@ -347,13 +361,15 @@ public class DiscSearchServiceTest {
 
     @Test
     public void releaseDateFromTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Det Som Engang Var", false);
-        query.setReleaseMonthFrom(1);
-        query.setReleaseYearFrom(1993);
-        query.setReleaseYearTo(2007);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .name("Det Som Engang Var")
+                .fromMonth(1)
+                .fromYear(1993)
+                .toYear(2007)
+                .build();
+
+        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Burzum");
         assertThat(discResult.getName()).isEqualTo("Det som engang var");
         assertThat(discResult.getTrackList()).hasSize(8);
@@ -369,13 +385,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void releaseDateToTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Burzum", false);
-        query.setReleaseMonthTo(4);
-        query.setReleaseYearTo(1993);
-        query.setReleaseTypes(DiscType.FULL_LENGTH);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Burzum")
+                .toMonth(4)
+                .toYear(1993)
+                .discType(DiscType.FULL_LENGTH)
+                .build());
+
         assertThat(discResult.getBandName()).isEqualTo("Burzum");
         assertThat(discResult.getName()).isEqualTo("Burzum");
         assertThat(discResult.getTrackList()).hasSize(9);
@@ -391,12 +407,14 @@ public class DiscSearchServiceTest {
 
     @Test
     public void labelNameTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Reverend Bizarre", false);
-        query.setReleaseTypes(DiscType.FULL_LENGTH);
-        query.setLabel("Spikefarm Records", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .bandName("Reverend Bizarre")
+                .discType(DiscType.FULL_LENGTH)
+                .labelName("Spikefarm Records")
+                .build();
+
+        final Disc discResult = new DiscSearchService().getFully(query).get(0);
+
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("II: Crush the Insects");
         assertThat(discResult.getTrackList()).hasSize(8);
@@ -413,10 +431,8 @@ public class DiscSearchServiceTest {
     @Test
     public void indieLabelTest() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Practice Sessions", false);
-        query.setLabel("", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder().name("Practice Sessions").labelName("").build();
+        final Disc discResult = service.getFully(query).get(0);
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("Practice Sessions");
         assertThat(discResult.getTrackList()).hasSize(4);
@@ -434,10 +450,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void exactReleaseTitleTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("In the Rectory of the Bizarre Reverend", true);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .name("In the Rectory of the Bizarre Reverend")
+                .exactNameMatch(true)
+                .build();
+        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("In the Rectory of the Bizarre Reverend");
         assertThat(discResult.getTrackList()).hasSize(6);
@@ -456,11 +474,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void exactBandNameTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Reverend Bizarre", true);
-        query.setReleaseName("II: Crush the Insects", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .bandName("Reverend Bizarre")
+                .exactBandNameMatch(true)
+                .name("II: Crush the Insects")
+                .build();
+        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("II: Crush the Insects");
         assertThat(discResult.getTrackList()).hasSize(8);
@@ -476,11 +496,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void artworkTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService(true);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Belphegor", false);
-        query.setReleaseName("Pestapokalypse VI", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .bandName("Belphegor")
+                .name("Pestapokalypse VI")
+                .build();
+        final Disc discResult = new DiscSearchService(true).getFully(query).get(0);
+
         assertThat(discResult.getBandName()).isEqualTo("Belphegor");
         assertThat(discResult.getName()).isEqualTo("Pestapokalypse VI");
         assertThat(discResult.getTrackList()).hasSize(9);
@@ -496,12 +517,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void lyricsTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        service.setLoadLyrics(true);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Cannibal Corpse", false);
-        query.setReleaseName("Eaten Back to Life", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .bandName("Cannibal Corpse")
+                .name("Eaten Back to Life")
+                .build();
+        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+
         for (final Track resultTrack : discResult.getTrackList()) {
             assertThat(resultTrack.getLyrics()).isNotEmpty();
         }
@@ -520,12 +541,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void reviewsTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        service.setLoadReviews(true);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setBandName("Cannibal Corpse", false);
-        query.setReleaseName("The Wretched Spawn", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .bandName("Cannibal Corpse")
+                .name("The Wretched Spawn")
+                .build();
+        final Disc discResult = new DiscSearchService(false, true, false).getSingleUniqueByQuery(query);
+
         assertThat(discResult.getReviews()).isNotEmpty();
         for (final Review resultReview : discResult.getReviews()) {
             assertThat(resultReview.getAuthor()).isNotEmpty();
@@ -551,10 +572,12 @@ public class DiscSearchServiceTest {
 
     @Test
     public void unreleasedAlbumTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService(1, false, false, true);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("At the Gate of Sethu", true);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .name("At the Gate of Sethu")
+                .exactNameMatch(true)
+                .build();
+        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Nile");
         assertThat(discResult.getName()).isEqualTo("At the Gate of Sethu");
         assertThat(discResult.getTrackList()).hasSize(11);
@@ -573,17 +596,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void metallumExcetionTest() {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        assertThatThrownBy(() -> service.performSearch(query)).isInstanceOf(MetallumException.class);
+        assertThatThrownBy(() -> API.getDiscsFully(DiscQuery.builder().build())).isInstanceOf(MetallumException.class);
     }
 
     @Test
     public void directIDTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setSearchObject(new Disc(666L));
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getDiscById(666L);
+
         assertThat(discResult.getBandName()).isEqualTo("Suffocation");
         assertThat(discResult.getName()).isEqualTo("Effigy of the Forgotten");
         assertThat(discResult.getTrackList()).hasSize(9);
@@ -599,10 +618,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void instrumentalTrackTest() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseName("Vikingligr Veldi", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        DiscQuery query = DiscQuery.builder()
+                .name("Vikingligr Veldi")
+                .build();
+        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+
         assertThat(discResult.getBandName()).isEqualTo("Enslaved");
         assertThat(discResult.getName()).isEqualTo("Vikingligr veldi");
         List<Track> trackList = discResult.getTrackList();
@@ -621,11 +641,11 @@ public class DiscSearchServiceTest {
 
     @Test
     public void testMember() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setReleaseTypes(DiscType.SPLIT_VIDEO);
-        query.setReleaseName("Live & Plugged vol.2", false);
-        final Disc discResult = service.performSearch(query).get(0);
+        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+                .name("Live & Plugged vol.2")
+                .discType(DiscType.SPLIT_VIDEO)
+                .build());
+
         Map<Member, String> members = discResult.getMember();
         boolean foundMember = false;
         for (Member member : members.keySet()) {
@@ -642,10 +662,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void onlyMiscMemberCategoryButNoMembers() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setSearchObject(new Disc(248488L));
-        Disc disc = service.performSearch(query).get(0);
+        final Disc disc = API.getDiscById(248488L);
 
         assertThat(disc.getMember()).isEmpty();
         assertThat(disc.getName()).isEqualTo("Demon's Night");
@@ -655,25 +672,20 @@ public class DiscSearchServiceTest {
 
     @Test
     public void testCollaboration() throws MetallumException {
-        final DiscSearchService service = new DiscSearchService();
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setSearchObject(new Disc(586338L));
-        Disc disc = service.performSearch(query).get(0);
+        final Disc disc = API.getDiscById(586338L);
 
         assertThat(disc.getType()).isEqualTo(DiscType.COLLABORATION);
         assertThat(disc.getName()).isEqualTo("Chthonic Libations");
         assertThat(disc.getSplitBands())
-                .extracting(Band::getId, Band::getName)
-                .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L,"Acherontas"));
-        assertThat(disc.getBandName()).isEmpty();
-        assertThat(disc.getBand().getId()).isEqualTo(0L);
+                .extracting(Partial::getId, Partial::getName)
+                .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L, "Acherontas"));
+        assertThat(disc.getBandName()).isEqualTo("Nåstrond / Acherontas");
+        assertThat(disc.getBand()).isNull();
 
         List<Track> trackList = disc.getTrackList();
         assertThat(trackList).hasSize(5);
         for (Track track : trackList) {
-            Band band = track.getBand();
-            assertThat(band.getId()).isEqualTo(0L);
-            assertThat(band.getName()).isEmpty();
+            assertThat(track.getBand()).isNull();
             assertThat(track.getBandName()).isEqualTo("Nåstrond / Acherontas");
         }
     }
@@ -682,9 +694,8 @@ public class DiscSearchServiceTest {
     public void testImageUrlWithoutFileSuffix() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
         service.setLoadImages(true);
-        final DiscSearchQuery query = new DiscSearchQuery();
-        query.setSearchObject(new Disc(64384L));
-        Disc disc = service.performSearch(query).get(0);
+
+        Disc disc = service.getById(64384L);
 
         assertThat(disc.getArtworkURL()).isNotEmpty();
         assertThat(disc.getArtwork()).isNotNull();

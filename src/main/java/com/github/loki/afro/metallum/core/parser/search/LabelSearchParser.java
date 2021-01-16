@@ -1,8 +1,9 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
-import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.SearchLabelResult;
+import com.google.api.client.util.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -12,12 +13,11 @@ import org.jsoup.Jsoup;
  *
  * @author Zarathustra
  */
-public class LabelSearchParser extends AbstractSearchParser<Label> {
+public class LabelSearchParser extends AbstractSearchParser<SearchLabelResult> {
 
     @Override
-    protected Label useSpecificSearchParser(JSONArray hits) throws JSONException {
-        Label label = new Label(parseLabelId(hits.getString(0)));
-        label.setName(parseLabelName(hits.getString(0)));
+    protected SearchLabelResult useSpecificSearchParser(JSONArray hits) throws JSONException {
+        SearchLabelResult label = new SearchLabelResult(parseLabelId(hits.getString(0)), parseLabelName(hits.getString(0)));
         label.setCountry(parseLabelCountry(hits.getString(1)));
         label.setSpecialisation(parseSpecialisation(hits.getString(2)));
         return label;
@@ -25,7 +25,7 @@ public class LabelSearchParser extends AbstractSearchParser<Label> {
 
     private long parseLabelId(final String hit) {
         String id = hit.substring(0, hit.indexOf("\">"));
-        id = id.substring(id.lastIndexOf("/") + 1, id.length());
+        id = id.substring(id.lastIndexOf("/") + 1);
         return Long.parseLong(id);
     }
 
@@ -34,7 +34,11 @@ public class LabelSearchParser extends AbstractSearchParser<Label> {
     }
 
     private Country parseLabelCountry(final String hit) {
-        return Country.ofMetallumDisplayName(hit);
+        if (Strings.isNullOrEmpty(hit)) {
+            return null;
+        } else {
+            return Country.ofMetallumDisplayName(hit);
+        }
     }
 
     private String parseSpecialisation(final String hit) {

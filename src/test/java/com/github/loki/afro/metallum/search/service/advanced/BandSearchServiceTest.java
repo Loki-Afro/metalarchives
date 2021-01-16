@@ -2,12 +2,14 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.search.API;
+import com.github.loki.afro.metallum.search.query.entity.BandQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.BandSearchQuery;
 import org.junit.jupiter.api.Test;
 
-import com.github.loki.afro.metallum.entity.YearRange.Year;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +20,8 @@ public class BandSearchServiceTest {
 
     @Test
     public void bandNameTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Mournful Congregation", false);
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getSingleUniqueBandByQuery(BandQuery.byName("Mournful Congregation", false));
+
         assertThat("Mournful Congregation").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.AU).isEqualTo(resultBand.getCountry());
@@ -59,10 +59,8 @@ public class BandSearchServiceTest {
 
     @Test
     public void exactBandNameTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Nile", false);
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandsFully(BandQuery.builder().name("Nile").build()).get(0);
+
         assertThat("Nile").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.US).isEqualTo(resultBand.getCountry());
@@ -88,10 +86,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void testDisputedStatus() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(174L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(174L);
 
         assertThat(resultBand.getStatus()).isEqualTo(BandStatus.DISPUTED);
     }
@@ -104,7 +99,8 @@ public class BandSearchServiceTest {
         assertThat(discList).isNotEmpty();
         assertThat(discList.size() >= expectedSize).isTrue();
         for (Disc disc : discList) {
-            assertThat(bandFromDisc).isSameAs(disc.getBand());
+            assertThat(bandFromDisc.getName()).isEqualTo(disc.getBand().getName());
+            assertThat(bandFromDisc.getId()).isEqualTo(disc.getBand().getId());
             assertThat(disc.getName()).isNotEmpty();
             assertThat(disc.getId() > 0).isTrue();
             assertThat(disc.getType()).isNotNull();
@@ -124,7 +120,7 @@ public class BandSearchServiceTest {
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Warning", false);
         query.setGenre("Doom Metal");
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = service.performSearchAndLoadFully(query).get(0);
         assertThat("Warning").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.GB).isEqualTo(resultBand.getCountry());
@@ -150,11 +146,12 @@ public class BandSearchServiceTest {
 
     @Test
     public void countryTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("40 Watt Sun", false);
-        query.addCountry(Country.GB);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("40 Watt Sun")
+                .country(Country.GB)
+                .build();
+
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
         assertThat("40 Watt Sun").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.GB).isEqualTo(resultBand.getCountry());
@@ -180,55 +177,49 @@ public class BandSearchServiceTest {
 
     @Test
     public void multiCountryTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        service.setObjectsToLoad(0);
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Lifelover", false);
-        query.addCountry(Country.SE);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Lifelover")
+                .country(Country.SE)
+                .country(Country.AD)
+                .build();
+
+        final SearchBandResult resultBand = new BandSearchService().get(bandQuery).get(0);
         assertThat("Lifelover").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
-        assertThat("Stockholm").isEqualTo(resultBand.getProvince());
-        assertThat(resultBand.getStatus()).isNull();
-        assertThat(resultBand.getYearFormedIn() == 0).isTrue();
-        assertThat("Black Metal/Depressive Rock").isEqualTo(resultBand.getGenre());
-        assertThat(resultBand.getLyricalThemes().isEmpty()).isTrue();
-        assertThat(resultBand.getLabel().getName().isEmpty()).isTrue();
-        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
+        assertThat(resultBand.getCountry()).contains(Country.SE);
+        assertThat(resultBand.getProvince()).contains("Stockholm");
+        assertThat(resultBand.getStatus()).isEmpty();
+        assertThat(resultBand.getYearFormedIn()).isEmpty();
+        assertThat(resultBand.getGenre()).contains("Black Metal/Depressive Rock");
+        assertThat(resultBand.getLyricalThemes()).isEmpty();
+//        assertThat(resultBand.getLabel().getName().isEmpty()).isTrue();
+//        assertThat(resultBand.getInfo().isEmpty()).isTrue();
+//        assertThat(resultBand.hasLogo()).isFalse();
+//        assertThat(resultBand.hasPhoto()).isFalse();
     }
 
     @Test
     public void toYearOfFormationTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        service.setObjectsToLoad(0);
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Katatonia", false);
-        query.setYearOfFormationTo(1991);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.byName("Katatonia", false)
+                .setYearOfFormationToYear(1991);
+
+        final SearchBandResult resultBand = new BandSearchService().get(bandQuery).get(0);
         assertThat("Katatonia").isEqualTo(resultBand.getName());
-        assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
+        assertThat(resultBand.getId()).isNotEqualTo(0);
+        assertThat(resultBand.getCountry()).contains(Country.SE);
         assertThat(resultBand.getProvince()).isEmpty();
-        assertThat(resultBand.getStatus()).isNull();
-        assertThat(1991).isEqualTo(resultBand.getYearFormedIn());
-        assertThat("Doom/Death Metal (early); Gothic/Alternative/Progressive Rock/Metal (later)").isEqualTo(resultBand.getGenre());
-        assertThat(resultBand.getLyricalThemes().isEmpty()).isTrue();
-        assertThat(resultBand.getLabel().getName().isEmpty()).isTrue();
-        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
+        assertThat(resultBand.getStatus()).isEmpty();
+        assertThat(resultBand.getYearFormedIn()).contains(1991);
+        assertThat(resultBand.getGenre()).contains("Doom/Death Metal (early); Gothic/Alternative/Progressive Rock/Metal (later)");
+        assertThat(resultBand.getLyricalThemes()).isEmpty();
     }
 
     @Test
     public void fromYearOfFormationTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Vital Remains", false);
-        query.setYearOfFormationTo(1988);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.byName("Vital Remains", false)
+                .setYearOfFormationToYear(1988);
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+
         assertThat("Vital Remains").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.US).isEqualTo(resultBand.getCountry());
@@ -254,12 +245,11 @@ public class BandSearchServiceTest {
 
     @Test
     public void fromAndToYearOfFormationTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Triptykon", false);
-        query.setYearOfFormationFrom(1988);
-        query.setYearOfFormationTo(2010);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.byName("Triptykon", false)
+                .setYearOfFormationFromYear(1988)
+                .setYearOfFormationToYear(2010);
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+
         assertThat("Triptykon").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.CH).isEqualTo(resultBand.getCountry());
@@ -284,11 +274,12 @@ public class BandSearchServiceTest {
 
     @Test
     public void bandStatusTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Nocturnal Depression", false);
-        query.addStatus(BandStatus.ACTIVE);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Nocturnal Depression")
+                .status(BandStatus.ACTIVE)
+                .build();
+
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
         assertThat("Nocturnal Depression").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.FR).isEqualTo(resultBand.getCountry());
@@ -314,11 +305,13 @@ public class BandSearchServiceTest {
 
     @Test
     public void multiBandStatusTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Nagelfar", false);
-        query.addStatus(BandStatus.ACTIVE, BandStatus.SPLIT_UP);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Nagelfar")
+                .status(BandStatus.ACTIVE)
+                .status(BandStatus.SPLIT_UP)
+                .build();
+
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
         assertThat("Nagelfar").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -344,11 +337,12 @@ public class BandSearchServiceTest {
 
     @Test
     public void onHoldTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Cruel Force", false);
-        query.addStatus(BandStatus.ON_HOLD);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Cruel Force")
+                .status(BandStatus.ON_HOLD)
+                .build();
+
+        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -374,55 +368,47 @@ public class BandSearchServiceTest {
     @Test
     public void lyricalThemesTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
-        service.setObjectsToLoad(0);
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Nocturnal", false);
         query.setLyricalThemes("Satan, Evil, Metal");
-        final Band resultBand = service.performSearch(query).get(0);
+        final SearchBandResult resultBand = service.performSearch(query).get(0);
         assertThat("Nocturnal").isEqualTo(resultBand.getName());
-        assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
+        assertThat(resultBand.getId()).isNotEqualTo(0);
+        assertThat(resultBand.getCountry()).contains(Country.DE);
         assertThat(resultBand.getProvince()).isEmpty();
-        assertThat(resultBand.getStatus()).isNull();
-        assertThat(resultBand.getYearFormedIn() == 0).isTrue();
-        assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
-        assertThat("Satan, Evil, Metal").isEqualTo(resultBand.getLyricalThemes());
-        assertThat(resultBand.getLabel().getName().isEmpty()).isTrue();
-        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
+        assertThat(resultBand.getStatus()).isEmpty();
+        assertThat(resultBand.getYearFormedIn()).isEmpty();
+        assertThat(resultBand.getGenre()).contains("Black/Thrash Metal");
+        assertThat(resultBand.getLyricalThemes()).contains("Satan, Evil, Metal");
     }
 
     @Test
     public void provinceTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
-        service.setObjectsToLoad(0);
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Merciless", false);
         query.setProvince("Strängnäs");
-        final Band resultBand = service.performSearch(query).get(0);
-        assertThat("Merciless").isEqualTo(resultBand.getName());
-        assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.SE).isEqualTo(resultBand.getCountry());
-        assertThat("Strängnäs, Södermanland").isEqualTo(resultBand.getProvince());
-        assertThat(resultBand.getStatus()).isNull();
-        assertThat(resultBand.getYearFormedIn() == 0).isTrue();
-        assertThat("Death/Thrash Metal").isEqualTo(resultBand.getGenre());
+        final SearchBandResult resultBand = service.performSearch(query).get(0);
+        assertThat(resultBand.getName()).isEqualTo("Merciless");
+        assertThat(resultBand.getId()).isNotEqualTo(0);
+        assertThat(resultBand.getCountry()).contains(Country.SE);
+        assertThat(resultBand.getProvince()).contains("Strängnäs, Södermanland");
+        assertThat(resultBand.getStatus()).isEmpty();
+        assertThat(resultBand.getYearFormedIn()).isEmpty();
+        assertThat(resultBand.getGenre()).contains("Death/Thrash Metal");
         assertThat(resultBand.getLyricalThemes()).isEmpty();
-        assertThat(resultBand.getLabel().getName().isEmpty()).isTrue();
-        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
     }
 
     @Test
     public void imagesTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
         service.setLoadImages(true);
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Cruel Force", false);
-        query.addStatus(BandStatus.ON_HOLD);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Cruel Force")
+                .status(BandStatus.ON_HOLD)
+                .build();
+
+        final Band resultBand = service.getFully(bandQuery).get(0);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -449,10 +435,12 @@ public class BandSearchServiceTest {
     public void reviewTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
         service.setLoadReviews(true);
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setBandName("Cruel Force", false);
-        query.addStatus(BandStatus.ON_HOLD);
-        final Band resultBand = service.performSearch(query).get(0);
+        BandQuery bandQuery = BandQuery.builder()
+                .name("Cruel Force")
+                .status(BandStatus.ON_HOLD)
+                .build();
+
+        final Band resultBand = service.getFully(bandQuery).get(0);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -515,7 +503,7 @@ public class BandSearchServiceTest {
         service.setLoadReadMore(true);
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Madness", true);
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = service.performSearchAndLoadFully(query).get(0);
         assertThat("Madness").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.BR).isEqualTo(resultBand.getCountry());
@@ -545,7 +533,7 @@ public class BandSearchServiceTest {
         final BandSearchService service = new BandSearchService();
         final BandSearchQuery query = new BandSearchQuery();
         try {
-            service.performSearch(query);
+            service.performSearchAndLoadFully(query);
         } catch (final MetallumException e) {
             assertThat(e.getMessage()).isNotEmpty();
         }
@@ -558,7 +546,7 @@ public class BandSearchServiceTest {
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Warning", true);
         query.setGenre("Doom Metal");
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = service.performSearchAndLoadFully(query).get(0);
         assertThat("Warning").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.GB).isEqualTo(resultBand.getCountry());
@@ -575,7 +563,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
         assertThat(!resultBand.getInfo().isEmpty()).isTrue();
         checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
-        final Map<Integer, List<Band>> similarArtists = resultBand.getSimilarArtists();
+        final Map<Integer, List<Band.SimilarBand>> similarArtists = resultBand.getSimilarArtists();
         checkSimilarArtists(similarArtists);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -583,12 +571,12 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
     }
 
-    private synchronized void checkSimilarArtists(final Map<Integer, List<Band>> similarArtists) {
-        for (final List<Band> bandList : similarArtists.values()) {
-            for (final Band similarBand : bandList) {
+    private synchronized void checkSimilarArtists(final Map<Integer, List<Band.SimilarBand>> similarArtists) {
+        for (final List<Band.SimilarBand> bandList : similarArtists.values()) {
+            for (final Band.SimilarBand similarBand : bandList) {
                 assertThat(similarBand.getId() != 0).isTrue();
                 assertThat(similarBand.getName()).isNotEmpty();
-                assertThat(similarBand.getCountry() == Country.ANY).isFalse();
+                assertThat(similarBand.getCountry()).isNotNull();
                 assertThat(similarBand.getGenre()).isNotEmpty();
             }
         }
@@ -596,10 +584,8 @@ public class BandSearchServiceTest {
 
     @Test
     public void directIdTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(666L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(666L);
+
         assertThat("Black Jester").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() == 666).isTrue();
         assertThat(Country.IT).isEqualTo(resultBand.getCountry());
@@ -623,10 +609,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void noDiscographyYetTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(3540273493L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(3540273493L);
 
         assertThat(resultBand.getDiscs()).isEmpty();
     }
@@ -635,9 +618,7 @@ public class BandSearchServiceTest {
     public void bitmapImageTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
         service.setLoadImages(true);
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(4515L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = service.getById(4515L);
 
         assertThat(resultBand.getLogo()).isNotNull();
         assertThat(resultBand.getPhoto()).isNotNull();
@@ -645,10 +626,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void unknownLabelTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(3540382837L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(3540382837L);
 
         Label label = resultBand.getLabel();
         assertThat(label.getName()).isEqualTo("Unknown");
@@ -657,10 +635,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void yearsActiveTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(189L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(189L);
 
         assertThat(resultBand.getYearsActive()).containsExactly(
                 YearRange.of(of(1989), of(1990), "Ulceration", null),
@@ -675,10 +650,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void yearsActiveWithLinksTest() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(7L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(7L);
 
         assertThat(resultBand.getYearsActive()).containsExactly(
                 YearRange.of(of(1987), of(1989), "Nihilist", 14076L),
@@ -689,10 +661,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void yearsActiveWithQuestionMark() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(4515L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(4515L);
 
         assertThat(resultBand.getYearsActive()).containsExactly(
                 YearRange.of(of(1998), unknown(), "Abandoned Grave", 4515L)
@@ -701,59 +670,44 @@ public class BandSearchServiceTest {
 
     @Test
     public void yearsActiveWithNotAvailable() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(3540477583L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(3540477583L);
 
         assertThat(resultBand.getYearsActive()).isEmpty();
     }
 
-   @Test
+    @Test
     public void yearsActiveMultipleQuestionMarks() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(81844L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(81844L);
 
-       assertThat(resultBand.getYearsActive()).containsExactly(
-               YearRange.of(of(2001), unknown(), "1000 A.D.", 81844L),
-               YearRange.of(unknown(), present(), "Growing", null)
-       );
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(2001), unknown(), "1000 A.D.", 81844L),
+                YearRange.of(unknown(), present(), "Growing", null)
+        );
     }
 
     @Test
     public void yearsActiveStartWithQuestionMark() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(3540413935L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(3540413935L);
 
-       assertThat(resultBand.getYearsActive()).containsExactly(
-               YearRange.of(unknown(), of(2017), "12:06", 3540413935L)
-       );
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(unknown(), of(2017), "12:06", 3540413935L)
+        );
     }
 
     @Test
     public void yearsActiveChangedNameWithReferenceAtEnd() throws MetallumException {
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(3540293316L));
-        final Band resultBand = service.performSearch(query).get(0);
+        final Band resultBand = API.getBandById(3540293316L);
 
-       assertThat(resultBand.getYearsActive()).containsExactly(
-               YearRange.of(of(1993), of(2003), "1369", 3540293316L),
-               YearRange.of(of(2003), present(), "Blood Tribe", 106025L)
-       );
+        assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(1993), of(2003), "1369", 3540293316L),
+                YearRange.of(of(2003), present(), "Blood Tribe", 106025L)
+        );
     }
 
     @Test
-    public void yearsActiveToString() throws MetallumException{
-        final BandSearchService service = new BandSearchService();
-        final BandSearchQuery query = new BandSearchQuery();
-        query.setSearchObject(new Band(98226L));
-        final Band resultBand = service.performSearch(query).get(0);
-        
+    public void yearsActiveToString() throws MetallumException {
+        final Band resultBand = API.getBandById(98226L);
+
         assertThat(resultBand.getYearsActive().stream()
                 .map(YearRange::toString))
                 .containsExactly(

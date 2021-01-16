@@ -1,9 +1,10 @@
 package com.github.loki.afro.metallum.example;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.query.BandSearchQuery;
+import com.github.loki.afro.metallum.search.query.entity.BandQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.search.service.advanced.BandSearchService;
 import org.junit.jupiter.api.Disabled;
 
@@ -16,25 +17,29 @@ public class BandSearchExampleTest {
         String bandToSearchFor = "Bathory";
         BandSearchService bandSearchService = new BandSearchService();
         bandSearchService.setLoadSimilar(true);
-        BandSearchQuery bandSearchQuery = new BandSearchQuery();
-        bandSearchQuery.setBandName(bandToSearchFor, true);
-        bandSearchQuery.setGenre("Black Metal");
-        bandSearchQuery.setLabel("*", false);
-        bandSearchQuery.setYearOfFormationFrom(1970);
-        bandSearchQuery.setProvince("*", "*");
-        bandSearchQuery.setLyricalThemes("*");
-        bandSearchService.performSearch(bandSearchQuery);
-        assertThat(bandSearchService.isResultEmpty()).isFalse();
 
-        for (Band band : bandSearchService.getResultAsList()) {
-            assertThat(band.getCountry()).isEqualTo(Country.SE);
+        BandQuery query = BandQuery.builder()
+                .name(bandToSearchFor)
+                .exactBandNameMatch(true)
+                .genre("Black Metal")
+                .labelName("*")
+                .yearOfFormationFromYear(1970)
+                .province("*")
+                .lyricalThemes("*")
+                .country(Country.SE)
+                .status(BandStatus.ON_HOLD)
+                .build();
+
+
+        for (SearchBandResult band : bandSearchService.get(query)) {
+            assertThat(band.getCountry()).contains(Country.SE);
             assertThat(band.getName()).isEqualTo(bandToSearchFor);
-            assertThat(band.getProvince()).isEqualTo("Stockholm");
-            assertThat(band.getLyricalThemes()).isEqualTo("Anti-Christ, Satan (old), Norse Mythology, Odinism");
+            assertThat(band.getProvince()).contains("Stockholm");
+            assertThat(band.getLyricalThemes()).contains("Anti-Christ, Satan (old), Norse Mythology, Odinism");
             assertThat(band.getId()).isEqualTo(184L);
-            assertThat(band.getGenre()).isEqualTo("Black Metal, Viking, Thrash Metal");
-            assertThat(band.getLabel().getName()).isEqualTo("Black Mark Production");
-            assertThat(band.getLabel().getId()).isEqualTo(38);
+            assertThat(band.getGenre()).contains("Black Metal, Viking, Thrash Metal");
+            assertThat(band.getLabelName()).isEqualTo("Black Mark Production");
+            assertThat(band.getLabelId()).isEqualTo(38);
             // here we could parse anything
         }
     }
