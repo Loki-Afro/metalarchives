@@ -1,10 +1,7 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Member;
-import com.github.loki.afro.metallum.entity.Review;
-import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.API;
@@ -20,6 +17,19 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 
 public class DiscSearchServiceTest {
+
+
+    @Test
+    public void bbb() throws MetallumException {
+        Disc disc = API.getDiscById(835770L);
+
+        for (PartialReview partialReview : disc.getPartialReviews()) {
+            Review fullReview = partialReview.load();
+            System.out.println(fullReview.getContent());
+            break;
+        }
+    }
+
 
     @Test
     public void objectToLoadTest() throws MetallumException {
@@ -547,15 +557,15 @@ public class DiscSearchServiceTest {
                 .build();
         final Disc discResult = new DiscSearchService(false, true, false).getSingleUniqueByQuery(query);
 
-        assertThat(discResult.getReviews()).isNotEmpty();
-        for (final Review resultReview : discResult.getReviews()) {
+        List<Review> reviews = discResult.getReviews();
+        assertThat(reviews).isNotEmpty();
+        for (final Review resultReview : reviews) {
             assertThat(resultReview.getAuthor()).isNotEmpty();
             assertThat(resultReview.getContent()).isNotEmpty();
             assertThat(resultReview.getName()).isNotEmpty();
             assertThat(resultReview.getDate()).isNotEmpty();
             assertThat(resultReview.getPercent() >= 0 && resultReview.getPercent() <= 100).isTrue();
             assertThat(resultReview.getId() != 0).isTrue();
-            assertThat(discResult).isSameAs(resultReview.getDisc());
         }
         assertThat(discResult.getBandName()).isEqualTo("Cannibal Corpse");
         assertThat(discResult.getName()).isEqualTo("The Wretched Spawn");

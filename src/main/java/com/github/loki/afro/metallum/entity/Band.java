@@ -2,12 +2,14 @@ package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Band extends AbstractEntity {
 
@@ -18,7 +20,7 @@ public class Band extends AbstractEntity {
     private String province;
     private BandStatus status = null;
     private String lyricalThemes;
-    private Label label;
+    private PartialLabel label;
     private Integer yearFormedIn;
     private BufferedImage photo = null;
     private BufferedImage logo = null;
@@ -82,10 +84,14 @@ public class Band extends AbstractEntity {
     }
 
     public Label getLabel() {
+        return this.label.load();
+    }
+
+    public PartialLabel getPartialLabel() {
         return this.label;
     }
 
-    public void setLabel(final Label newLabel) {
+    public void setLabel(final PartialLabel newLabel) {
         this.label = newLabel;
     }
 
@@ -155,16 +161,6 @@ public class Band extends AbstractEntity {
 
     public void setLastKnownLineup(final Map<Member, String> lastMembers) {
         this.lastMember = lastMembers;
-    }
-
-    public void addToReviews(final Review... reviews) {
-        for (final Review review : reviews) {
-            for (final Disc disc : this.discs) {
-                if (disc.getId() == review.getDisc().getId()) {
-                    disc.addReview(review);
-                }
-            }
-        }
     }
 
     /**
@@ -292,14 +288,6 @@ public class Band extends AbstractEntity {
         return this.tablatureLinks;
     }
 
-    public final List<Review> getReviews() {
-        final List<Review> reviewList = new ArrayList<>();
-        for (final Disc disc : this.discs) {
-            reviewList.addAll(disc.getReviews());
-        }
-        return reviewList;
-    }
-
     public void setSimilarArtists(final Map<Integer, List<SimilarBand>> similarArtists) {
         this.similarArtist = similarArtists;
     }
@@ -392,4 +380,16 @@ public class Band extends AbstractEntity {
             return genre;
         }
     }
+
+    public static class PartialLabel extends Partial {
+
+        public PartialLabel(long id, String name) {
+            super(id, name);
+        }
+
+        private Label load() {
+            return API.getLabelById(getId());
+        }
+    }
+
 }

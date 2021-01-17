@@ -14,7 +14,7 @@ public class Disc extends AbstractEntity {
 
     private DiscType type;
     private List<Track> trackList = new ArrayList<>();
-    private List<Review> reviewList = new ArrayList<>();
+    private List<PartialReview> reviewList = new ArrayList<>();
     private String releaseDate;
     private Partial band;
     private Label label;
@@ -32,7 +32,6 @@ public class Disc extends AbstractEntity {
     private Map<Member, String> guestMember = new HashMap<>();
 
     private int discCount = 1;
-    private boolean hasReviews = false;
 
     public Disc(final long id, String name) {
         super(id, name);
@@ -40,15 +39,14 @@ public class Disc extends AbstractEntity {
 
     public final float getReviewPercentAverage() {
         float k = 0;
-        for (final Review review : this.reviewList) {
-            k += review.getPercent();
+        for (final PartialReview review : this.reviewList) {
+            k += review.getPercentage();
         }
         return k / this.reviewList.size();
-        // calc
     }
 
     public final boolean hasReviews() {
-        return this.hasReviews;
+        return !this.reviewList.isEmpty();
     }
 
     public int getReviewCount() {
@@ -72,6 +70,12 @@ public class Disc extends AbstractEntity {
     }
 
     public List<Review> getReviews() {
+        return this.reviewList.stream()
+                .map(PartialReview::load)
+                .collect(Collectors.toList());
+    }
+
+    public List<PartialReview> getPartialReviews() {
         return this.reviewList;
     }
 
@@ -91,17 +95,8 @@ public class Disc extends AbstractEntity {
         this.label = label;
     }
 
-    public final void addReview(final Review... reviews) {
-        for (final Review review : reviews) {
-            review.setDisc(this);
-            this.reviewList.add(review);
-            this.hasReviews = true;
-        }
-    }
-
     public void setBand(final Partial band) {
         this.band = band;
-//        this.band.addToDiscography(this);
     }
 
     public static List<Disc> setBandForEachDisc(final List<Disc> discList, final Band band) {
@@ -207,9 +202,8 @@ public class Disc extends AbstractEntity {
         return this.artwork != null;
     }
 
-    public void setReviews(final List<Review> reviewList) {
+    public void setReviews(final List<PartialReview> reviewList) {
         this.reviewList = reviewList;
-        this.hasReviews = !reviewList.isEmpty();
     }
 
     public void setSplitBands(final List<Partial> splitBands) {
@@ -226,10 +220,6 @@ public class Disc extends AbstractEntity {
 
     public void setArtworkURL(final String artworkURL) {
         this.artworkURL = artworkURL;
-    }
-
-    public final void setHasReview(final boolean hasReviews) {
-        this.hasReviews = hasReviews;
     }
 
     /**

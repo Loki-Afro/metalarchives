@@ -37,7 +37,6 @@ public final class DiscParser {
                 Disc disc = new Disc(parseDiscId(cols.first()), cols.first().text());
                 disc.setDiscType(parseDiscType(cols.get(1)));
                 disc.setReleaseDate(cols.get(2).text());
-                disc.setHasReview(parseReview(cols.get(3)));
                 discography.add(disc);
             }
         } catch (NoDiscAvailableException e) {

@@ -3,8 +3,10 @@ package com.github.loki.afro.metallum.search;
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.search.query.entity.*;
+import com.github.loki.afro.metallum.search.service.LabelSearchService;
 import com.github.loki.afro.metallum.search.service.MemberSearchService;
 import com.github.loki.afro.metallum.search.service.advanced.BandSearchService;
 import com.github.loki.afro.metallum.search.service.advanced.DiscSearchService;
@@ -57,5 +59,8 @@ public abstract class API {
         return new MemberSearchService().getById(id);
     }
 
+    public static Label getLabelById(long id) {
+        return new LabelSearchService().getById(id);
+    }
 
 }

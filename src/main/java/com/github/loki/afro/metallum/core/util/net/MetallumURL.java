@@ -170,6 +170,11 @@ public final class MetallumURL {
         return BASEURL + "reviews/_/_/" + discId;
     }
 
+    public static String assembleReviewURL(final long discId, final long reviewId) {
+//        https://www.metal-archives.com/reviews/_/_/835770/_/411594
+        return BASEURL + "reviews/_/_/" + discId + "/_/" + reviewId;
+    }
+
     /**
      * Assembles a URL where you can get JSon from. It will contain the
      * <b>current</b> bands from the label.

@@ -14,6 +14,7 @@ import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.entity.Link;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LabelStatus;
+import com.google.common.base.Strings;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -301,7 +302,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         contactHtml = contactHtml.substring(0, contactHtml.indexOf("</p>"));
 
         label.setWebSiteURL(parseLabelWebsiteURL(contactHtml));
-        label.setEmail(parseLabelEmail(contactHtml));
+        label.setEmail(Strings.emptyToNull(parseLabelEmail(contactHtml)));
         return label;
     }
 

@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.search.query.entity;
 
+import com.github.loki.afro.metallum.entity.AbstractEntity;
 import com.github.loki.afro.metallum.entity.Identifiable;
 
 public class Partial implements Identifiable {

@@ -17,8 +17,13 @@ import java.util.concurrent.ExecutionException;
 public final class ReviewParser {
     private final Document doc;
 
-    public ReviewParser(final long discId) throws ExecutionException {
+    public ReviewParser(final long discId) {
         String html = Downloader.getHTML(MetallumURL.assembleReviewsURL(discId));
+        this.doc = Jsoup.parse(html);
+    }
+
+    public ReviewParser(final long discId, final long reviewId) {
+        String html = Downloader.getHTML(MetallumURL.assembleReviewURL(discId, reviewId));
         this.doc = Jsoup.parse(html);
     }
 

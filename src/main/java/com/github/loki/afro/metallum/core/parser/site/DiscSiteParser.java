@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -54,7 +54,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         disc.setDetails(parseDetails());
         disc.setReleaseDate(parseReleaseDate());
         disc = parseMember(disc);
-        disc.addReview(parseReviewList(disc));
+        disc.setReviews(parseReviewList(disc.getId()));
         disc = parseModifications(disc);
         return disc;
     }
@@ -139,21 +139,32 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         return disc;
     }
 
-    private Review[] parseReviewList(final Disc disc) {
-        if (this.loadReviews) {
-            try {
-                ReviewParser parser = new ReviewParser(disc.getId());
-                final List<Review> parsedReviewList = parser.parse();
-                final Review[] reviewArr = new Review[parsedReviewList.size()];
-                for (final Review review : parsedReviewList) {
-                    review.setDisc(disc);
-                }
-                return parsedReviewList.toArray(reviewArr);
-            } catch (final ExecutionException e) {
-                throw new MetallumException("unable to parse reviews from: " + disc, e);
+    private List<PartialReview> parseReviewList(long discId) {
+//        if (this.loadReviews) {
+//            try {
+//                ReviewParser parser = new ReviewParser(disc.getId());
+//                final List<Review> parsedReviewList = parser.parse();
+//                for (final Review review : parsedReviewList) {
+//                    review.setDisc(disc);
+//                }
+//                return parsedReviewList;
+//            } catch (final MetallumException e) {
+//                throw new MetallumException("unable to parse reviews from: " + disc, e);
+//            }
+//        } else {
+            List<PartialReview> partialReviews = new ArrayList<>();
+            Elements rows = this.doc.select("#review_list > tbody:nth-child(1)").get(0).getElementsByTag("tr");
+            for (Element row : rows) {
+                Elements cells = row.getElementsByTag("td");
+                long id = Long.parseLong(cells.get(0).getElementsByTag("a").attr("href").replaceAll("^.*/", ""));
+                String name = cells.get(1).text();
+                int percentage = Integer.parseInt(cells.get(2).text().replaceAll("%", ""));
+                String author = cells.get(3).text();
+                String date = cells.get(4).text();
+                partialReviews.add(new PartialReview(id, discId, name, percentage, author, date));
             }
-        }
-        return new Review[0];
+            return partialReviews;
+//        }
     }
 
     private final String parseArtworkURL() {

@@ -18,14 +18,12 @@ import java.util.SortedMap;
 public final class BandSearchService extends AbstractSearchService<Band, BandQuery, SearchBandResult> {
 
     private boolean loadImages;
-    private boolean loadReviews;
     private boolean loadSimilar;
     private boolean loadLinks = false;
     private boolean loadReadMore;
 
     public BandSearchService() {
         this.loadImages = false;
-        this.loadReviews = false;
         this.loadSimilar = false;
         this.loadReadMore = false;
     }
@@ -38,10 +36,6 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
         this.loadImages = loadImages;
     }
 
-    public final void setLoadReviews(final boolean loadReviews) {
-        this.loadReviews = loadReviews;
-    }
-
     public final void setLoadSimilar(final boolean loadSimilar) {
         this.loadSimilar = loadSimilar;
     }
@@ -52,7 +46,7 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
 
     @Override
     protected final BandSiteParser getSiteParser(final long entityId) {
-        return new BandSiteParser(entityId, this.loadImages, this.loadReviews, this.loadSimilar, this.loadLinks, this.loadReadMore);
+        return new BandSiteParser(entityId, this.loadImages, this.loadSimilar, this.loadLinks, this.loadReadMore);
     }
 
     @Override

@@ -25,15 +25,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BandSiteParser extends AbstractSiteParser<Band> {
-    private final boolean loadReviews;
     private final boolean loadSimilarArtists;
     private final boolean loadReadMore;
     private static final Logger logger = LoggerFactory.getLogger(BandSiteParser.class);
     private static final Pattern periodMatcher = Pattern.compile("(\\d\\d\\d\\d|\\?)(?:-(\\d\\d\\d\\d|present|\\?))?(?:\\s\\(as\\s(.+)\\))?");
 
-    public BandSiteParser(final long entityId, final boolean loadImages, final boolean loadReviews, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) {
+    public BandSiteParser(final long entityId, final boolean loadImages, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) {
         super(entityId, loadImages, loadLinks);
-        this.loadReviews = loadReviews;
         this.loadSimilarArtists = loadSimilarArtists;
         this.loadReadMore = loadReadMore;
     }
@@ -54,7 +52,6 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             band.addToDiscography(disc);
         }
         parseMember(band);
-        band.addToReviews(parseReviews(band));
         band.setSimilarArtists(parseSimilarArtists());
         band.addLinks(parseLinks());
         band = parseModifications(band);
@@ -182,7 +179,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return Integer.parseInt(firstPartHtml);
     }
 
-    private final Label parseCurrentLabel(final Element labelElement) {
+    private final Band.PartialLabel parseCurrentLabel(final Element labelElement) {
         // id
         String labelId;
         String labelElementText = labelElement.html();
@@ -193,7 +190,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             labelId = "0";
         }
 
-        return new Label(Long.parseLong(labelId), labelElement.text().trim());
+        return new Band.PartialLabel(Long.parseLong(labelId), labelElement.text().trim());
 
     }
 
@@ -230,27 +227,6 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         band.setPastLineup(memberParser.getPastLineup());
         band.setLiveLineup(memberParser.getLiveLineup());
         band.setLastKnownLineup(memberParser.getLastKnownLineup());
-    }
-
-    private final Review[] parseReviews(final Band band) {
-        if (this.loadReviews) {
-            final List<Review> parsedReviewList = new ArrayList<>();
-            for (final Disc disc : band.getDiscs()) {
-                try {
-                    final ReviewParser parser = new ReviewParser(disc.getId());
-                    for (final Review review : parser.parse()) {
-                        review.setDisc(disc);
-                        parsedReviewList.add(review);
-                    }
-                } catch (final ExecutionException e) {
-                    logger.error("error in parsing " + Review.class + " for band: " + band, e);
-                }
-            }
-            final Review[] reviewArr = new Review[parsedReviewList.size()];
-            return parsedReviewList.toArray(reviewArr);
-        } else {
-            return new Review[0];
-        }
     }
 
     private final Map<Integer, List<Band.SimilarBand>> parseSimilarArtists() {

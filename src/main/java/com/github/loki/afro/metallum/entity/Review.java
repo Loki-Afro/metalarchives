@@ -1,12 +1,11 @@
 package com.github.loki.afro.metallum.entity;
 
-public class Review extends AbstractEntity {
+public class Review extends AbstractIdentifiable {
 
     private String author;
     private int percent;
-    private String content;
     private String date;
-    private Disc discFromReview;
+    private String content;
 
     public Review(long id, String name) {
         super(id, name);
@@ -36,26 +35,12 @@ public class Review extends AbstractEntity {
         this.date = date;
     }
 
-    /**
-     * @return the author
-     */
     public String getAuthor() {
         return this.author;
     }
 
-    /**
-     * @return the date
-     */
     public String getDate() {
         return this.date;
-    }
-
-    public void setDisc(final Disc disc) {
-        this.discFromReview = disc;
-    }
-
-    public Disc getDisc() {
-        return this.discFromReview;
     }
 
 }
