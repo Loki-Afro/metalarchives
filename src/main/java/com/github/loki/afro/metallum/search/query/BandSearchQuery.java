@@ -1,20 +1,7 @@
 package com.github.loki.afro.metallum.search.query;
 
-import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
-import com.github.loki.afro.metallum.core.parser.search.BandSearchParser;
-import com.github.loki.afro.metallum.core.util.net.MetallumURL;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.enums.BandStatus;
-import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.AbstractSearchQuery;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.BandQuery;
-import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
-import com.google.common.collect.Iterables;
-
-import java.util.List;
-import java.util.Set;
-import java.util.SortedMap;
 
 @Deprecated
 public class BandSearchQuery extends AbstractSearchQuery<BandQuery> {

@@ -1,10 +1,10 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.band;
 
-import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.enums.DiscType;
+import com.google.common.base.Strings;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public final class DiscParser {
 
@@ -22,33 +21,37 @@ public final class DiscParser {
     private final Document doc;
     private final long bandId;
 
-    public DiscParser(final long bandId) throws ExecutionException {
+    public DiscParser(final long bandId) {
         this.bandId = bandId;
         this.doc = Jsoup.parse(Downloader.getHTML(MetallumURL.assembleDiscographyURL(this.bandId)));
     }
 
-    public final Disc[] parse() {
-        List<Disc> discography = new LinkedList<>();
-        Elements rows = this.doc.getElementsByTag("tr");
+    public final List<Band.PartialDisc> parse() {
+        List<Band.PartialDisc> discography = new LinkedList<>();
+        Elements rows = this.doc.getElementsByTag("tbody").first().getElementsByTag("tr");
         try {
-            for (int i = 1; i < rows.size(); i++) {
-                Element row = rows.get(i);
+            for (Element row : rows) {
                 Elements cols = row.getElementsByTag("td");
-                Disc disc = new Disc(parseDiscId(cols.first()), cols.first().text());
-                disc.setDiscType(parseDiscType(cols.get(1)));
-                disc.setReleaseDate(cols.get(2).text());
-                discography.add(disc);
+
+                long discId = parseDiscId(cols.first());
+                String name = cols.first().text();
+                DiscType discType = parseDiscType(cols.get(1));
+                int releaseYear = Integer.parseInt(cols.get(2).text());
+
+                String text = cols.get(3).text();
+                int count = 0;
+                Integer averagePercentage = null;
+                if (!Strings.isNullOrEmpty(text)) {
+                    String[] thirdColumn = text.split(" ");
+                    count = Integer.parseInt(thirdColumn[0]);
+                    averagePercentage = Integer.parseInt(thirdColumn[1].replaceAll("[^\\d.]", ""));
+                }
+                discography.add(new Band.PartialDisc(discId, name, discType, releaseYear, count, averagePercentage));
             }
         } catch (NoDiscAvailableException e) {
             logger.debug("Band {} has no Discography", bandId);
         }
-        return discography.toArray(new Disc[discography.size()]);
-    }
-
-    private final boolean parseReview(final Element element) {
-        String content = element.text();
-        content = MetallumUtil.trimNoBreakSpaces(content);
-        return !content.isEmpty();
+        return discography;
     }
 
     private final long parseDiscId(final Element element) throws NoDiscAvailableException {
@@ -57,7 +60,7 @@ public final class DiscParser {
             throw new NoDiscAvailableException();
         }
         String link = linkElem.attr("href");
-        String id = link.substring(link.lastIndexOf("/") + 1, link.length());
+        String id = link.substring(link.lastIndexOf("/") + 1);
         return Long.parseLong(id);
     }
 

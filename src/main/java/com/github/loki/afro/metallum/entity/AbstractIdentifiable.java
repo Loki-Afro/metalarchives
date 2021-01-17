@@ -18,14 +18,6 @@ public abstract class AbstractIdentifiable implements Identifiable {
         return name;
     }
 
-    public void setName(String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void setId(long id) {
-        throw new UnsupportedOperationException();
-    }
-
 
     /*
      * (non-Javadoc)

@@ -41,7 +41,4 @@ public class SearchBandResult extends AbstractBand implements Identifiable {
     }
 
 
-
-
-
 }

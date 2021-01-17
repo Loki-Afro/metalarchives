@@ -158,7 +158,7 @@ public class DiscQuery extends AbstractDisc implements IQuery {
     }
 
     public boolean isAbleToParseCountry() {
-        return getCountries().size() >1;
+        return getCountries().size() > 1;
     }
 
 }

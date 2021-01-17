@@ -12,7 +12,6 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public final class ReviewParser {
     private final Document doc;

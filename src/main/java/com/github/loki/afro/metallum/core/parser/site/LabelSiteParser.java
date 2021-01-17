@@ -12,6 +12,7 @@ import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.entity.Link;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LabelStatus;
 import com.google.common.base.Strings;
@@ -191,15 +192,15 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         return upperRightPart.substring(1, upperRightPart.indexOf(" </dd>"));
     }
 
-    private Label parseParentLabel(final String upperRightPart) {
+    private PartialLabel parseParentLabel(final String upperRightPart) {
         String labelName = upperRightPart.substring(upperRightPart.indexOf("\">") + 2, upperRightPart.indexOf("</a></dd>"));
         String labelId = upperRightPart.substring(0, upperRightPart.indexOf("\">" + labelName));
         labelId = labelId.substring(labelId.lastIndexOf("/") + 1);
-        return new Label(Long.parseLong(labelId), labelName);
+        return new PartialLabel(Long.parseLong(labelId), labelName);
     }
 
-    private List<Label> parseSubLabels(final String upperRightPart) {
-        List<Label> labelList = new ArrayList<>();
+    private List<PartialLabel> parseSubLabels(final String upperRightPart) {
+        List<PartialLabel> labelList = new ArrayList<>();
         // must and with </dd> and at least 9 characters to match
         if (!upperRightPart.trim().matches(".{9,}?[</dd>]$")) {
             return labelList;
@@ -213,7 +214,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
             // id
             String labelId = parseAbleString.substring(0, parseAbleString.length() - (labelName.length() + 6));
             labelId = labelId.substring(labelId.lastIndexOf("/") + 1);
-            labelList.add(new Label(Long.parseLong(labelId), labelName));
+            labelList.add(new PartialLabel(Long.parseLong(labelId), labelName));
         }
         return labelList;
     }

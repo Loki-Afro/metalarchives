@@ -1,7 +1,8 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.Optional;
 public class Track extends AbstractEntity {
 
     private final PartialDisc partialDisc;
-    private final Partial bandPartial;
+    private final PartialBand bandPartial;
     private boolean instrumental = false;
 
     private String lyrics;
@@ -25,11 +26,11 @@ public class Track extends AbstractEntity {
 
     private Track(Disc disc, long bandId, String bandName, long id, String name) {
         this(PartialDisc.of(disc),
-                new Partial(bandId, bandName),
+                new PartialBand(bandId, bandName),
                 id, name);
     }
 
-    public Track(PartialDisc disc, Partial bandPartial, long id, String name) {
+    public Track(PartialDisc disc, PartialBand bandPartial, long id, String name) {
         super(id, name);
         this.partialDisc = disc;
         this.bandPartial = bandPartial;
@@ -46,8 +47,8 @@ public class Track extends AbstractEntity {
     }
 
     public static Track createSplitTrack(Disc disc, String bandName, long trackId, String trackTitle) {
-        List<Partial> splitBands = disc.getSplitBands();
-        Optional<Partial> first = splitBands.stream()
+        List<PartialBand> splitBands = disc.getSplitBands();
+        Optional<PartialBand> first = splitBands.stream()
                 .filter(pb -> pb.getName().equals(bandName))
                 .findFirst();
         if (first.isPresent()) {
@@ -116,21 +117,18 @@ public class Track extends AbstractEntity {
         return partialDisc;
     }
 
-    public Partial getBand() {
+    public PartialBand getBand() {
         return bandPartial;
     }
 
-    public static final class PartialDisc extends Partial {
+    public static final class PartialDisc extends com.github.loki.afro.metallum.entity.partials.PartialDisc {
 
+        @Getter
         private final DiscType discType;
 
         public PartialDisc(long id, String name, DiscType discType) {
             super(id, name);
             this.discType = discType;
-        }
-
-        public DiscType getDiscType() {
-            return discType;
         }
 
         static PartialDisc of(Disc disc) {

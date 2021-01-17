@@ -1,15 +1,10 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
-import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public class BandSearchParser extends AbstractSearchParser<SearchBandResult> {
 
     private boolean isAbleToParseProvince = false;

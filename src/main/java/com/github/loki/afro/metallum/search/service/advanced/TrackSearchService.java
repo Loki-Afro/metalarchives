@@ -3,10 +3,10 @@ package com.github.loki.afro.metallum.search.service.advanced;
 import com.github.loki.afro.metallum.core.parser.search.TrackSearchParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
 import com.github.loki.afro.metallum.search.SearchRelevance;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
 import com.google.common.collect.Iterables;
@@ -36,7 +36,6 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
     }
 
 
-
     public final void setLoadLyrics(final boolean loadLyrics) {
         this.loadLyrics = loadLyrics;
     }
@@ -45,7 +44,7 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
     protected Function<SearchTrackResult, Track> parseFully() {
         return searchResult -> {
             Track.PartialDisc partialDisc = new Track.PartialDisc(searchResult.getDiscId(), searchResult.getDiscName(), searchResult.getDiscType().orElse(null));
-            Partial bandPartial = new Partial(searchResult.getBandId(), searchResult.getBandName());
+            PartialBand bandPartial = new PartialBand(searchResult.getBandId(), searchResult.getBandName());
             Track track = new Track(partialDisc, bandPartial, searchResult.getId(), searchResult.getName());
             track.setLyrics(searchResult.getLyrics().orElse(null));
             return track;

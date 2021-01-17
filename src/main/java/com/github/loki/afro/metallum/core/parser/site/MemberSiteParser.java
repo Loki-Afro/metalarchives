@@ -6,12 +6,11 @@ import com.github.loki.afro.metallum.core.parser.site.helper.member.BandParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Link;
 import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialDisc;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,23 +104,23 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         return memberDetails[2].substring(0, memberDetails[2].indexOf("</dd>"));
     }
 
-    private Map<Partial, Map<Partial, String>> parseActiveBands() {
+    private Map<PartialBand, Map<PartialDisc, String>> parseActiveBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.ACTIVE);
     }
 
-    private Map<Partial, Map<Partial, String>> parsePastBands() {
+    private Map<PartialBand, Map<PartialDisc, String>> parsePastBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.PAST);
     }
 
-    private Map<Partial, Map<Partial, String>> parseGuestSessionBands() {
+    private Map<PartialBand, Map<PartialDisc, String>> parseGuestSessionBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.GUEST);
     }
 
     // 2007 Equally Destructive (Single) Design, above the band name
-    private Map<Partial, Map<Partial, String>> parseMiscBands() {
+    private Map<PartialBand, Map<PartialDisc, String>> parseMiscBands() {
         final BandParser parser = new BandParser();
         return parser.parse(this.html, BandParser.Mode.MISC);
     }

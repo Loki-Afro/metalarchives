@@ -1,12 +1,12 @@
-package com.github.loki.afro.metallum.entity;
+package com.github.loki.afro.metallum.entity.partials;
 
 import com.github.loki.afro.metallum.core.parser.site.helper.ReviewParser;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.entity.Review;
 import lombok.Getter;
 
 import java.util.List;
 
-public class PartialReview extends Partial {
+public class PartialReview extends LoadablePartial<Review> {
 
     @Getter
     private final long discId;
@@ -25,6 +25,7 @@ public class PartialReview extends Partial {
         this.date = date;
     }
 
+    @Override
     public Review load() {
         ReviewParser reviewParser = new ReviewParser(discId, getId());
         List<Review> parse = reviewParser.parse();

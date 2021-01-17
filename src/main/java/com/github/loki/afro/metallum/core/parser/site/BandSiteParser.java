@@ -1,7 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.core.parser.site.helper.ReviewParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.band.BandLinkParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.band.DiscParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.band.MemberParser;
@@ -9,17 +8,22 @@ import com.github.loki.afro.metallum.core.parser.site.helper.band.SimilarArtists
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.entity.Link;
+import com.github.loki.afro.metallum.entity.YearRange;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,10 +51,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         band = parseBandImages(band);
 
         band.setInfo(parseInfo());
-        for (final Disc disc : parseDiscography()) {
-            disc.setBand(new Partial(band.getId(), band.getName()));
-            band.addToDiscography(disc);
-        }
+        band.setDiscs(parseDiscography());
         parseMember(band);
         band.setSimilarArtists(parseSimilarArtists());
         band.addLinks(parseLinks());
@@ -179,7 +180,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return Integer.parseInt(firstPartHtml);
     }
 
-    private final Band.PartialLabel parseCurrentLabel(final Element labelElement) {
+    private final PartialLabel parseCurrentLabel(final Element labelElement) {
         // id
         String labelId;
         String labelElementText = labelElement.html();
@@ -190,7 +191,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             labelId = "0";
         }
 
-        return new Band.PartialLabel(Long.parseLong(labelId), labelElement.text().trim());
+        return new PartialLabel(Long.parseLong(labelId), labelElement.text().trim());
 
     }
 
@@ -210,11 +211,11 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     }
 
     // we do not specify complete /main/live/demo/misc -> BandGeneric
-    private final Disc[] parseDiscography() {
+    private final List<Band.PartialDisc> parseDiscography() {
         try {
             final DiscParser discParser = new DiscParser(this.entityId);
             return discParser.parse();
-        } catch (final ExecutionException e) {
+        } catch (final MetallumException e) {
             throw new MetallumException("error in parsing the discography for band: " + this.entityId, e);
         }
     }
@@ -259,7 +260,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             try {
                 return Downloader.getImage((imageUrl));
             } catch (final MetallumException e) {
-                throw new MetallumException("Exception while downloading an image from \"" + imageUrl + "\" ," + this.entityId,e);
+                throw new MetallumException("Exception while downloading an image from \"" + imageUrl + "\" ," + this.entityId, e);
             }
         } else {
             return null;
@@ -271,7 +272,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
             try {
                 return Downloader.getImage(photoUrl);
             } catch (MetallumException e) {
-                throw new MetallumException("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entityId,e);
+                throw new MetallumException("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entityId, e);
             }
         } else {
             return null;

@@ -2,12 +2,13 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
@@ -17,18 +18,6 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 
 public class DiscSearchServiceTest {
-
-
-    @Test
-    public void bbb() throws MetallumException {
-        Disc disc = API.getDiscById(835770L);
-
-        for (PartialReview partialReview : disc.getPartialReviews()) {
-            Review fullReview = partialReview.load();
-            System.out.println(fullReview.getContent());
-            break;
-        }
-    }
 
 
     @Test
@@ -46,7 +35,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void fullLengthTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Transilvanian Hunger")
                 .discType(DiscType.FULL_LENGTH)
                 .build());
@@ -66,7 +55,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void vhsTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Live Εσχατον: The Art of Rebellion")
                 .discType(DiscType.VIDEO)
                 .build());
@@ -111,7 +100,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void dvdTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Return to Yggdrasill")
                 .discType(DiscType.VIDEO)
                 .build());
@@ -131,7 +120,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void liveTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Live Kreation")
                 .discType(DiscType.LIVE_ALBUM)
                 .build());
@@ -152,7 +141,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void boxedSetTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("In Memory of Quorthon")
                 .discType(DiscType.BOXED_SET)
                 .build());
@@ -171,8 +160,32 @@ public class DiscSearchServiceTest {
     }
 
     @Test
+    public void splitSearchTest() throws MetallumException {
+        List<SearchDiscResult> result = API.getDiscs(DiscQuery.builder()
+                .name("Thousands of Moons Ago / The Gates")
+                .build());
+
+        assertThat(result).hasSize(1);
+
+        SearchDiscResult searchDiscResult = Iterables.getOnlyElement(result);
+
+        assertThat(searchDiscResult.getId()).isNotEqualTo(0L);
+        assertThat(searchDiscResult.getReleaseDate()).isEmpty();
+        assertThat(searchDiscResult.getBandCountry()).isEmpty();
+        assertThat(searchDiscResult.getDiscType()).contains(DiscType.SPLIT);
+
+        assertThat(searchDiscResult.getBandId()).isEqualTo(0L);
+        assertThat(searchDiscResult.getBandName()).isEmpty();
+        assertThat(searchDiscResult.getSplitBands())
+                .extracting(PartialBand::getId, PartialBand::getName)
+                .containsExactly(
+                        tuple(9344L, "Drudkh"),
+                        tuple(107837L, "Winterfylleth"));
+    }
+
+    @Test
     public void splitTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Emperor / Hordanes Land")
                 .discType(DiscType.SPLIT)
                 .build());
@@ -196,7 +209,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void compilationTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Abyssus Abyssum Invocat")
                 .discType(DiscType.COMPILATION)
                 .build());
@@ -217,13 +230,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void splitVideoTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Live & Plugged vol.2")
                 .discType(DiscType.SPLIT_VIDEO)
                 .build());
 
         assertThat(discResult.getSplitBands())
-                .extracting(Partial::getId, Partial::getName)
+                .extracting(PartialBand::getId, PartialBand::getName)
                 .containsExactly(tuple(69L, "Dimmu Borgir"),
                         tuple(183L, "Dissection"));
 
@@ -248,7 +261,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void demoTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Burzum")
                 .exactNameMatch(true)
                 .discType(DiscType.DEMO)
@@ -268,7 +281,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void cityTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("A Touch of Medieval Darkness")
                 .build());
 
@@ -287,7 +300,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void countryTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Autumn Aurora")
                 .country(Country.UA)
                 .build());
@@ -307,7 +320,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void multiCountryTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("The Somberlain")
                 .discType(DiscType.FULL_LENGTH)
                 .countries(Sets.newHashSet(Country.UA, Country.DE, Country.SE, Country.TW))
@@ -328,7 +341,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void multiDiscTypeTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Alongside Death")
                 .discTypes(Sets.newHashSet(DiscType.FULL_LENGTH, DiscType.SPLIT))
                 .build());
@@ -378,7 +391,7 @@ public class DiscSearchServiceTest {
                 .toYear(2007)
                 .build();
 
-        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+        final Disc discResult = API.getSingleUniqueDisc(query);
 
         assertThat(discResult.getBandName()).isEqualTo("Burzum");
         assertThat(discResult.getName()).isEqualTo("Det som engang var");
@@ -395,7 +408,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void releaseDateToTest() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Burzum")
                 .toMonth(4)
                 .toYear(1993)
@@ -464,7 +477,7 @@ public class DiscSearchServiceTest {
                 .name("In the Rectory of the Bizarre Reverend")
                 .exactNameMatch(true)
                 .build();
-        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+        final Disc discResult = API.getSingleUniqueDisc(query);
 
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("In the Rectory of the Bizarre Reverend");
@@ -489,7 +502,7 @@ public class DiscSearchServiceTest {
                 .exactBandNameMatch(true)
                 .name("II: Crush the Insects")
                 .build();
-        final Disc discResult = API.getSingleUniqueDiscByQuery(query);
+        final Disc discResult = API.getSingleUniqueDisc(query);
 
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("II: Crush the Insects");
@@ -531,7 +544,7 @@ public class DiscSearchServiceTest {
                 .bandName("Cannibal Corpse")
                 .name("Eaten Back to Life")
                 .build();
-        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+        final Disc discResult = new DiscSearchService(false, true).getSingleUniqueByQuery(query);
 
         for (final Track resultTrack : discResult.getTrackList()) {
             assertThat(resultTrack.getLyrics()).isNotEmpty();
@@ -555,7 +568,7 @@ public class DiscSearchServiceTest {
                 .bandName("Cannibal Corpse")
                 .name("The Wretched Spawn")
                 .build();
-        final Disc discResult = new DiscSearchService(false, true, false).getSingleUniqueByQuery(query);
+        final Disc discResult = new DiscSearchService(false, false).getSingleUniqueByQuery(query);
 
         List<Review> reviews = discResult.getReviews();
         assertThat(reviews).isNotEmpty();
@@ -586,7 +599,7 @@ public class DiscSearchServiceTest {
                 .name("At the Gate of Sethu")
                 .exactNameMatch(true)
                 .build();
-        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+        final Disc discResult = new DiscSearchService(false, true).getSingleUniqueByQuery(query);
 
         assertThat(discResult.getBandName()).isEqualTo("Nile");
         assertThat(discResult.getName()).isEqualTo("At the Gate of Sethu");
@@ -631,7 +644,7 @@ public class DiscSearchServiceTest {
         DiscQuery query = DiscQuery.builder()
                 .name("Vikingligr Veldi")
                 .build();
-        final Disc discResult = new DiscSearchService(false, false, true).getSingleUniqueByQuery(query);
+        final Disc discResult = new DiscSearchService(false, true).getSingleUniqueByQuery(query);
 
         assertThat(discResult.getBandName()).isEqualTo("Enslaved");
         assertThat(discResult.getName()).isEqualTo("Vikingligr veldi");
@@ -651,7 +664,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void testMember() throws MetallumException {
-        final Disc discResult = API.getSingleUniqueDiscByQuery(DiscQuery.builder()
+        final Disc discResult = API.getSingleUniqueDisc(DiscQuery.builder()
                 .name("Live & Plugged vol.2")
                 .discType(DiscType.SPLIT_VIDEO)
                 .build());
@@ -687,7 +700,7 @@ public class DiscSearchServiceTest {
         assertThat(disc.getType()).isEqualTo(DiscType.COLLABORATION);
         assertThat(disc.getName()).isEqualTo("Chthonic Libations");
         assertThat(disc.getSplitBands())
-                .extracting(Partial::getId, Partial::getName)
+                .extracting(PartialBand::getId, PartialBand::getName)
                 .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L, "Acherontas"));
         assertThat(disc.getBandName()).isEqualTo("Nåstrond / Acherontas");
         assertThat(disc.getBand()).isNull();

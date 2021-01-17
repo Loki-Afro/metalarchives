@@ -4,20 +4,15 @@ import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.google.common.base.Strings;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackSearchParser.class);
@@ -79,7 +74,7 @@ public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
             id = id.substring(0, id.indexOf("\" title=\""));
             return Long.parseLong(id);
         } else {
-            logger.debug("The current Track, does not have a lyrical-Link => Unable to the track-id");
+            logger.warn("The current Track, does not have a lyrical-Link => Unable to the track-id");
             return 0L;
         }
     }

@@ -9,7 +9,7 @@ public class MemberQuery implements IQuery {
 
     @Getter
     @Setter
-    private  String name;
+    private String name;
 
     public MemberQuery(String name) {
         this.name = name;

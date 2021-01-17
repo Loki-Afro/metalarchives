@@ -4,7 +4,6 @@ import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.Jsoup;
 
 import java.util.ArrayList;

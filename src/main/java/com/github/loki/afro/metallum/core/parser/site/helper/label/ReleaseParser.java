@@ -4,8 +4,8 @@ import com.github.loki.afro.metallum.core.parser.site.LabelSiteParser;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -37,21 +37,20 @@ public class ReleaseParser extends AbstractRosterParser<Band, List<Disc>> {
         if (disc.isSplit()) {
             disc.setSplitBands(parseSplitBands(hits.getString(0)));
         } else {
-            disc.setBand(new Partial(band.getId(), band.getName()));
-            band.addToDiscography(disc);
+            disc.setBand(new PartialBand(band.getId(), band.getName()));
         }
         discList.add(disc);
         this.mainMap.put(band, discList);
     }
 
-    private List<Partial> parseSplitBands(final String bandData) {
-        List<Partial> list = new ArrayList<>();
+    private List<PartialBand> parseSplitBands(final String bandData) {
+        List<PartialBand> list = new ArrayList<>();
         final String[] strBandArray = bandData.split("</a>");
         for (String s : strBandArray) {
             String bandName = s.substring(s.indexOf("\">") + 2);
             String bandId = s.substring(0, s.length() - (bandName.length() + 2));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
-            list.add(new Partial(Long.parseLong(bandId), bandName));
+            list.add(new PartialBand(Long.parseLong(bandId), bandName));
         }
         return list;
     }

@@ -2,17 +2,19 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
+import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.entity.BandQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.BandSearchQuery;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,19 +22,39 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BandSearchServiceTest {
 
     @Test
-    public void bbb() throws MetallumException {
+    public void partialLabelTest() throws MetallumException {
         Band band = API.getBandById(3540465313L);
 
+        long partialLabelId = band.getPartialLabel().getId();
         Label label = band.getLabel();
 
-        System.out.println(label.getId());
-        System.out.println(label.getEmail());
+        assertThat(partialLabelId).isEqualTo(label.getId());
+        assertThat(label.getEmail()).isNotNull();
+    }
 
+    @Test
+    public void testDiscPartial() throws MetallumException {
+        Band band = API.getBandById(112092L);
+
+        List<Band.PartialDisc> discsPartial = band.getDiscsPartial();
+        assertThat(discsPartial).hasSizeGreaterThanOrEqualTo(5);
+
+
+        Band.PartialDisc disc = discsPartial.stream()
+                .filter(d -> d.getName().equals("De Occulta Philosophia"))
+                .collect(Collectors.toList())
+                .get(0);
+
+        assertThat(disc.getId()).isEqualTo(178710L);
+        assertThat(disc.getDiscType()).isEqualTo(DiscType.FULL_LENGTH);
+        assertThat(disc.getReleaseYear()).isEqualTo(2007);
+        assertThat(disc.getReviewCount()).isGreaterThanOrEqualTo(7);
+        assertThat(disc.getAverageReviewPercentage()).isGreaterThanOrEqualTo(70);
     }
 
     @Test
     public void bandNameTest() throws MetallumException {
-        final Band resultBand = API.getSingleUniqueBandByQuery(BandQuery.byName("Mournful Congregation", false));
+        final Band resultBand = API.getSingleUniqueBand(BandQuery.byName("Mournful Congregation", false));
 
         assertThat("Mournful Congregation").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
@@ -50,23 +72,11 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 13, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 13);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
         assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
-        List<Disc> discs = resultBand.getDiscs();
-        boolean found = false;
-        boolean found2 = false;
-        for (Disc disc : discs) {
-            if (disc.getName().equals("Weeping")) {
-                found = !disc.hasReviews();
-            } else if (disc.getName().equals("The Book of Kings")) {
-                found2 = disc.hasReviews();
-            }
-        }
-        assertThat(found).isTrue();
-        assertThat(found2).isTrue();
     }
 
     @Test
@@ -89,7 +99,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 15, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 15);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -103,25 +113,19 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getStatus()).isEqualTo(BandStatus.DISPUTED);
     }
 
-    private synchronized void checkDefaultDisc(final List<Disc> discList, final int expectedSize, final Band bandFromDisc) {
-        checkDefaultDisc(discList, expectedSize, bandFromDisc, false);
-    }
-
-    private synchronized void checkDefaultDisc(final List<Disc> discList, final int expectedSize, final Band bandFromDisc, final boolean percentAverage) {
+    private void checkDefaultDisc(final List<Band.PartialDisc> discList, final int expectedSize) {
         assertThat(discList).isNotEmpty();
         assertThat(discList.size() >= expectedSize).isTrue();
-        for (Disc disc : discList) {
-            assertThat(bandFromDisc.getName()).isEqualTo(disc.getBand().getName());
-            assertThat(bandFromDisc.getId()).isEqualTo(disc.getBand().getId());
+        for (Band.PartialDisc disc : discList) {
             assertThat(disc.getName()).isNotEmpty();
-            assertThat(disc.getId() > 0).isTrue();
-            assertThat(disc.getType()).isNotNull();
-            assertThat(!disc.getReleaseDate().isEmpty()).isTrue();
-            assertThat(disc.getArtwork()).isNull();
-            if (percentAverage) {
-                assertThat(disc.getReviewPercentAverage() != 0).isTrue();
+            assertThat(disc.getId()).isNotEqualTo(0L);
+            assertThat(disc.getDiscType()).isNotNull();
+            assertThat(disc.getReleaseYear()).isGreaterThan(0);
+            Integer averageReviewPercentage = disc.getAverageReviewPercentage();
+            if (averageReviewPercentage != null) {
+                assertThat(disc.getReviewCount()).isGreaterThan(0);
             } else {
-                assertThat(Double.isNaN(disc.getReviewPercentAverage())).isTrue();
+                assertThat(disc.getReviewCount()).isEqualTo(0);
             }
         }
     }
@@ -149,7 +153,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 6);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -163,7 +167,7 @@ public class BandSearchServiceTest {
                 .country(Country.GB)
                 .build();
 
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
         assertThat("40 Watt Sun").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.GB).isEqualTo(resultBand.getCountry());
@@ -180,7 +184,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 1, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 1);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -230,7 +234,7 @@ public class BandSearchServiceTest {
     public void fromYearOfFormationTest() throws MetallumException {
         BandQuery bandQuery = BandQuery.byName("Vital Remains", false)
                 .setYearOfFormationToYear(1988);
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
 
         assertThat("Vital Remains").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
@@ -248,7 +252,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 14, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 14);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -260,7 +264,7 @@ public class BandSearchServiceTest {
         BandQuery bandQuery = BandQuery.byName("Triptykon", false)
                 .setYearOfFormationFromYear(1988)
                 .setYearOfFormationToYear(2010);
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
 
         assertThat("Triptykon").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
@@ -277,7 +281,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 3, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 3);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -291,7 +295,7 @@ public class BandSearchServiceTest {
                 .status(BandStatus.ACTIVE)
                 .build();
 
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
         assertThat("Nocturnal Depression").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.FR).isEqualTo(resultBand.getCountry());
@@ -308,7 +312,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 16, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 16);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -323,7 +327,7 @@ public class BandSearchServiceTest {
                 .status(BandStatus.SPLIT_UP)
                 .build();
 
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
         assertThat("Nagelfar").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -340,7 +344,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 8, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 8);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -354,7 +358,7 @@ public class BandSearchServiceTest {
                 .status(BandStatus.ON_HOLD)
                 .build();
 
-        final Band resultBand = API.getSingleUniqueBandByQuery(bandQuery);
+        final Band resultBand = API.getSingleUniqueBand(bandQuery);
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
@@ -370,7 +374,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 4, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 4);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -436,7 +440,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isTrue();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 4, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 4);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -464,7 +468,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 3, resultBand, true);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 3);
 
         assertThat(resultBand.getInfo().endsWith("(2009).")).isTrue();
         assertThat(resultBand.getInfo().startsWith("Additional discograp")).isTrue();
@@ -508,7 +512,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
         assertThat(!resultBand.getInfo().isEmpty()).isTrue();
-        checkDefaultDisc(resultBand.getDiscs(), 6, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 6);
         final Map<Integer, List<Band.SimilarBand>> similarArtists = resultBand.getSimilarArtists();
         checkSimilarArtists(similarArtists);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
@@ -546,7 +550,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
         assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscs(), 3, resultBand);
+        checkDefaultDisc(resultBand.getDiscsPartial(), 3);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();
@@ -557,7 +561,7 @@ public class BandSearchServiceTest {
     public void noDiscographyYetTest() throws MetallumException {
         final Band resultBand = API.getBandById(3540273493L);
 
-        assertThat(resultBand.getDiscs()).isEmpty();
+        assertThat(resultBand.getDiscsPartial()).isEmpty();
     }
 
     @Test
@@ -574,7 +578,7 @@ public class BandSearchServiceTest {
     public void unknownLabelTest() throws MetallumException {
         final Band resultBand = API.getBandById(3540382837L);
 
-        Band.PartialLabel label = resultBand.getPartialLabel();
+        PartialLabel label = resultBand.getPartialLabel();
         assertThat(label.getName()).isEqualTo("Unknown");
         assertThat(label.getId()).isEqualTo(0L);
     }

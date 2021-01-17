@@ -1,9 +1,11 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.API;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.enums.DiscType;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,7 @@ public class Band extends AbstractEntity {
     private BufferedImage photo = null;
     private BufferedImage logo = null;
     private String info;
-    private List<Disc> discs = new ArrayList<>();
+    private List<PartialDisc> discs = new ArrayList<>();
     private Map<Member, String> currentMember = new HashMap<>();
     private Map<Member, String> lastMember = new HashMap<>();
     private Map<Member, String> liveMember = new HashMap<>();
@@ -45,6 +47,12 @@ public class Band extends AbstractEntity {
     }
 
     public final List<Disc> getDiscs() {
+        return this.discs.stream()
+                .map(PartialDisc::load)
+                .collect(Collectors.toList());
+    }
+
+    public List<PartialDisc> getDiscsPartial() {
         return this.discs;
     }
 
@@ -134,17 +142,6 @@ public class Band extends AbstractEntity {
 
     public void setInfo(final String info) {
         this.info = info;
-    }
-
-    public void addToDiscography(final Disc... discs) {
-        for (final Disc disc : discs) {
-            if (!this.discs.contains(disc)) {
-                // if (disc.getBand() != this) {
-                // disc.setBand(this);
-                // }
-                this.discs.add(disc);
-            }
-        }
     }
 
     public void setCurrentLineup(final Map<Member, String> currentMember) {
@@ -314,7 +311,7 @@ public class Band extends AbstractEntity {
         return this.logo != null;
     }
 
-    public final void setDiscs(final List<Disc> discList) {
+    public final void setDiscs(final List<PartialDisc> discList) {
         this.discs = discList;
     }
 
@@ -362,8 +359,10 @@ public class Band extends AbstractEntity {
         this.yearsActive = yearsActive;
     }
 
-    public static class SimilarBand extends Partial {
+    public static class SimilarBand extends PartialBand {
+        @Getter
         private final Country country;
+        @Getter
         private final String genre;
 
         public SimilarBand(long id, String name, Country country, String genre) {
@@ -371,25 +370,26 @@ public class Band extends AbstractEntity {
             this.country = country;
             this.genre = genre;
         }
-
-        public Country getCountry() {
-            return country;
-        }
-
-        public String getGenre() {
-            return genre;
-        }
     }
 
-    public static class PartialLabel extends Partial {
+    public static class PartialDisc extends com.github.loki.afro.metallum.entity.partials.PartialDisc {
 
-        public PartialLabel(long id, String name) {
+        @Getter
+        private final DiscType discType;
+        @Getter
+        private final int releaseYear;
+        @Getter
+        private final int reviewCount;
+        @Getter
+        private final Integer averageReviewPercentage;
+
+        public PartialDisc(long id, String name, DiscType discType, int releaseYear, int reviewCount, Integer averageReviewPercentage) {
             super(id, name);
+            this.discType = discType;
+            this.releaseYear = releaseYear;
+            this.reviewCount = reviewCount;
+            this.averageReviewPercentage = averageReviewPercentage;
         }
 
-        private Label load() {
-            return API.getLabelById(getId());
-        }
     }
-
 }

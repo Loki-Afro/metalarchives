@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LabelStatus;
 
@@ -10,12 +11,12 @@ public class Label extends AbstractEntity {
 
     private String specialisation;
     private Country country;
-    private Label parentLabel = null;
+    private PartialLabel parentLabel = null;
     private String address;
     private String phoneNumber;
     private LabelStatus status;
     private String foundingDate;
-    private List<Label> subLabels = new ArrayList<>();
+    private List<PartialLabel> subLabels = new ArrayList<>();
     private boolean onlineShopping = false;
     private Link websiteURL;
     private String email;
@@ -31,100 +32,58 @@ public class Label extends AbstractEntity {
         super(id, labelName);
     }
 
-    /**
-     * @return the parentLabel
-     */
-    public Label getParentLabel() {
+    public PartialLabel getParentLabel() {
         return this.parentLabel;
     }
 
-    /**
-     * @return the address
-     */
     public String getAddress() {
         return this.address;
     }
 
-    /**
-     * @return the phoneNumber
-     */
     public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
-    /**
-     * @return the status
-     */
     public LabelStatus getStatus() {
         return this.status;
     }
 
-    /**
-     * @return the foundingDate
-     */
     public String getFoundingDate() {
         return this.foundingDate;
     }
 
-    /**
-     * @return the subLabels
-     */
-    public List<Label> getSubLabels() {
+    public List<PartialLabel> getSubLabels() {
         return this.subLabels;
     }
 
-    /**
-     * @return the websiteURL
-     */
     public Link getWebsiteURL() {
         return this.websiteURL;
     }
 
-    /**
-     * @return the email
-     */
     public String getEmail() {
         return this.email;
     }
 
-    /**
-     * @return the currentRoster
-     */
     public List<Band> getCurrentRoster() {
         return this.currentRoster;
     }
 
-    /**
-     * @return the pastRoster
-     */
     public Map<Band, Integer> getPastRoster() {
         return this.pastRoster;
     }
 
-    /**
-     * @return the details
-     */
     public String getDetails() {
         return this.details;
     }
 
-    /**
-     * @return the links
-     */
     public List<Link> getLinks() {
         return this.links;
     }
 
-    /**
-     * @return the releases
-     */
     public Map<Band, List<Disc>> getReleases() {
         return this.releases;
     }
 
-    /**
-     * @return the logo
-     */
     public BufferedImage getLogo() {
         return this.logo;
     }
@@ -161,7 +120,7 @@ public class Label extends AbstractEntity {
         this.foundingDate = foundingDate;
     }
 
-    public void setSubLabels(final List<Label> subLabels) {
+    public void setSubLabels(final List<PartialLabel> subLabels) {
         this.subLabels = subLabels;
     }
 
@@ -201,7 +160,7 @@ public class Label extends AbstractEntity {
         this.releases = map;
     }
 
-    public void setParentLabel(final Label parseParentLabel) {
+    public void setParentLabel(final PartialLabel parseParentLabel) {
         this.parentLabel = parseParentLabel;
     }
 

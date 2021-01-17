@@ -53,7 +53,7 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
 
     protected abstract String getSearchURL(final long labelId, final byte numberPerPage, final boolean alphabetical, final int sortType);
 
-    private JSONObject getJSONObject(final String url) throws JSONException, ExecutionException {
+    private JSONObject getJSONObject(final String url) throws JSONException {
         return new JSONObject(Downloader.getHTML(url));
     }
 
@@ -63,8 +63,7 @@ abstract class AbstractRosterParser<K, V> implements IJSONParser {
      */
     Disc getADisc(final String hit) {
         String name = parseName(hit);
-        Disc disc = new Disc(parseId(hit), name);
-        return disc;
+        return new Disc(parseId(hit), name);
     }
 
     /**

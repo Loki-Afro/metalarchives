@@ -19,7 +19,6 @@ import static com.github.loki.afro.metallum.core.util.MetallumUtil.isNotBlank;
 public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, SearchDiscResult> {
 
     private boolean loadImages;
-    private boolean loadReviews;
     private boolean loadLyrics;
 
     /**
@@ -28,7 +27,7 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
      * - load image = false
      */
     public DiscSearchService() {
-        this(false, false, false);
+        this(false, false);
     }
 
     /**
@@ -38,7 +37,7 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
      * @param loadImages see {@code setLoadImages}
      */
     public DiscSearchService(final boolean loadImages) {
-        this(loadImages, false, false);
+        this(loadImages, false);
     }
 
     /**
@@ -46,21 +45,15 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
      * <br>
      *
      * @param loadImages   see {@code setLoadImages}
-     * @param loadReviews  see {@code setLoadReviews}
      * @param loadLyrics see {@code setLoadLyrics}
      */
-    public DiscSearchService(final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
+    public DiscSearchService(final boolean loadImages, final boolean loadLyrics) {
         this.loadImages = loadImages;
-        this.loadReviews = loadReviews;
         this.loadLyrics = loadLyrics;
     }
 
     public void setLoadImages(boolean loadImages) {
         this.loadImages = loadImages;
-    }
-
-    public void setLoadReviews(boolean loadReviews) {
-        this.loadReviews = loadReviews;
     }
 
     public void setLoadLyrics(final boolean loadLyrics) {
@@ -69,7 +62,7 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
 
     @Override
     protected DiscSiteParser getSiteParser(final long entityId) {
-        return new DiscSiteParser(entityId, this.loadImages, this.loadReviews, this.loadLyrics);
+        return new DiscSiteParser(entityId, this.loadImages, this.loadLyrics);
     }
 
     @Override

@@ -1,11 +1,9 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.SearchRelevance;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
 import com.google.api.client.util.Strings;
 import org.json.JSONArray;
@@ -20,11 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public class MemberSearchParser extends AbstractSearchParser<SearchMemberResult> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MemberSearchParser.class);
@@ -56,9 +49,9 @@ public class MemberSearchParser extends AbstractSearchParser<SearchMemberResult>
         return Long.parseLong(hit);
     }
 
-    private List<Partial> parseBands(final String hit) {
+    private List<PartialBand> parseBands(final String hit) {
         LOGGER.debug("new hit: " + hit);
-        List<Partial> bandList = new ArrayList<>();
+        List<PartialBand> bandList = new ArrayList<>();
         Document doc = Jsoup.parse(hit);
         Elements links = doc.getElementsByAttribute("href");
         for (Element link : links) {
@@ -67,7 +60,7 @@ public class MemberSearchParser extends AbstractSearchParser<SearchMemberResult>
 //			because there are Members which do not have any band O.o 
 //			see FENRIZ - http://www.metal-archives.com/artists/FENRIZ/407865
             if (!bandId.isEmpty()) {
-                Partial band = new Partial(Long.parseLong(bandId), MetallumUtil.trimNoBreakSpaces(link.text()));
+                PartialBand band = new PartialBand(Long.parseLong(bandId), MetallumUtil.trimNoBreakSpaces(link.text()));
                 LOGGER.debug("adding new Band to Member: " + band);
                 bandList.add(band);
             }

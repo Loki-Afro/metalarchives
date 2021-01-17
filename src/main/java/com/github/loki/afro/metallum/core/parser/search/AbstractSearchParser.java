@@ -1,7 +1,6 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
 import com.github.loki.afro.metallum.core.parser.IJSONParser;
-import com.github.loki.afro.metallum.entity.AbstractIdentifiable;
 import com.github.loki.afro.metallum.entity.Identifiable;
 import com.github.loki.afro.metallum.search.SearchRelevance;
 import org.json.JSONArray;
@@ -15,11 +14,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public abstract class AbstractSearchParser<S extends Identifiable> implements IJSONParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSearchParser.class);

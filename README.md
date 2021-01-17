@@ -77,8 +77,10 @@ public class APIExample {
         for (final Band fullBand : API.getBandsFully(query)) {
             System.out.println("Bandname: " + fullBand.getName());
             System.out.println("Bandgenre: " + fullBand.getGenre());
-            System.out.println("Bandstatus: " + fullBand.getStatus().asString());
-            System.out.println("Discs: " + fullBand.getDiscs().asString());
+            System.out.println("Bandstatus: " + fullBand.getStatus());
+            System.out.println("Partial Discs: " + fullBand.getDiscsPartial());
+//          or if you want the discs with all details
+            System.out.println("Discs: " + fullBand.getDiscs());
             System.out.println("---");
         }
 

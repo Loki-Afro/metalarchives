@@ -1,16 +1,11 @@
 package com.github.loki.afro.metallum.search.service;
 
-import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
 import com.github.loki.afro.metallum.core.parser.search.MemberSearchParser;
 import com.github.loki.afro.metallum.core.parser.site.MemberSiteParser;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.MemberQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
-
-import java.util.List;
-import java.util.SortedMap;
 
 
 public class MemberSearchService extends AbstractSearchService<Member, MemberQuery, SearchMemberResult> {

@@ -16,7 +16,7 @@ import static com.github.loki.afro.metallum.search.query.entity.IQuery.getForQue
 
 
 @SuperBuilder
-public class TrackQuery extends AbstractTrack implements IQuery{
+public class TrackQuery extends AbstractTrack implements IQuery {
     @Setter
     @Getter
     private boolean exactNameMatch;

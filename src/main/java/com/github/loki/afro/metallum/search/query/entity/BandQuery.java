@@ -16,7 +16,7 @@ import static com.github.loki.afro.metallum.search.query.entity.IQuery.asPair;
 import static com.github.loki.afro.metallum.search.query.entity.IQuery.getForQuery;
 
 @SuperBuilder
-public class BandQuery extends AbstractBand implements IQuery{
+public class BandQuery extends AbstractBand implements IQuery {
 
     @Setter
     private String labelName;

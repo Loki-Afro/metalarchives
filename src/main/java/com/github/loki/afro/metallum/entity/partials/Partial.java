@@ -1,9 +1,10 @@
-package com.github.loki.afro.metallum.search.query.entity;
+package com.github.loki.afro.metallum.entity.partials;
 
-import com.github.loki.afro.metallum.entity.AbstractEntity;
 import com.github.loki.afro.metallum.entity.Identifiable;
+import lombok.ToString;
 
-public class Partial implements Identifiable {
+@ToString
+abstract class Partial implements Identifiable {
 
     private final long id;
     private final String name;

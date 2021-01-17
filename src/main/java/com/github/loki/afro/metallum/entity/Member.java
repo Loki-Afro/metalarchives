@@ -1,7 +1,8 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialDisc;
 import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -11,16 +12,16 @@ public class Member extends AbstractEntity {
 
     private Country country;
     private String realName;
-    private List<Partial> uncategorizedBands = new ArrayList<>();
+    private List<PartialBand> uncategorizedBands = new ArrayList<>();
     private Integer age;
     private String province;
     private String gender;
     private BufferedImage photo = null;
     private String alternativeName;
-    private Map<Partial, Map<Partial, String>> guestSessionBands = new LinkedHashMap<>();
-    private Map<Partial, Map<Partial, String>> activeInBands = new LinkedHashMap<>();
-    private Map<Partial, Map<Partial, String>> pastBands = new LinkedHashMap<>();
-    private Map<Partial, Map<Partial, String>> miscBands = new LinkedHashMap<>();
+    private Map<PartialBand, Map<PartialDisc, String>> guestSessionBands = new LinkedHashMap<>();
+    private Map<PartialBand, Map<PartialDisc, String>> activeInBands = new LinkedHashMap<>();
+    private Map<PartialBand, Map<PartialDisc, String>> pastBands = new LinkedHashMap<>();
+    private Map<PartialBand, Map<PartialDisc, String>> miscBands = new LinkedHashMap<>();
     private final List<Link> linkList = new ArrayList<>();
     private String details;
     private String photoUrl;
@@ -42,7 +43,7 @@ public class Member extends AbstractEntity {
      *
      * @return uncategorizedBands
      */
-    public final List<Partial> getUncategorizedBands() {
+    public final List<PartialBand> getUncategorizedBands() {
         return this.uncategorizedBands;
     }
 
@@ -54,7 +55,7 @@ public class Member extends AbstractEntity {
         return this.country;
     }
 
-    public final void setUncategorizedBands(final List<Partial> memberBands) {
+    public final void setUncategorizedBands(final List<PartialBand> memberBands) {
         this.uncategorizedBands = memberBands;
     }
 
@@ -75,7 +76,7 @@ public class Member extends AbstractEntity {
     }
 
     @Deprecated
-    public void setGuestIn(final Map<Partial, Map<Partial, String>> map) {
+    public void setGuestIn(final Map<PartialBand, Map<PartialDisc, String>> map) {
         this.guestSessionBands = map;
     }
 
@@ -84,17 +85,17 @@ public class Member extends AbstractEntity {
     }
 
     @Deprecated
-    public void setMiscActivities(final Map<Partial, Map<Partial, String>> parseMiscBands) {
+    public void setMiscActivities(final Map<PartialBand, Map<PartialDisc, String>> parseMiscBands) {
         this.miscBands = parseMiscBands;
     }
 
     @Deprecated
-    public void setPastBands(final Map<Partial, Map<Partial, String>> parsePastBands) {
+    public void setPastBands(final Map<PartialBand, Map<PartialDisc, String>> parsePastBands) {
         this.pastBands = parsePastBands;
     }
 
     @Deprecated
-    public void setActiveIn(final Map<Partial, Map<Partial, String>> parseActiveBands) {
+    public void setActiveIn(final Map<PartialBand, Map<PartialDisc, String>> parseActiveBands) {
         this.activeInBands = parseActiveBands;
     }
 
@@ -102,61 +103,43 @@ public class Member extends AbstractEntity {
         this.details = details;
     }
 
-    /**
-     * @return the age
-     */
     public int getAge() {
         return this.age;
     }
 
-    /**
-     * @return the province
-     */
     public String getProvince() {
         return this.province;
     }
 
-    /**
-     * @return the gender
-     */
     public String getGender() {
         return this.gender;
     }
 
-    /**
-     * @return the photo
-     */
     public BufferedImage getPhoto() {
         return this.photo;
     }
 
-    /**
-     * @return the alternativeName
-     */
     public String getAlternativeName() {
         return this.alternativeName;
     }
 
-    /**
-     * @return the guestSessionBands
-     */
     @Deprecated
-    public Map<Partial, Map<Partial, String>> getGuestSessionBands() {
+    public Map<PartialBand, Map<PartialDisc, String>> getGuestSessionBands() {
         return this.guestSessionBands;
     }
 
     @Deprecated
-    public Map<Partial, Map<Partial, String>> getActiveInBands() {
+    public Map<PartialBand, Map<PartialDisc, String>> getActiveInBands() {
         return this.activeInBands;
     }
 
     @Deprecated
-    public Map<Partial, Map<Partial, String>> getPastBands() {
+    public Map<PartialBand, Map<PartialDisc, String>> getPastBands() {
         return this.pastBands;
     }
 
     @Deprecated
-    public Map<Partial, Map<Partial, String>> getMiscBands() {
+    public Map<PartialBand, Map<PartialDisc, String>> getMiscBands() {
         return this.miscBands;
     }
 

@@ -8,11 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public class LabelSearchParser extends AbstractSearchParser<SearchLabelResult> {
 
     @Override

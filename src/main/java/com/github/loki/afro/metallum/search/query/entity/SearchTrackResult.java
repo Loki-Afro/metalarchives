@@ -46,6 +46,7 @@ public class SearchTrackResult extends AbstractTrack implements Identifiable {
         return this.bandName;
 
     }
+
     public String getDiscName() {
         return this.discName;
     }
@@ -58,9 +59,6 @@ public class SearchTrackResult extends AbstractTrack implements Identifiable {
     public String getResolvedBandName() {
         if (this.discType == DiscType.COLLABORATION) {
             return splitBandName;
-//            return discFromTrack.getSplitBands().stream()
-//                    .map(Band::getName)
-//                    .collect(Collectors.joining(" / "));
         } else if (this.discType.isSplit()) {
             return this.splitBandName;
         } else {

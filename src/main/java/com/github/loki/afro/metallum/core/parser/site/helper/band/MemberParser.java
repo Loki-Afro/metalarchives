@@ -1,9 +1,8 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.band;
 
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
-import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Member;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,8 +112,8 @@ public class MemberParser {
         return Jsoup.parse(htmlPart).text();
     }
 
-    private final List<Partial> parseMemberBands(final String htmlPart) {
-        final List<Partial> mBands = new ArrayList<>();
+    private final List<PartialBand> parseMemberBands(final String htmlPart) {
+        final List<PartialBand> mBands = new ArrayList<>();
         if (!htmlPart.contains("See also:")) {
             return mBands;
         }
@@ -127,7 +126,7 @@ public class MemberParser {
             idStr = idStr.substring(idStr.indexOf("/") + 1, idStr.indexOf("\">"));
             long id = Long.parseLong(idStr);
 
-            mBands.add(new Partial(id, name));
+            mBands.add(new PartialBand(id, name));
         }
 
         return mBands;

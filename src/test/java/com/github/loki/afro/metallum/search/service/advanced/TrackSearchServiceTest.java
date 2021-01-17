@@ -1,20 +1,44 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
+import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
 import com.github.loki.afro.metallum.search.query.entity.TrackSearchQuery;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class TrackSearchServiceTest {
+
+    @Test
+    public void searchTestIdWithoutLyrics() {
+        long trackId = 4337410L;
+        String trackName = "Hunger";
+
+        List<SearchTrackResult> searchTrackResults = new TrackSearchService().get(TrackQuery.builder().bandName("Eaten")
+                .discName("Eaten")
+                .bandName("Eaten")
+                .name(trackName)
+                .build());
+
+        assertThat(searchTrackResults).hasSize(1);
+
+        SearchTrackResult result = Iterables.getOnlyElement(searchTrackResults);
+        assertThat(result.getId()).isEqualTo(trackId);
+
+        Disc disc = API.getDiscById(result.getDiscId());
+        assertThat(disc.getTrackList())
+                .extracting(Track::getId, Track::getName)
+                .contains(tuple(trackId, trackName));
+    }
 
     @Test
     public void songTitleTest() throws MetallumException {

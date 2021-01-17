@@ -19,7 +19,7 @@ public interface IQuery {
     static <X> String getForQuery(String name, Collection<X> collection, Function<X, Object> toString) {
         final StringBuilder buf = new StringBuilder();
         for (final X type : collection) {
-            buf.append( name +"[]=" + toString.apply(type) + "&");
+            buf.append(name + "[]=" + toString.apply(type) + "&");
         }
         return buf.toString();
     }

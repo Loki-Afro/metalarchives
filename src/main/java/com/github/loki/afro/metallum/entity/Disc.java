@@ -1,7 +1,8 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Disc extends AbstractEntity {
     private List<Track> trackList = new ArrayList<>();
     private List<PartialReview> reviewList = new ArrayList<>();
     private String releaseDate;
-    private Partial band;
+    private PartialBand band;
     private Label label;
     private BufferedImage artwork = null;
     private String details;
@@ -25,7 +26,7 @@ public class Disc extends AbstractEntity {
      * Only filled if DiscType.isSplit(type) is true
      * Does only contain BandName and Id.
      */
-    private final List<Partial> splitBands = new ArrayList<>();
+    private final List<PartialBand> splitBands = new ArrayList<>();
 
     private Map<Member, String> lineup = new HashMap<>();
     private Map<Member, String> miscMember = new HashMap<>();
@@ -83,7 +84,7 @@ public class Disc extends AbstractEntity {
         this.type = discType;
     }
 
-    public Partial getBand() {
+    public PartialBand getBand() {
         return this.band;
     }
 
@@ -95,15 +96,8 @@ public class Disc extends AbstractEntity {
         this.label = label;
     }
 
-    public void setBand(final Partial band) {
+    public void setBand(final PartialBand band) {
         this.band = band;
-    }
-
-    public static List<Disc> setBandForEachDisc(final List<Disc> discList, final Band band) {
-        for (final Disc disc : discList) {
-            disc.setBand(new Partial(band.getId(), band.getName()));
-        }
-        return discList;
     }
 
     public void addTracks(final List<Track> tracks) {
@@ -170,7 +164,7 @@ public class Disc extends AbstractEntity {
         return this.guestMember;
     }
 
-    public List<Partial> getSplitBands() {
+    public List<PartialBand> getSplitBands() {
         return this.splitBands;
     }
 
@@ -194,7 +188,7 @@ public class Disc extends AbstractEntity {
 
     private String getSplitBandsAsString() {
         return getSplitBands().stream()
-                .map(Partial::getName)
+                .map(PartialBand::getName)
                 .collect(Collectors.joining(" / "));
     }
 
@@ -206,7 +200,7 @@ public class Disc extends AbstractEntity {
         this.reviewList = reviewList;
     }
 
-    public void setSplitBands(final List<Partial> splitBands) {
+    public void setSplitBands(final List<PartialBand> splitBands) {
         this.splitBands.addAll(splitBands);
     }
 

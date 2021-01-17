@@ -1,17 +1,11 @@
 package com.github.loki.afro.metallum.search.service;
 
-import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
 import com.github.loki.afro.metallum.core.parser.search.LabelSearchParser;
 import com.github.loki.afro.metallum.core.parser.site.LabelSiteParser;
 import com.github.loki.afro.metallum.entity.Label;
-import com.github.loki.afro.metallum.search.AbstractSearchQuery;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.LabelQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchLabelResult;
-
-import java.util.List;
-import java.util.SortedMap;
 
 public class LabelSearchService extends AbstractSearchService<Label, LabelQuery, SearchLabelResult> {
 
@@ -28,7 +22,6 @@ public class LabelSearchService extends AbstractSearchService<Label, LabelQuery,
     public LabelSearchService(final boolean loadImages) {
         this.loadImages = loadImages;
     }
-
 
 
     public void setLoadImages(boolean loadImages) {

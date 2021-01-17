@@ -27,7 +27,7 @@ public abstract class API {
         return new BandSearchService().getFully(bandQuery);
     }
 
-    public static Band getSingleUniqueBandByQuery(BandQuery bandQuery) throws MetallumException {
+    public static Band getSingleUniqueBand(BandQuery bandQuery) throws MetallumException {
         return new BandSearchService().getSingleUniqueByQuery(bandQuery);
     }
 
@@ -43,7 +43,7 @@ public abstract class API {
         return new DiscSearchService().getFully(query);
     }
 
-    public static Disc getSingleUniqueDiscByQuery(DiscQuery discQuery) throws MetallumException {
+    public static Disc getSingleUniqueDisc(DiscQuery discQuery) throws MetallumException {
         return Iterables.getOnlyElement(getDiscsFully(discQuery));
     }
 

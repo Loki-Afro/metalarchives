@@ -1,9 +1,9 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,11 +12,6 @@ import org.jsoup.Jsoup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Parses the data which was gained by the search
- *
- * @author Zarathustra
- */
 public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
 
     private boolean isAbleToParseDate = false;
@@ -40,13 +35,13 @@ public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
         return parseOptionalFields(disc, hit);
     }
 
-    private List<Partial> parseSplitBands(final String string) {
-        List<Partial> list = new ArrayList<>();
+    private List<PartialBand> parseSplitBands(final String string) {
+        List<PartialBand> list = new ArrayList<>();
         final String[] bandLinks = string.split("\\s\\|\\s");
         for (String bandLink : bandLinks) {
             long id = parseBandId(bandLink);
             String name = parseBandName(bandLink);
-            list.add(new Partial(id, name));
+            list.add(new PartialBand(id, name));
         }
         return list;
     }

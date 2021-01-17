@@ -1,15 +1,17 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.core.parser.site.helper.ReviewParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteMemberParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteTrackParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
-import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.Label;
+import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -17,22 +19,18 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
-    private final boolean loadReviews;
     private final boolean loadLyrics;
     private static final Logger logger = LoggerFactory.getLogger(DiscSiteParser.class);
 
     /**
      * Creates a new DiscParser, just call parse
      */
-    public DiscSiteParser(final long entityId, final boolean loadImages, final boolean loadReviews, final boolean loadLyrics) {
+    public DiscSiteParser(final long entityId, final boolean loadImages, final boolean loadLyrics) {
         super(entityId, loadImages, false);
-        this.loadReviews = loadReviews;
         this.loadLyrics = loadLyrics;
     }
 
@@ -140,20 +138,10 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     }
 
     private List<PartialReview> parseReviewList(long discId) {
-//        if (this.loadReviews) {
-//            try {
-//                ReviewParser parser = new ReviewParser(disc.getId());
-//                final List<Review> parsedReviewList = parser.parse();
-//                for (final Review review : parsedReviewList) {
-//                    review.setDisc(disc);
-//                }
-//                return parsedReviewList;
-//            } catch (final MetallumException e) {
-//                throw new MetallumException("unable to parse reviews from: " + disc, e);
-//            }
-//        } else {
-            List<PartialReview> partialReviews = new ArrayList<>();
-            Elements rows = this.doc.select("#review_list > tbody:nth-child(1)").get(0).getElementsByTag("tr");
+        List<PartialReview> partialReviews = new ArrayList<>();
+        Element tableElement = this.doc.select("#review_list > tbody:nth-child(1)").first();
+        if (tableElement != null) {
+            Elements rows = tableElement.getElementsByTag("tr");
             for (Element row : rows) {
                 Elements cells = row.getElementsByTag("td");
                 long id = Long.parseLong(cells.get(0).getElementsByTag("a").attr("href").replaceAll("^.*/", ""));
@@ -163,7 +151,8 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
                 String date = cells.get(4).text();
                 partialReviews.add(new PartialReview(id, discId, name, percentage, author, date));
             }
-            return partialReviews;
+        }
+        return partialReviews;
 //        }
     }
 
@@ -182,22 +171,22 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         return null;
     }
 
-    private final List<Partial> parseSplitBands() {
-        List<Partial> list = new ArrayList<>();
+    private final List<PartialBand> parseSplitBands() {
+        List<PartialBand> list = new ArrayList<>();
         Element bandsElement = this.doc.getElementsByClass("band_name").get(0);
         Elements bands = bandsElement.select(("a[href]"));
         for (Element bandElem : bands) {
             String bandLink = bandElem.toString();
             String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandElem.text()));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
-            list.add(new Partial(Long.parseLong(bandId), bandElem.text()));
+            list.add(new PartialBand(Long.parseLong(bandId), bandElem.text()));
         }
         logger.debug("SplitBands: " + list);
         return list;
     }
 
-    private Partial parseBand() {
-        return new Partial(parseBandId(), parseBandName());
+    private PartialBand parseBand() {
+        return new PartialBand(parseBandId(), parseBandName());
     }
 
     private String parseBandName() {

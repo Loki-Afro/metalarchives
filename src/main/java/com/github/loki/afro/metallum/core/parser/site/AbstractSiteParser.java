@@ -7,8 +7,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.concurrent.ExecutionException;
-
 public abstract class AbstractSiteParser<T extends AbstractEntity> {
 
     @Deprecated
@@ -16,7 +14,7 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     final Document doc;
     final boolean loadImage;
     final boolean loadLinks;
-//    protected final T entity;
+    //    protected final T entity;
     protected final long entityId;
 
     AbstractSiteParser(final long entityId, final boolean loadImage, final boolean loadLinks) {

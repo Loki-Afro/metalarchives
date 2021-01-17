@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.search.query.entity;
 
 import com.github.loki.afro.metallum.entity.Identifiable;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import lombok.Getter;
@@ -15,10 +16,12 @@ public class SearchDiscResult extends AbstractDisc implements Identifiable {
     private final long id;
 
     @Setter
+    @Getter
     private long bandId;
 
     @Setter
-    private List<Partial> splitBands;
+    @Getter
+    private List<PartialBand> splitBands;
 
     // optionals
     @Setter

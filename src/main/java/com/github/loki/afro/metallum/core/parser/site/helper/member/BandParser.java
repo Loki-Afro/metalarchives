@@ -1,7 +1,8 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.member;
 
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
-import com.github.loki.afro.metallum.search.query.entity.Partial;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialDisc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class BandParser {
         ACTIVE, GUEST, PAST, MISC, LIVE
     }
 
-    public Map<Partial, Map<Partial, String>> parse(final String html, final Mode mode) {
+    public Map<PartialBand, Map<PartialDisc, String>> parse(final String html, final Mode mode) {
         String htmlPart;
         switch (mode) {
             case ACTIVE:
@@ -45,11 +46,11 @@ public class BandParser {
         return parseIntern(htmlPart.split("<div class=\"member_in_band"));
     }
 
-    private Map<Partial, Map<Partial, String>> parseIntern(final String[] html) {
-        final Map<Partial, Map<Partial, String>> returnMap = new LinkedHashMap<>();
+    private Map<PartialBand, Map<PartialDisc, String>> parseIntern(final String[] html) {
+        final Map<PartialBand, Map<PartialDisc, String>> returnMap = new LinkedHashMap<>();
         for (int i = 1; i < html.length; i++) {
-            final Partial band = parseBand(html[i]);
-            final Map<Partial, String> albumMap = new LinkedHashMap<>();
+            final PartialBand band = parseBand(html[i]);
+            final Map<PartialDisc, String> albumMap = new LinkedHashMap<>();
 
             final String[] roleInBand = html[i].split("id=\"memberInAlbum");
             for (int j = 1; j < roleInBand.length; j++) {
@@ -60,9 +61,9 @@ public class BandParser {
         return returnMap;
     }
 
-    private Partial parseBand(final String html) {
+    private PartialBand parseBand(final String html) {
         String name = parseBandName(html);
-        return new Partial(parseBandId(html), name);
+        return new PartialBand(parseBandId(html), name);
     }
 
     private String parseBandName(final String html) {
@@ -94,9 +95,9 @@ public class BandParser {
         }
     }
 
-    private Partial parseDisc(final String html) {
+    private PartialDisc parseDisc(final String html) {
         String name = parseDiscName(html);
-        return new Partial(parseDiscId(html), name);
+        return new PartialDisc(parseDiscId(html), name);
     }
 
     private String parseDiscName(final String html) {
