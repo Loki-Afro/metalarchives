@@ -7,9 +7,9 @@ import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
 import org.jsoup.nodes.Element;
@@ -110,7 +110,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
      *
      * @return the Label of the Disc if there is one.
      */
-    private Label parseLabel() {
+    private PartialLabel parseLabel() {
         Element labelElement = this.doc.select("dl[class=float_right]").first();
         Element labelLink = labelElement.getElementsByTag("dd").first();
         String labelName = labelLink.text();
@@ -125,7 +125,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
                 labelIdStr = labelIdStr.substring(0, labelIdStr.indexOf("#"));
             }
         }
-        return new Label(Long.parseLong(labelIdStr), labelName);
+        return new PartialLabel(Long.parseLong(labelIdStr), labelName);
     }
 
     private Disc parseMember(final Disc disc) {

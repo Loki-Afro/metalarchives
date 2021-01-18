@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
 
@@ -18,7 +19,7 @@ public class Disc extends AbstractEntity {
     private List<PartialReview> reviewList = new ArrayList<>();
     private String releaseDate;
     private PartialBand band;
-    private Label label;
+    private PartialLabel label;
     private BufferedImage artwork = null;
     private String details;
     private String artworkURL = null;
@@ -89,10 +90,14 @@ public class Disc extends AbstractEntity {
     }
 
     public Label getLabel() {
+        return this.label.load();
+    }
+
+    public PartialLabel getLabelPartial() {
         return this.label;
     }
 
-    public void setLabel(final Label label) {
+    public void setLabel(final PartialLabel label) {
         this.label = label;
     }
 
