@@ -175,11 +175,17 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         List<PartialBand> list = new ArrayList<>();
         Element bandsElement = this.doc.getElementsByClass("band_name").get(0);
         Elements bands = bandsElement.select(("a[href]"));
+        String fullString = bandsElement.text();
         for (Element bandElem : bands) {
             String bandLink = bandElem.toString();
-            String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandElem.text()));
+            String bandName = bandElem.text();
+            String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandName));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
-            list.add(new PartialBand(Long.parseLong(bandId), bandElem.text()));
+            list.add(new PartialBand(Long.parseLong(bandId), bandName));
+            fullString = fullString.replaceAll(bandName + " / ", "");
+        }
+        for (String leftover : fullString.split("/")) {
+            list.add(new PartialBand(0L, leftover.trim()));
         }
         logger.debug("SplitBands: " + list);
         return list;

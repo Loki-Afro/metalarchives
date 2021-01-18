@@ -1,7 +1,10 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.Disc;
+import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.entity.Review;
+import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
@@ -722,6 +725,27 @@ public class DiscSearchServiceTest {
 
         assertThat(disc.getArtworkURL()).isNotEmpty();
         assertThat(disc.getArtwork()).isNotNull();
+    }
+
+    @Test
+    public void splitBandsTest() {
+        Disc disc = API.getDiscById(347457L);
+        assertThat(disc.getSplitBands()).extracting(PartialBand::getId, PartialBand::getName)
+                .containsExactly(
+                        tuple(97L, "Judas Priest"),
+                        tuple(198L, "Accept"),
+                        tuple(15424L, "Scorpions"),
+                        tuple(0L, "New Race"),
+                        tuple(0L, "Hawkwind")
+                );
+
+        assertThat(disc.getTrackList())
+                .extracting(Track::getBandName, t -> t.getBand().getId(), Track::getName)
+                .contains(
+                        tuple("Judas Priest", 97L, "Diamonds and Rust"),
+                        tuple("Scorpions", 15424L, "It All Depends"),
+                        tuple("Hawkwind", 0L, "Motorhead")
+                );
     }
 
 

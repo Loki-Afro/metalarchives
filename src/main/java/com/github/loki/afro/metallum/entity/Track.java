@@ -54,7 +54,7 @@ public class Track extends AbstractEntity {
         if (first.isPresent()) {
             return new Track(disc, first.get().getId(), bandName, trackId, trackTitle);
         } else {
-            throw new IllegalStateException("could not find split band from previously parsed disc");
+            throw new IllegalStateException("could not find split band from previously parsed disc with id " + disc.getId());
         }
     }
 
