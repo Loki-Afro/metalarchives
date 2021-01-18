@@ -12,18 +12,16 @@ import com.github.loki.afro.metallum.search.service.advanced.BandSearchService;
 import com.github.loki.afro.metallum.search.service.advanced.DiscSearchService;
 import com.google.common.collect.Iterables;
 
-import java.util.List;
-
 public abstract class API {
     private API() {
 //        util
     }
 
-    public static List<SearchBandResult> getBands(BandQuery bandQuery) {
+    public static Iterable<SearchBandResult> getBands(BandQuery bandQuery) {
         return new BandSearchService().get(bandQuery);
     }
 
-    public static List<Band> getBandsFully(BandQuery bandQuery) {
+    public static Iterable<Band> getBandsFully(BandQuery bandQuery) {
         return new BandSearchService().getFully(bandQuery);
     }
 
@@ -35,11 +33,11 @@ public abstract class API {
         return new BandSearchService().getById(id);
     }
 
-    public static List<SearchDiscResult> getDiscs(DiscQuery query) {
+    public static Iterable<SearchDiscResult> getDiscs(DiscQuery query) {
         return new DiscSearchService().get(query);
     }
 
-    public static List<Disc> getDiscsFully(DiscQuery query) {
+    public static Iterable<Disc> getDiscsFully(DiscQuery query) {
         return new DiscSearchService().getFully(query);
     }
 
@@ -51,7 +49,7 @@ public abstract class API {
         return new DiscSearchService().getById(id);
     }
 
-    public static List<SearchMemberResult> getMemberByName(String name) {
+    public static Iterable<SearchMemberResult> getMemberByName(String name) {
         return new MemberSearchService().get(new MemberQuery(name));
     }
 

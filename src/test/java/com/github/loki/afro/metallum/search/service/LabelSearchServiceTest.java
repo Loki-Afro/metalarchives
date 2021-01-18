@@ -5,6 +5,7 @@ import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.entity.LabelQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchLabelResult;
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -16,12 +17,12 @@ public class LabelSearchServiceTest {
     @Test
     public void noLabelTest() {
         final LabelSearchService searchService = new LabelSearchService();
-        assertThatThrownBy(() -> searchService.getFully(new LabelQuery(""))).isInstanceOf(MetallumException.class);
+        assertThatThrownBy(() -> searchService.getFully(new LabelQuery("")).iterator().next()).isInstanceOf(MetallumException.class);
     }
 
     @Test
     public void labelNameTest() throws MetallumException {
-        final List<SearchLabelResult> result = new LabelSearchService().get(new LabelQuery("Nuclear"));
+        final List<SearchLabelResult> result = Lists.newArrayList(new LabelSearchService().get(new LabelQuery("Nuclear")));
 
         assertThat(result).isNotEmpty();
         for (final SearchLabelResult label : result) {

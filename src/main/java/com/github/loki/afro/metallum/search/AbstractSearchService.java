@@ -6,86 +6,92 @@ import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.AbstractEntity;
 import com.github.loki.afro.metallum.entity.Identifiable;
 import com.github.loki.afro.metallum.search.query.entity.IQuery;
+import com.google.common.collect.AbstractIterator;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Lists;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, QUERY extends IQuery, SEARCH_RESULT extends Identifiable> {
 
     public AbstractSearchService() {
     }
 
-    protected void enrichParsedEntity(QUERY query, SEARCH_RESULT resultMap) {
+    protected SEARCH_RESULT enrichParsedEntity(QUERY query, SEARCH_RESULT result) {
+        return result;
     }
 
     protected abstract AbstractSearchParser<SEARCH_RESULT> getSearchParser(QUERY query);
 
 
-    public List<SEARCH_RESULT> get(QUERY query) {
-        return new ArrayList<>(toList(getAsMap(query)));
+    public Iterable<SEARCH_RESULT> get(QUERY query) {
+        return lazyQuery(query);
     }
 
-    private SortedMap<SearchRelevance, Collection<SEARCH_RESULT>> getAsMap(QUERY query) {
-        ListMultimap<SearchRelevance, SEARCH_RESULT> resultMap = parseSearchResults(query);
 
-        Map<SearchRelevance, Collection<SEARCH_RESULT>> searchRelevanceCollectionMap = resultMap.asMap();
-        return new TreeMap<>(searchRelevanceCollectionMap);
-    }
-
-    public List<FULL_ENTITY> getFully(QUERY query) {
-        List<FULL_ENTITY> out = new ArrayList<>();
-        SortedMap<SearchRelevance, Collection<SEARCH_RESULT>> resultAsMap = getAsMap(query);
-
-        for (Map.Entry<SearchRelevance, Collection<SEARCH_RESULT>> searchResultMapEntry : resultAsMap.entrySet()) {
-            for (SEARCH_RESULT searchResult : searchResultMapEntry.getValue()) {
-                FULL_ENTITY fullEntity = parseFully().apply(searchResult);
-                out.add(fullEntity);
-            }
-        }
-
-        return out;
+    public Iterable<FULL_ENTITY> getFully(QUERY query) {
+        return StreamSupport.stream(lazyQuery(query).spliterator(), false)
+                .map(r -> parseFully().apply(r))
+                ::iterator;
     }
 
 
     @Deprecated
     public List<SEARCH_RESULT> performSearch(final AbstractSearchQuery<QUERY> query) throws MetallumException {
-        return new ArrayList<>(get(query.searchObject));
+        return Lists.newArrayList(get(query.searchObject));
     }
 
     @Deprecated
     public List<FULL_ENTITY> performSearchAndLoadFully(final AbstractSearchQuery<QUERY> query) throws MetallumException {
-        return getFully(query.searchObject);
+        return Lists.newArrayList(getFully(query.searchObject));
     }
 
     public FULL_ENTITY getById(long id) {
         return getById().apply(id);
     }
 
-    private final ListMultimap<SearchRelevance, SEARCH_RESULT> parseSearchResults(QUERY query) throws MetallumException {
-        ListMultimap<SearchRelevance, SEARCH_RESULT> map = MultimapBuilder.treeKeys()
-                .arrayListValues()
-                .build();
+    private Iterable<SEARCH_RESULT> lazyQuery(QUERY query) {
+        AbstractSearchParser<SEARCH_RESULT> parser = getSearchParser(query);
+        Iterator<List<SEARCH_RESULT>> pagingIterator = new AbstractIterator<List<SEARCH_RESULT>>() {
+            private boolean endOfData;
+            private int currentPage = 0;
 
-        final AbstractSearchParser<SEARCH_RESULT> parser = getSearchParser(query);
-        int page = 0;
-        while (page == 0 || parser.getTotalSearchResults() > page) {
-            final String searchUrl = getUrlForQuery(query, page);
-            final String resultHtml = Downloader.getHTML(searchUrl);
-            SortedMap<SearchRelevance, List<SEARCH_RESULT>> newMap = parser.parseSearchResults(resultHtml);
-
-            for (Map.Entry<SearchRelevance, List<SEARCH_RESULT>> entry : newMap.entrySet()) {
-                for (SEARCH_RESULT searchResult : entry.getValue()) {
-                    enrichParsedEntity(query, searchResult);
-                    map.put(entry.getKey(), searchResult);
+            @Override
+            protected List<SEARCH_RESULT> computeNext() {
+                if (endOfData) {
+                    return endOfData();
                 }
-            }
 
-            page += 200;
-        }
-        return map;
+                List<SEARCH_RESULT> rows = query(query, parser, currentPage);
+
+                if (rows.isEmpty()) {
+                    return endOfData();
+                } else if (rows.size() < 200) {
+                    endOfData = true;
+                } else {
+                    currentPage += 200;
+                }
+
+                return rows;
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(pagingIterator, 0), false)
+                .flatMap(List::stream)
+                ::iterator;
+    }
+
+
+    private List<SEARCH_RESULT> query(QUERY query, AbstractSearchParser<SEARCH_RESULT> parser, int page) {
+        final String searchUrl = getUrlForQuery(query, page);
+        final String resultHtml = Downloader.getHTML(searchUrl);
+        SortedMap<SearchRelevance, List<SEARCH_RESULT>> newMap = parser.parseSearchResults(resultHtml);
+        return newMap.values().stream()
+                .flatMap(Collection::stream)
+                .map(r -> enrichParsedEntity(query, r))
+                .collect(Collectors.toList());
     }
 
     private String getUrlForQuery(QUERY query, final int startPage) throws MetallumException {
@@ -94,14 +100,6 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         } else {
             throw new MetallumException("No entity to search for!");
         }
-    }
-
-    private static <X> List<X> toList(Map<SearchRelevance, Collection<X>> map) {
-        final List<X> listToReturn = new ArrayList<>();
-        for (final Collection<X> listWithSearchObjects : map.values()) {
-            listToReturn.addAll(listWithSearchObjects);
-        }
-        return listToReturn;
     }
 
     protected Function<SEARCH_RESULT, FULL_ENTITY> parseFully() {

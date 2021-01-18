@@ -23,7 +23,7 @@ public class LabelSearchExampleTest {
         stringList.add("Century Media Records");
         for (String labelName : stringList) {
             // System.out.println("searching with: " + labelName);
-            List<SearchLabelResult> labels = new LabelSearchService().get(new LabelQuery(labelName));
+            Iterable<SearchLabelResult> labels = new LabelSearchService().get(new LabelQuery(labelName));
             for (SearchLabelResult label : labels) {
 //                label.getCountry()
 //                ...

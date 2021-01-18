@@ -23,13 +23,11 @@ public class TrackSearchServiceTest {
         long trackId = 4337410L;
         String trackName = "Hunger";
 
-        List<SearchTrackResult> searchTrackResults = new TrackSearchService().get(TrackQuery.builder().bandName("Eaten")
+        Iterable<SearchTrackResult> searchTrackResults = new TrackSearchService().get(TrackQuery.builder().bandName("Eaten")
                 .discName("Eaten")
                 .bandName("Eaten")
                 .name(trackName)
                 .build());
-
-        assertThat(searchTrackResults).hasSize(1);
 
         SearchTrackResult result = Iterables.getOnlyElement(searchTrackResults);
         assertThat(result.getId()).isEqualTo(trackId);
@@ -121,7 +119,7 @@ public class TrackSearchServiceTest {
                 .discType(DiscType.FULL_LENGTH)
                 .build();
 
-        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
+        final SearchTrackResult resultTrack = Iterables.getOnlyElement(new TrackSearchService().get(query));
         assertThat(resultTrack.getBandName()).isEqualTo("Drudkh");
         assertThat(resultTrack.getDiscName()).isEqualTo("Microcosmos");
         assertThat(resultTrack.getName()).isEqualTo("Ars Poetica");
@@ -138,7 +136,7 @@ public class TrackSearchServiceTest {
                 .discTypes(Sets.newHashSet(DiscType.FULL_LENGTH, DiscType.DEMO, DiscType.EP))
                 .build();
 
-        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
+        final SearchTrackResult resultTrack = Iterables.getOnlyElement(new TrackSearchService().get(query));
         assertThat(resultTrack.getBandName()).isEqualTo("Drudkh");
         assertThat(resultTrack.getDiscName()).isEqualTo("Відчуженість (Estrangement)");
         assertThat(resultTrack.getName()).isEqualTo("Самітня нескінченна тропа (Solitary Endless Path)");
@@ -161,7 +159,7 @@ public class TrackSearchServiceTest {
                 .lyrics("I'm your saviour, your")
                 .build();
 
-        final SearchTrackResult resultTrack = new TrackSearchService().get(query).get(0);
+        final SearchTrackResult resultTrack = Iterables.getOnlyElement(new TrackSearchService().get(query));
 
         assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(resultTrack.getDiscName()).isEqualTo("II: Crush the Insects");
@@ -181,7 +179,7 @@ public class TrackSearchServiceTest {
                 .discType(DiscType.FULL_LENGTH)
                 .build();
 
-        final Track resultTrack = new TrackSearchService(true).getFully(query).get(0);
+        final Track resultTrack = new TrackSearchService(true).getSingleUniqueByQuery(query);
         assertThat(resultTrack.getBandName()).isEqualTo("Burzum");
         assertThat(resultTrack.getDiscName()).isEqualTo("Burzum");
         assertThat(resultTrack.getName()).isEqualTo("War");
@@ -201,7 +199,7 @@ public class TrackSearchServiceTest {
                 .build();
 
 
-        final List<Track> resultTrackList = new TrackSearchService().getFully(query);
+        final Iterable<Track> resultTrackList = new TrackSearchService().getFully(query);
         for (final Track resultTrack : resultTrackList) {
             assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
             assertThat(resultTrack.getDiscName().isEmpty()).isFalse();
@@ -231,9 +229,8 @@ public class TrackSearchServiceTest {
                 .exactNameMatch(true)
                 .discType(DiscType.FULL_LENGTH)
                 .build();
-        List<SearchTrackResult> trackList = new TrackSearchService().get(query);
-        assertThat(trackList).hasSize(1);
-        SearchTrackResult track = trackList.get(0);
+        Iterable<SearchTrackResult> trackList = new TrackSearchService().get(query);
+        SearchTrackResult track = Iterables.getOnlyElement(trackList);
 
         assertThat(track.getBandName()).isEqualTo("Defeated Sanity");
         assertThat(track.getDiscName()).isEqualTo("Psalms of the Moribund");

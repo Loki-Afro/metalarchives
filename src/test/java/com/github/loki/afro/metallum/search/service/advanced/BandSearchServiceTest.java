@@ -10,6 +10,7 @@ import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.query.BandSearchQuery;
+import com.google.common.collect.Iterables;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -81,7 +82,7 @@ public class BandSearchServiceTest {
 
     @Test
     public void exactBandNameTest() throws MetallumException {
-        final Band resultBand = API.getBandsFully(BandQuery.builder().name("Nile").build()).get(0);
+        final Band resultBand = Iterables.getFirst(API.getBandsFully(BandQuery.builder().name("Nile").build()), null);
 
         assertThat("Nile").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
@@ -199,7 +200,7 @@ public class BandSearchServiceTest {
                 .country(Country.AD)
                 .build();
 
-        final SearchBandResult resultBand = new BandSearchService().get(bandQuery).get(0);
+        final SearchBandResult resultBand = Iterables.getOnlyElement(new BandSearchService().get(bandQuery));
         assertThat("Lifelover").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(resultBand.getCountry()).contains(Country.SE);
@@ -208,10 +209,6 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getYearFormedIn()).isEmpty();
         assertThat(resultBand.getGenre()).contains("Black Metal/Depressive Rock");
         assertThat(resultBand.getLyricalThemes()).isEmpty();
-//        assertThat(resultBand.getPartialLabel().getName().isEmpty()).isTrue();
-//        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-//        assertThat(resultBand.hasLogo()).isFalse();
-//        assertThat(resultBand.hasPhoto()).isFalse();
     }
 
     @Test
@@ -219,7 +216,7 @@ public class BandSearchServiceTest {
         BandQuery bandQuery = BandQuery.byName("Katatonia", false)
                 .setYearOfFormationToYear(1991);
 
-        final SearchBandResult resultBand = new BandSearchService().get(bandQuery).get(0);
+        final SearchBandResult resultBand = Iterables.getOnlyElement(new BandSearchService().get(bandQuery));
         assertThat("Katatonia").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId()).isNotEqualTo(0);
         assertThat(resultBand.getCountry()).contains(Country.SE);
@@ -424,7 +421,7 @@ public class BandSearchServiceTest {
                 .status(BandStatus.ON_HOLD)
                 .build();
 
-        final Band resultBand = service.getFully(bandQuery).get(0);
+        final Band resultBand = Iterables.getOnlyElement(service.getFully(bandQuery));
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());

@@ -63,11 +63,12 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
     }
 
     @Override
-    protected void enrichParsedEntity(TrackQuery query, SearchTrackResult result) {
+    protected SearchTrackResult enrichParsedEntity(TrackQuery query, SearchTrackResult result) {
         if (query.getDiscTypes().size() == 1) {
             final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
             result.setDiscType(discType);
         }
+        return result;
     }
 
 }

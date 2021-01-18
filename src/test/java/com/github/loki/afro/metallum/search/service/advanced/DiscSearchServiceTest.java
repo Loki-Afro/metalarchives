@@ -25,15 +25,13 @@ public class DiscSearchServiceTest {
 
     @Test
     public void objectToLoadTest() throws MetallumException {
-        final List<SearchDiscResult> discListResult = new DiscSearchService().get(DiscQuery.builder()
+        final Iterable<SearchDiscResult> discListResult = new DiscSearchService().get(DiscQuery.builder()
                 .bandName("Lantlôs")
                 .build());
 
-        assertThat(discListResult).isNotEmpty();
-        for (final SearchDiscResult discResult : discListResult) {
-            assertThat(discResult.getBandName()).contains("Lantlôs");
-            assertThat(discResult.getName()).isNotEmpty();
-        }
+        assertThat(discListResult)
+                .extracting(SearchDiscResult::getBandName)
+                .contains("Lantlôs");
     }
 
     @Test
@@ -164,11 +162,9 @@ public class DiscSearchServiceTest {
 
     @Test
     public void splitSearchTest() throws MetallumException {
-        List<SearchDiscResult> result = API.getDiscs(DiscQuery.builder()
+        Iterable<SearchDiscResult> result = API.getDiscs(DiscQuery.builder()
                 .name("Thousands of Moons Ago / The Gates")
                 .build());
-
-        assertThat(result).hasSize(1);
 
         SearchDiscResult searchDiscResult = Iterables.getOnlyElement(result);
 
@@ -369,7 +365,7 @@ public class DiscSearchServiceTest {
                 .genre("Symphonic Black Metal")
                 .build();
 
-        final Disc discResult = API.getDiscsFully(query).get(0);
+        final Disc discResult = Iterables.getFirst(API.getDiscsFully(query), null);
 
         assertThat(discResult.getBandName()).isEqualTo("Dimmu Borgir");
         assertThat(discResult.getName()).isEqualTo("Stormblåst");
@@ -439,7 +435,7 @@ public class DiscSearchServiceTest {
                 .labelName("Spikefarm Records")
                 .build();
 
-        final Disc discResult = new DiscSearchService().getFully(query).get(0);
+        final Disc discResult = new DiscSearchService().getFully(query).iterator().next();
 
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("II: Crush the Insects");
@@ -458,7 +454,7 @@ public class DiscSearchServiceTest {
     public void indieLabelTest() throws MetallumException {
         final DiscSearchService service = new DiscSearchService();
         DiscQuery query = DiscQuery.builder().name("Practice Sessions").labelName("").build();
-        final Disc discResult = service.getFully(query).get(0);
+        final Disc discResult = service.getFully(query).iterator().next();
         assertThat(discResult.getBandName()).isEqualTo("Reverend Bizarre");
         assertThat(discResult.getName()).isEqualTo("Practice Sessions");
         assertThat(discResult.getTrackList()).hasSize(4);
@@ -526,7 +522,7 @@ public class DiscSearchServiceTest {
                 .bandName("Belphegor")
                 .name("Pestapokalypse VI")
                 .build();
-        final Disc discResult = new DiscSearchService(true).getFully(query).get(0);
+        final Disc discResult = Iterables.getFirst(new DiscSearchService(true).getFully(query), null);
 
         assertThat(discResult.getBandName()).isEqualTo("Belphegor");
         assertThat(discResult.getName()).isEqualTo("Pestapokalypse VI");
@@ -622,7 +618,7 @@ public class DiscSearchServiceTest {
 
     @Test
     public void metallumExcetionTest() {
-        assertThatThrownBy(() -> API.getDiscsFully(DiscQuery.builder().build())).isInstanceOf(MetallumException.class);
+        assertThatThrownBy(() -> API.getDiscsFully(DiscQuery.builder().build()).iterator().next()).isInstanceOf(MetallumException.class);
     }
 
     @Test

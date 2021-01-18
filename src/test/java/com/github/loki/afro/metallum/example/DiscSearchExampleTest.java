@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DiscSearchExampleTest {
     @Disabled
     public void test() throws MetallumException {
-        List<Disc> result = API.getDiscsFully(DiscQuery.builder()
+        Iterable<Disc> result = API.getDiscsFully(DiscQuery.builder()
                 .bandName("Reverend Bizarre")
                 .name("Under the Sign of the Wolf")
                 .exactNameMatch(true)

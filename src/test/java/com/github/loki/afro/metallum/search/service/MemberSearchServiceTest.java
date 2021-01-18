@@ -7,6 +7,8 @@ import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.entity.MemberQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -19,7 +21,7 @@ public class MemberSearchServiceTest {
 
     @Test
     public void test() throws MetallumException {
-        List<SearchMemberResult> members = API.getMemberByName("Sami");
+        Iterable<SearchMemberResult> members = API.getMemberByName("Sami");
 
         for (SearchMemberResult member : members) {
             assertThat(member.getName()).isNotNull();
@@ -52,22 +54,21 @@ public class MemberSearchServiceTest {
 
     @Test
     public void noMemberNameTest() {
-        assertThatThrownBy(() -> API.getMemberByName("")).isInstanceOf(MetallumException.class);
+        assertThatThrownBy(() -> API.getMemberByName("").iterator().next()).isInstanceOf(MetallumException.class);
     }
 
     @Test
     public void searchNameTest() throws MetallumException {
-        final List<SearchMemberResult> result = API.getMemberByName("Fenriz");
-        assertThat(result.isEmpty()).isFalse();
+        final Iterable<SearchMemberResult> result = Lists.newArrayList(API.getMemberByName("Fenriz"));
+        assertThat(result).isNotEmpty();
         defaultSearchMemberCheck(result);
     }
 
     @Test
     public void photoTest() throws MetallumException {
         final MemberSearchService searchService = new MemberSearchService(true, false, false);
-        final List<Member> result = searchService.getFully(new MemberQuery("Eicca Toppinen"));
-        assertThat(result.isEmpty()).isFalse();
-        final Member member = result.get(0);
+        final Iterable<Member> result = searchService.getFully(new MemberQuery("Eicca Toppinen"));
+        Member member = Iterables.getOnlyElement(result);
         defaultSearchMemberCheck(member);
         assertThat(member.getPhotoUrl().isEmpty()).isFalse();
         assertThat(member.getPhoto()).isNotNull();
@@ -76,9 +77,8 @@ public class MemberSearchServiceTest {
     @Test
     public void detailsTest() throws MetallumException {
         final MemberSearchService searchService = new MemberSearchService(false, false, true);
-        final List<Member> result = searchService.getFully(new MemberQuery("George \"Corpsegrinder\" Fisher"));
-        assertThat(result.isEmpty()).isFalse();
-        final Member member = result.get(0);
+        final Iterable<Member> result = searchService.getFully(new MemberQuery("George \"Corpsegrinder\" Fisher"));
+        final Member member = Iterables.getOnlyElement(result);
         defaultSearchMemberCheck(member);
         assertThat(member.getPhotoUrl().isEmpty()).isFalse();
         assertThat(member.getDetails().startsWith("George")).isTrue();
@@ -88,7 +88,7 @@ public class MemberSearchServiceTest {
     @Test
     public void linksTest() throws MetallumException {
         final MemberSearchService searchService = new MemberSearchService(false, true, false);
-        final List<Member> result = searchService.getFully(new MemberQuery("Tom G. Warrior"));
+        final List<Member> result = Lists.newArrayList(searchService.getFully(new MemberQuery("Tom G. Warrior")));
         assertThat(result.isEmpty()).isFalse();
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
@@ -115,7 +115,7 @@ public class MemberSearchServiceTest {
         assertThat(country).isNotNull();
     }
 
-    private void defaultSearchMemberCheck(final Collection<SearchMemberResult> membersToTest) {
+    private void defaultSearchMemberCheck(final Iterable<SearchMemberResult> membersToTest) {
         for (final SearchMemberResult member : membersToTest) {
             defaultSearchMemberCheck(member.getId(), member.getName(), member.getCountry());
         }

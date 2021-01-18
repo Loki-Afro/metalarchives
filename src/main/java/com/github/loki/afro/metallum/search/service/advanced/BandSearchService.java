@@ -72,7 +72,7 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
     }
 
     @Override
-    protected void enrichParsedEntity(BandQuery query, SearchBandResult result) {
+    protected SearchBandResult enrichParsedEntity(BandQuery query, SearchBandResult result) {
         Set<Country> countries = query.getCountries();
         if (countries.size() == 1) {
             final Country country = Iterables.getOnlyElement(countries);
@@ -84,6 +84,7 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
             final BandStatus status = Iterables.getOnlyElement(statusSet);
             result.setStatus(status);
         }
+        return result;
     }
 
 }

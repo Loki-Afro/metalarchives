@@ -77,7 +77,7 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
     }
 
     @Override
-    protected void enrichParsedEntity(DiscQuery query, final SearchDiscResult result) {
+    protected SearchDiscResult enrichParsedEntity(DiscQuery query, final SearchDiscResult result) {
         if (query.getDiscTypes().size() == 1) {
             final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
             result.setDiscType(discType);
@@ -86,6 +86,7 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
             final Country country = Iterables.getOnlyElement(query.getCountries());
             result.setBandCountry(country);
         }
+        return result;
     }
 
 }
