@@ -6,13 +6,10 @@ import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
 import com.google.common.collect.Iterables;
 
-import java.util.List;
-import java.util.SortedMap;
 import java.util.function.Function;
 
 public class TrackSearchService extends AbstractSearchService<Track, TrackQuery, SearchTrackResult> {
@@ -66,16 +63,11 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
     }
 
     @Override
-    protected SortedMap<SearchRelevance, List<SearchTrackResult>> enrichParsedEntity(TrackQuery query, SortedMap<SearchRelevance, List<SearchTrackResult>> resultMap) {
+    protected void enrichParsedEntity(TrackQuery query, SearchTrackResult result) {
         if (query.getDiscTypes().size() == 1) {
             final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
-            for (final List<SearchTrackResult> trackList : resultMap.values()) {
-                for (final SearchTrackResult track : trackList) {
-                    track.setDiscType(discType);
-                }
-            }
+            result.setDiscType(discType);
         }
-        return resultMap;
     }
 
 }

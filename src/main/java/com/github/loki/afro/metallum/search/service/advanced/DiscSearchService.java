@@ -6,13 +6,10 @@ import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
 import com.google.common.collect.Iterables;
 
-import java.util.List;
-import java.util.SortedMap;
 import java.util.function.Function;
 
 import static com.github.loki.afro.metallum.core.util.MetallumUtil.isNotBlank;
@@ -80,25 +77,15 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
     }
 
     @Override
-    protected SortedMap<SearchRelevance, List<SearchDiscResult>> enrichParsedEntity(DiscQuery query, final SortedMap<SearchRelevance, List<SearchDiscResult>> resultMap) {
+    protected void enrichParsedEntity(DiscQuery query, final SearchDiscResult result) {
         if (query.getDiscTypes().size() == 1) {
             final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
-            for (final List<SearchDiscResult> discList : resultMap.values()) {
-                for (final SearchDiscResult disc : discList) {
-                    // if there is a discType we are overwriting it!
-                    disc.setDiscType(discType);
-                }
-            }
+            result.setDiscType(discType);
         }
         if (query.getCountries().size() == 1) {
             final Country country = Iterables.getOnlyElement(query.getCountries());
-            for (final List<SearchDiscResult> discList : resultMap.values()) {
-                for (final SearchDiscResult disc : discList) {
-                    disc.setBandCountry(country);
-                }
-            }
+            result.setBandCountry(country);
         }
-        return resultMap;
     }
 
 }

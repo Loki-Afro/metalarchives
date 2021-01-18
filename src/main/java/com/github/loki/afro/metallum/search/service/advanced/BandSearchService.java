@@ -6,14 +6,11 @@ import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
-import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.BandQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.google.common.collect.Iterables;
 
-import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.function.Function;
 
 public final class BandSearchService extends AbstractSearchService<Band, BandQuery, SearchBandResult> {
@@ -75,27 +72,18 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
     }
 
     @Override
-    protected SortedMap<SearchRelevance, List<SearchBandResult>> enrichParsedEntity(BandQuery query, SortedMap<SearchRelevance, List<SearchBandResult>> resultMap) {
+    protected void enrichParsedEntity(BandQuery query, SearchBandResult result) {
         Set<Country> countries = query.getCountries();
         if (countries.size() == 1) {
             final Country country = Iterables.getOnlyElement(countries);
-            for (final List<SearchBandResult> bandList : resultMap.values()) {
-                for (final SearchBandResult band : bandList) {
-                    band.setCountry(country);
-                }
-            }
+            result.setCountry(country);
         }
 
         Set<BandStatus> statusSet = query.getStatuses();
         if (statusSet.size() == 1) {
             final BandStatus status = Iterables.getOnlyElement(statusSet);
-            for (final List<SearchBandResult> bandList : resultMap.values()) {
-                for (SearchBandResult band : bandList) {
-                    band.setStatus(status);
-                }
-            }
+            result.setStatus(status);
         }
-        return resultMap;
     }
 
 }
