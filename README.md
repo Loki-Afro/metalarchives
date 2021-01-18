@@ -33,14 +33,14 @@ Snapshots (Repository http://oss.sonatype.org/content/repositories/snapshots)
 <dependency>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```
-compile 'com.github.loki-afro:metalarchives-api:1.0.0'
+compile 'com.github.loki-afro:metalarchives-api:1.0.0-SNAPSHOT'
 ```
 
 ### Usage
