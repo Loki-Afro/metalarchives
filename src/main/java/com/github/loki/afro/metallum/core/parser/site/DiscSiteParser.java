@@ -182,10 +182,14 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
             String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandName));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
             list.add(new PartialBand(Long.parseLong(bandId), bandName));
-            fullString = fullString.replaceAll(bandName + " / ", "");
         }
-        for (String leftover : fullString.split("/")) {
-            list.add(new PartialBand(0L, leftover.trim()));
+        for (PartialBand partialBand : list) {
+            fullString = fullString.replaceFirst(partialBand.getName() + "(?:\\s/)?", "").trim();
+        }
+        if (!fullString.isEmpty()) {
+            for (String leftover : fullString.split("/")) {
+                list.add(new PartialBand(0L, leftover.trim()));
+            }
         }
         logger.debug("SplitBands: " + list);
         return list;
