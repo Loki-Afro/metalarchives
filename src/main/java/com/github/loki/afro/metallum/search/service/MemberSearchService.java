@@ -7,6 +7,8 @@ import com.github.loki.afro.metallum.search.AbstractSearchService;
 import com.github.loki.afro.metallum.search.query.entity.MemberQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchMemberResult;
 
+import java.util.function.Function;
+
 
 public class MemberSearchService extends AbstractSearchService<Member, MemberQuery, SearchMemberResult> {
     private boolean loadImages;
@@ -72,13 +74,13 @@ public class MemberSearchService extends AbstractSearchService<Member, MemberQue
     }
 
     @Override
-    protected final MemberSiteParser getSiteParser(final long entityId) {
-        return new MemberSiteParser(entityId, this.loadImages, this.loadLinks, this.loadDetails);
+    protected final MemberSearchParser getSearchParser(MemberQuery memberQuery) {
+        return new MemberSearchParser();
     }
 
     @Override
-    protected final MemberSearchParser getSearchParser(MemberQuery memberQuery) {
-        return new MemberSearchParser();
+    protected Function<Long, Member> getById() {
+        return id -> new MemberSiteParser(id, this.loadImages, this.loadLinks, this.loadDetails).parse();
     }
 
 }

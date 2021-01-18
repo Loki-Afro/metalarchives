@@ -52,6 +52,11 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
     }
 
     @Override
+    protected Function<Long, Track> getById() {
+        throw new UnsupportedOperationException("currently tracks cannot be searched by id");
+    }
+
+    @Override
     protected final TrackSearchParser getSearchParser(TrackQuery trackQuery) {
         TrackSearchParser trackSearchParser = new TrackSearchParser();
         trackSearchParser.setLoadLyrics(this.loadLyrics);
@@ -73,8 +78,4 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
         return resultMap;
     }
 
-    @Override
-    public Track getById(long id) {
-        throw new UnsupportedOperationException("currently tracks cannot be searched by id");
-    }
 }

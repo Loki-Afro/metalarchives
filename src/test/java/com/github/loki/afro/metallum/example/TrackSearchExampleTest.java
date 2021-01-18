@@ -27,7 +27,6 @@ public class TrackSearchExampleTest {
             assertThat(track.getName()).isEqualTo("The Gate of Nanna");
             // lyrics will come
         }
-        assertThat(trackService.isResultEmpty()).isFalse();
     }
 
 }

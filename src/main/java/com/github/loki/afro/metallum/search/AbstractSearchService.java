@@ -2,7 +2,6 @@ package com.github.loki.afro.metallum.search;
 
 import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.search.AbstractSearchParser;
-import com.github.loki.afro.metallum.core.parser.site.AbstractSiteParser;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.AbstractEntity;
 import com.github.loki.afro.metallum.entity.Identifiable;
@@ -37,15 +36,12 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
     }
 
     public List<FULL_ENTITY> getFully(QUERY query) {
-        AbstractSearchParser<SEARCH_RESULT> parser = getSearchParser(query);
-        parseSearchResults(parser, query);
-
-        loadResults(query);
+        get(query);
 
         for (Map.Entry<SearchRelevance, List<SEARCH_RESULT>> searchResultMapEntry : this.searchResultMap.entrySet()) {
             List<FULL_ENTITY> tempList = new ArrayList<>();
             for (SEARCH_RESULT searchResult : searchResultMapEntry.getValue()) {
-                FULL_ENTITY fullEntity = useSiteParser(searchResult);
+                FULL_ENTITY fullEntity = parseFully().apply(searchResult);
                 tempList.add(fullEntity);
             }
 
@@ -69,7 +65,7 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
     }
 
     public FULL_ENTITY getById(long id) {
-        FULL_ENTITY fullEntity = getSiteParser(id).parse();
+        FULL_ENTITY fullEntity = getById().apply(id);
         this.fullResultMap.put(new SearchRelevance(0d), Collections.singletonList(fullEntity));
         return fullEntity;
     }
@@ -77,14 +73,14 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
     private final void parseSearchResults(AbstractSearchParser<SEARCH_RESULT> parser, QUERY query) throws MetallumException {
         int startPage = 0;
         while (startPage == 0 || parser.getTotalSearchResults() > startPage) {
-            final String searchUrl = getUrl(query, startPage);
+            final String searchUrl = getUrlForQuery(query, startPage);
             final String resultHtml = Downloader.getHTML(searchUrl);
             addToSearchResultMap(parser.parseSearchResults(resultHtml));
             startPage += 200;
         }
     }
 
-    private String getUrl(QUERY query, final int startPage) throws MetallumException {
+    private String getUrlForQuery(QUERY query, final int startPage) throws MetallumException {
         if (query.isValid()) {
             return query.assembleQueryUrl(startPage);
         } else {
@@ -103,50 +99,12 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         }
     }
 
-    public final SEARCH_RESULT getFirst() {
-        List<SEARCH_RESULT> firstList = this.getFirstList();
-        if (!firstList.isEmpty()) {
-            return firstList.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    private final List<SEARCH_RESULT> getFirstList() {
-        if (this.searchResultMap.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return this.searchResultMap.get(this.searchResultMap.firstKey());
-    }
-
     private static <X> List<X> toList(Map<SearchRelevance, List<X>> map) {
         final List<X> listToReturn = new ArrayList<>();
         for (final List<X> listWithSearchObjects : map.values()) {
             listToReturn.addAll(listWithSearchObjects);
         }
         return listToReturn;
-    }
-
-    public final Map<SearchRelevance, List<SEARCH_RESULT>> getResultMap() {
-        return this.searchResultMap;
-    }
-
-    /**
-     * @return true if there is more as one result, false if there is also no result
-     */
-    public final boolean hasMoreAsOneResult() {
-        return this.searchResultMap.size() > 1
-                || this.getFirstList().size() > 1;
-
-    }
-
-    /**
-     * To check if the result is empty.
-     *
-     * @return returns true if there is no result, false otherwise.
-     */
-    public final boolean isResultEmpty() {
-        return this.searchResultMap.isEmpty();
     }
 
     protected final void removeAndPutNewKey(final SearchRelevance key, final List<SEARCH_RESULT> newObjectList) {
@@ -172,25 +130,11 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         this.searchResultMap = enrichParsedEntity(query, this.searchResultMap);
     }
 
-    /**
-     * If there is a parser specified you'll get the whole parsed entity.
-     *
-     * @param searchResult the parsed entity
-     * @return if there is no parser, the same entity will be returned! otherwise the parsed entity,
-     * with all information
-     */
-    private final FULL_ENTITY useSiteParser(final SEARCH_RESULT searchResult) throws MetallumException {
-        return parseFully().apply(searchResult);
-    }
-
     protected Function<SEARCH_RESULT, FULL_ENTITY> parseFully() {
-        return searchResult -> getSiteParser(searchResult.getId()).parse();
+        return sr -> getById(sr.getId());
     }
 
-    protected AbstractSiteParser<FULL_ENTITY> getSiteParser(final long entityId) {
-        return null;
-    }
-
+    protected abstract Function<Long, FULL_ENTITY> getById();
 
     public FULL_ENTITY getSingleUniqueByQuery(QUERY query) {
         return Iterables.getOnlyElement(getFully(query));

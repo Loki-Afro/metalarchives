@@ -14,6 +14,7 @@ import com.google.common.collect.Iterables;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.function.Function;
 
 public final class BandSearchService extends AbstractSearchService<Band, BandQuery, SearchBandResult> {
 
@@ -45,11 +46,6 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
     }
 
     @Override
-    protected final BandSiteParser getSiteParser(final long entityId) {
-        return new BandSiteParser(entityId, this.loadImages, this.loadSimilar, this.loadLinks, this.loadReadMore);
-    }
-
-    @Override
     protected final BandSearchParser getSearchParser(BandQuery bandQuery) {
         BandSearchParser bandSearchParser = new BandSearchParser();
         if (bandQuery.getYearOfFormationFromYear().isPresent() || bandQuery.getYearOfFormationToYear().isPresent()) {
@@ -71,6 +67,11 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
             }
         }
         return bandSearchParser;
+    }
+
+    @Override
+    protected Function<Long, Band> getById() {
+        return id -> new BandSiteParser(id, this.loadImages, this.loadSimilar, this.loadLinks, this.loadReadMore).parse();
     }
 
     @Override

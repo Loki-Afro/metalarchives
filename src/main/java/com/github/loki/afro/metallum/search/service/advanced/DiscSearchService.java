@@ -13,6 +13,7 @@ import com.google.common.collect.Iterables;
 
 import java.util.List;
 import java.util.SortedMap;
+import java.util.function.Function;
 
 import static com.github.loki.afro.metallum.core.util.MetallumUtil.isNotBlank;
 
@@ -61,11 +62,6 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
     }
 
     @Override
-    protected DiscSiteParser getSiteParser(final long entityId) {
-        return new DiscSiteParser(entityId, this.loadImages, this.loadLyrics);
-    }
-
-    @Override
     protected DiscSearchParser getSearchParser(DiscQuery discQuery) {
         DiscSearchParser discSearchParser = new DiscSearchParser();
         discSearchParser.setIsAbleToParseDate(discQuery.isAbleToParseDate());
@@ -76,6 +72,11 @@ public class DiscSearchService extends AbstractSearchService<Disc, DiscQuery, Se
         discSearchParser.setIsAbleToParseCountry(discQuery.isAbleToParseCountry());
         discSearchParser.setIsAbleToParseProvince(isNotBlank(discQuery.getBandProvince()));
         return discSearchParser;
+    }
+
+    @Override
+    protected Function<Long, Disc> getById() {
+        return id -> new DiscSiteParser(id, this.loadImages, this.loadLyrics).parse();
     }
 
     @Override

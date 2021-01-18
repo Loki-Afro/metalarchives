@@ -7,6 +7,8 @@ import com.github.loki.afro.metallum.search.AbstractSearchService;
 import com.github.loki.afro.metallum.search.query.entity.LabelQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchLabelResult;
 
+import java.util.function.Function;
+
 public class LabelSearchService extends AbstractSearchService<Label, LabelQuery, SearchLabelResult> {
 
     private boolean loadImages;
@@ -50,8 +52,8 @@ public class LabelSearchService extends AbstractSearchService<Label, LabelQuery,
     }
 
     @Override
-    protected LabelSiteParser getSiteParser(final long entityId) {
-        return new LabelSiteParser(entityId, this.loadImages, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases);
+    protected Function<Long, Label> getById() {
+        return id -> new LabelSiteParser(id, this.loadImages, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases).parse();
     }
 
 }
