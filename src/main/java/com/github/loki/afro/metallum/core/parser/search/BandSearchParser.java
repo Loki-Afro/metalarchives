@@ -1,36 +1,43 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
+import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.search.query.entity.BandQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
+import com.google.common.collect.Iterables;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Set;
+
 public class BandSearchParser extends AbstractSearchParser<SearchBandResult> {
 
-    private boolean isAbleToParseProvince = false;
-    private boolean isAbleToParseLabel = false;
+    private final BandQuery bandQuery;
+    private final boolean isAbleToParseProvince;
+    private final boolean isAbleToParseLabel;
+    private final boolean isAbleToParseLyricalThemes;
     private boolean isAbleToParseYear = false;
-    private boolean isAbleToParseLyricalThemes = false;
     private boolean isAbleToParseCountry = false;
 
-    public void setIsAbleToParseCountry(final boolean isAbleToParse) {
-        this.isAbleToParseCountry = isAbleToParse;
-    }
-
-    public void setIsAbleToParseProvince(final boolean isAbleToParse) {
-        this.isAbleToParseProvince = isAbleToParse;
-    }
-
-    public void setIsAbleToParseYear(final boolean isAbleToParse) {
-        this.isAbleToParseYear = isAbleToParse;
-    }
-
-    public void setIsAbleToParseLyricalThemes(final boolean isAbleToParse) {
-        this.isAbleToParseLyricalThemes = isAbleToParse;
-    }
-
-    public void setIsAbleToParseLabel(final boolean isAbleToParse) {
-        this.isAbleToParseLabel = isAbleToParse;
+    public BandSearchParser(BandQuery bandQuery) {
+        this.bandQuery = bandQuery;
+        if (bandQuery.getYearOfFormationFromYear().isPresent() || bandQuery.getYearOfFormationToYear().isPresent()) {
+            this.isAbleToParseYear = true;
+        }
+        this.isAbleToParseLabel = !bandQuery.getLabelName().orElse("").isEmpty();
+        this.isAbleToParseLyricalThemes = !bandQuery.getLyricalThemes().orElse("").isEmpty();
+        Set<Country> countries = bandQuery.getCountries();
+        this.isAbleToParseProvince = !bandQuery.getProvince().orElse("").isEmpty() || !countries.isEmpty();
+        if (countries.isEmpty()) {
+            this.isAbleToParseCountry = true;
+        } else {
+            int foundCountries = 0;
+            for (Country country : countries) {
+                if (++foundCountries > 1) {
+                    this.isAbleToParseCountry = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -54,7 +61,17 @@ public class BandSearchParser extends AbstractSearchParser<SearchBandResult> {
         if (isAbleToParseLabel) {
             searchBandResult.setLabelName(parseLabel(hits.getString(index)));
         }
+        Set<Country> countries = this.bandQuery.getCountries();
+        if (countries.size() == 1) {
+            final Country country = Iterables.getOnlyElement(countries);
+            searchBandResult.setCountry(country);
+        }
 
+        Set<BandStatus> statusSet = this.bandQuery.getStatuses();
+        if (statusSet.size() == 1) {
+            final BandStatus status = Iterables.getOnlyElement(statusSet);
+            searchBandResult.setStatus(status);
+        }
         return searchBandResult;
     }
 

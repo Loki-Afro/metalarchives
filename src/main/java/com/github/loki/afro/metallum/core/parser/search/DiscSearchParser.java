@@ -4,7 +4,9 @@ import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
+import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
+import com.google.common.collect.Iterables;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.jsoup.Jsoup;
@@ -12,8 +14,11 @@ import org.jsoup.Jsoup;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.loki.afro.metallum.core.util.MetallumUtil.isNotBlank;
+
 public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
 
+    private final DiscQuery discQuery;
     private boolean isAbleToParseDate = false;
     private boolean isAbleToParseLabel = false;
     private boolean isAbleToParseGenre = false;
@@ -22,6 +27,17 @@ public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
     private boolean isAbleToParseDiscType;
     private boolean isAbleToParseCountry = false;
     private boolean isAbleToParseProvince;
+
+    public DiscSearchParser(DiscQuery discQuery) {
+        this.discQuery = discQuery;
+        setIsAbleToParseDate(discQuery.isAbleToParseDate());
+
+        setIsAbleToParseDiscType(discQuery.isAbleToParseDiscType());
+        setIsAbleToParseGenre(isNotBlank(discQuery.getGenre()));
+        setIsAbleToParseLabel(isNotBlank(discQuery.getLabelName()));
+        setIsAbleToParseCountry(discQuery.isAbleToParseCountry());
+        setIsAbleToParseProvince(isNotBlank(discQuery.getBandProvince()));
+    }
 
     @Override
     protected SearchDiscResult useSpecificSearchParser(final JSONArray hit) throws JSONException {
@@ -64,7 +80,21 @@ public class DiscSearchParser extends AbstractSearchParser<SearchDiscResult> {
         disc.setBandProvince(this.isAbleToParseProvince ? parseBandProvince(hit.getString(index++)) : null);
         disc.setReleaseDate((this.isAbleToParseDate ? parseDate(hit.getString(index++)) : null));
         disc.setLabelName(this.isAbleToParseLabel ? parseLabel(hit.getString(index)) : null);
-        return disc;
+
+        return enrichParsedEntity(discQuery, disc);
+    }
+
+
+    private SearchDiscResult enrichParsedEntity(DiscQuery query, final SearchDiscResult result) {
+        if (query.getDiscTypes().size() == 1) {
+            final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
+            result.setDiscType(discType);
+        }
+        if (query.getCountries().size() == 1) {
+            final Country country = Iterables.getOnlyElement(query.getCountries());
+            result.setBandCountry(country);
+        }
+        return result;
     }
 
     /**

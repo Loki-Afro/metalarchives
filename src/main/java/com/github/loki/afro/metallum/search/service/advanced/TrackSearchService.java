@@ -1,14 +1,11 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.core.parser.search.TrackSearchParser;
-import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
-import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
 import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
-import com.google.common.collect.Iterables;
 
 import java.util.function.Function;
 
@@ -55,20 +52,9 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
 
     @Override
     protected final TrackSearchParser getSearchParser(TrackQuery trackQuery) {
-        TrackSearchParser trackSearchParser = new TrackSearchParser();
+        TrackSearchParser trackSearchParser = new TrackSearchParser(trackQuery);
         trackSearchParser.setLoadLyrics(this.loadLyrics);
-        trackSearchParser.setIsAbleToParseGenre(MetallumUtil.isNotBlank(trackQuery.getGenre()));
-        trackSearchParser.setIsAbleToParseDiscType(trackQuery.getDiscTypes().size() != 1);
         return trackSearchParser;
-    }
-
-    @Override
-    protected SearchTrackResult enrichParsedEntity(TrackQuery query, SearchTrackResult result) {
-        if (query.getDiscTypes().size() == 1) {
-            final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
-            result.setDiscType(discType);
-        }
-        return result;
     }
 
 }

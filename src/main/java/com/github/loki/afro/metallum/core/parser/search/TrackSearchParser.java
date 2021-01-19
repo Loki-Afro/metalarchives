@@ -7,7 +7,9 @@ import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.enums.DiscType;
 import com.github.loki.afro.metallum.search.SearchRelevance;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
+import com.github.loki.afro.metallum.search.query.entity.TrackQuery;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -16,9 +18,16 @@ import org.slf4j.LoggerFactory;
 public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(TrackSearchParser.class);
+    private final TrackQuery trackQuery;
     private boolean isAbleToParseGenre = false;
     private boolean isAbleToParseDiscType = false;
     private boolean loadLyrics = false;
+
+    public TrackSearchParser(TrackQuery trackQuery) {
+        this.trackQuery = trackQuery;
+        setIsAbleToParseGenre(MetallumUtil.isNotBlank(trackQuery.getGenre()));
+        setIsAbleToParseDiscType(trackQuery.getDiscTypes().size() != 1);
+    }
 
     public void setIsAbleToParseGenre(final boolean isAbleToParse) {
         this.isAbleToParseGenre = isAbleToParse;
@@ -53,7 +62,7 @@ public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
             track.setBandName(parsedBandName);
         }
         track.setBandId(parseBandId(hits.getString(0)));
-        return parseOptionalFields(track, hits);
+        return enrichParsedEntity(this.trackQuery, parseOptionalFields(track, hits));
     }
 
     private SearchTrackResult parseOptionalFields(final SearchTrackResult track, final JSONArray jArray) throws JSONException {
@@ -65,6 +74,14 @@ public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
             track.setLyrics(parseLyrics(track));
         }
         return track;
+    }
+
+    private SearchTrackResult enrichParsedEntity(TrackQuery query, SearchTrackResult result) {
+        if (query.getDiscTypes().size() == 1) {
+            final DiscType discType = Iterables.getOnlyElement(query.getDiscTypes());
+            result.setDiscType(discType);
+        }
+        return result;
     }
 
     private final long parseTrackId(final String hit) {

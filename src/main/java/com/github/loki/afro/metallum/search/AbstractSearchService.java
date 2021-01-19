@@ -20,10 +20,6 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
     public AbstractSearchService() {
     }
 
-    protected SEARCH_RESULT enrichParsedEntity(QUERY query, SEARCH_RESULT result) {
-        return result;
-    }
-
     protected abstract AbstractSearchParser<SEARCH_RESULT> getSearchParser(QUERY query);
 
 
@@ -58,6 +54,7 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         Iterator<List<SEARCH_RESULT>> pagingIterator = new AbstractIterator<List<SEARCH_RESULT>>() {
             private boolean endOfData;
             private int currentPage = 0;
+            private static final int PAGE_SIZE = 200;
 
             @Override
             protected List<SEARCH_RESULT> computeNext() {
@@ -69,10 +66,10 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
 
                 if (rows.isEmpty()) {
                     return endOfData();
-                } else if (rows.size() < 200) {
+                } else if (rows.size() < PAGE_SIZE) {
                     endOfData = true;
                 } else {
-                    currentPage += 200;
+                    currentPage += PAGE_SIZE;
                 }
 
                 return rows;
@@ -90,7 +87,6 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         SortedMap<SearchRelevance, List<SEARCH_RESULT>> newMap = parser.parseSearchResults(resultHtml);
         return newMap.values().stream()
                 .flatMap(Collection::stream)
-                .map(r -> enrichParsedEntity(query, r))
                 .collect(Collectors.toList());
     }
 
