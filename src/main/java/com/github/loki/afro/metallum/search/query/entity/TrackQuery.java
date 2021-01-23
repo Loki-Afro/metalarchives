@@ -62,7 +62,7 @@ public class TrackQuery extends AbstractTrack implements IQuery {
     }
 
     @Override
-    public String assembleQueryUrl(int page) {
+    public String assembleQueryUrl(int offset) {
         final StringBuilder searchQueryBuf = new StringBuilder();
         searchQueryBuf.append(asPair("bandName", getBandName()));
         searchQueryBuf.append(asPair("songTitle", getName()));
@@ -75,6 +75,6 @@ public class TrackQuery extends AbstractTrack implements IQuery {
         searchQueryBuf.append("exactReleaseMatch=" + (this.isExactDiscNameMatch() ? 1 : 0) + "&");
 
         searchQueryBuf.append(getForQuery("releaseType", this.discTypes, DiscType::asSearchNumber));
-        return MetallumURL.assembleTrackSearchURL(searchQueryBuf.toString(), page);
+        return MetallumURL.assembleTrackSearchURL(searchQueryBuf.toString(), offset);
     }
 }

@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.Month;
+import java.time.Year;
 
 /**
  * @author Zarathustra
@@ -216,6 +218,14 @@ public final class MetallumURL {
 
     public static String assembleMemberLinksURL(final long memberId) {
         return BASEURL + "link/ajax-list/type/person/id/" + memberId;
+    }
+
+    public static String assembleBandsByModificationDateUrl(int offset, Year year, Month month) {
+        return BASEURL + "archives/ajax-band-list/by/modified/selection/" +
+                year.getValue() + "-" + String.format("%02d", month.getValue()) +
+                "?sEcho=3&iColumns=6&sColumns=&iDisplayStart=" +
+                offset +
+                "&iDisplayLength=200&mDataProp_0=0&mDataProp_1=1&mDataProp_2=2&mDataProp_3=3&mDataProp_4=4&mDataProp_5=5&iSortCol_0=4&sSortDir_0=desc&iSortingCols=1&bSortable_0=true&bSortable_1=true&bSortable_2=true&bSortable_3=true&bSortable_4=true&bSortable_5=true&_=1611062403038";
     }
 
     public static String encodeURIComponent(final String s) {

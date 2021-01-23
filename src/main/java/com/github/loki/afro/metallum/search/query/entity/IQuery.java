@@ -10,7 +10,7 @@ public interface IQuery {
 
     boolean isValid();
 
-    String assembleQueryUrl(int page);
+    String assembleQueryUrl(int offset);
 
     static String asPair(String parameterName, Optional<String> property) {
         return parameterName + "=" + MetallumURL.asURLString(property.orElse(""));

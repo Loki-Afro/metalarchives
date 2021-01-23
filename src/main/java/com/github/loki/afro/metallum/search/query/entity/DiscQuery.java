@@ -101,7 +101,7 @@ public class DiscQuery extends AbstractDisc implements IQuery {
     }
 
     @Override
-    public String assembleQueryUrl(int page) {
+    public String assembleQueryUrl(int offset) {
         final StringBuilder searchQueryBuf = new StringBuilder();
         searchQueryBuf.append(asPair("bandName", getBandName()));
         searchQueryBuf.append(asPair("releaseTitle", getName()));
@@ -114,7 +114,7 @@ public class DiscQuery extends AbstractDisc implements IQuery {
         searchQueryBuf.append(asPair("genre", getGenre()));
         searchQueryBuf.append(asPair("location", getBandProvince()));
         searchQueryBuf.append(getForQuery("releaseType", getDiscTypes(), DiscType::asSearchNumber));
-        return MetallumURL.assembleDiscSearchURL(searchQueryBuf.toString(), page);
+        return MetallumURL.assembleDiscSearchURL(searchQueryBuf.toString(), offset);
     }
 
     private final String getYearMonth() {

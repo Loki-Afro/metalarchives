@@ -21,7 +21,7 @@ public class LabelQuery implements IQuery {
     }
 
     @Override
-    public String assembleQueryUrl(int page) {
-        return MetallumURL.assembleLabelSearchURL(getName(), page);
+    public String assembleQueryUrl(int offset) {
+        return MetallumURL.assembleLabelSearchURL(getName(), offset);
     }
 }

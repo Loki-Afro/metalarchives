@@ -21,7 +21,7 @@ public class MemberQuery implements IQuery {
     }
 
     @Override
-    public String assembleQueryUrl(int page) {
-        return MetallumURL.assembleMemberSearchURL(getName(), page);
+    public String assembleQueryUrl(int offset) {
+        return MetallumURL.assembleMemberSearchURL(getName(), offset);
     }
 }

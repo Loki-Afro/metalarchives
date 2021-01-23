@@ -53,7 +53,7 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
         AbstractSearchParser<SEARCH_RESULT> parser = getSearchParser(query);
         Iterator<List<SEARCH_RESULT>> pagingIterator = new AbstractIterator<List<SEARCH_RESULT>>() {
             private boolean endOfData;
-            private int currentPage = 0;
+            private int offset = 0;
             private static final int PAGE_SIZE = 200;
 
             @Override
@@ -62,14 +62,14 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
                     return endOfData();
                 }
 
-                List<SEARCH_RESULT> rows = query(query, parser, currentPage);
+                List<SEARCH_RESULT> rows = query(query, parser, offset);
 
                 if (rows.isEmpty()) {
                     return endOfData();
                 } else if (rows.size() < PAGE_SIZE) {
                     endOfData = true;
                 } else {
-                    currentPage += PAGE_SIZE;
+                    offset += PAGE_SIZE;
                 }
 
                 return rows;
@@ -81,8 +81,8 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
     }
 
 
-    private List<SEARCH_RESULT> query(QUERY query, AbstractSearchParser<SEARCH_RESULT> parser, int page) {
-        final String searchUrl = getUrlForQuery(query, page);
+    private List<SEARCH_RESULT> query(QUERY query, AbstractSearchParser<SEARCH_RESULT> parser, int offset) {
+        final String searchUrl = getUrlForQuery(query, offset);
         final String resultHtml = Downloader.getHTML(searchUrl);
         SortedMap<SearchRelevance, List<SEARCH_RESULT>> newMap = parser.parseSearchResults(resultHtml);
         return newMap.values().stream()
@@ -90,11 +90,11 @@ public abstract class AbstractSearchService<FULL_ENTITY extends AbstractEntity, 
                 .collect(Collectors.toList());
     }
 
-    private String getUrlForQuery(QUERY query, final int startPage) throws MetallumException {
+    private String getUrlForQuery(QUERY query, final int offset) throws MetallumException {
         if (query.isValid()) {
-            return query.assembleQueryUrl(startPage);
+            return query.assembleQueryUrl(offset);
         } else {
-            throw new MetallumException("No entity to search for!");
+            throw new MetallumException("invalid query!");
         }
     }
 

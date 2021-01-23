@@ -116,7 +116,7 @@ public class BandQuery extends AbstractBand implements IQuery {
     }
 
     @Override
-    public String assembleQueryUrl(int page) {
+    public String assembleQueryUrl(int offset) {
         final StringBuilder searchQueryBuf = new StringBuilder();
         searchQueryBuf.append(asPair("bandName", getName()).replaceAll("%2B", "+"));
         searchQueryBuf.append("exactBandMatch=" + (isExactBandNameMatch() ? 1 : 0) + "&");
@@ -129,7 +129,7 @@ public class BandQuery extends AbstractBand implements IQuery {
         searchQueryBuf.append(asPair("location", getProvince()));
         searchQueryBuf.append(asPair("bandLabelName", getLabelName()));
         searchQueryBuf.append("indieLabel=" + (isIndieLabel() ? 1 : 0) + "&");
-        return MetallumURL.assembleBandSearchURL(searchQueryBuf.toString(), page);
+        return MetallumURL.assembleBandSearchURL(searchQueryBuf.toString(), offset);
     }
 
     private String getCountryForQuery() {
