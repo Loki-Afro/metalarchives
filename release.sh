@@ -1,7 +1,7 @@
 #!/bin/sh
-mvn clean install
-mvn release:clean
-mvn release:prepare
-mvn release:perform
+mvn clean install -DskipTests
+mvn release:clean -Darguments=-DskipTests
+mvn release:prepare -Darguments=-DskipTests
+mvn release:perform -Darguments=-DskipTests
 
 

@@ -18,7 +18,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/Loki-Afro/metalarchives.git</connection>
-        <developerConnection>scm:git:ssh://github.com/Loki-Afro/metalarchives.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/Loki-Afro/metalarchives.git</developerConnection>
         <url>https://github.com/Loki-Afro/metalarchives</url>
     </scm>
 
