@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 abstract class AbstractDownloader {
     private final String urlString;
@@ -29,6 +30,7 @@ abstract class AbstractDownloader {
             @Override
             public void initialize(HttpRequest request) {
                 ExponentialBackOff backOff = new ExponentialBackOff.Builder()
+                        .setMaxElapsedTimeMillis((int) TimeUnit.SECONDS.toMillis(10))
                         .build();
 
                 HttpBackOffUnsuccessfulResponseHandler unsuccessfulResponseHandler = new HttpBackOffUnsuccessfulResponseHandler(backOff);
