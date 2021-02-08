@@ -16,7 +16,7 @@ Encyclopedia Metallum is still the best website to get correct and complete info
 
 ## Build
 
-Just install it with maven
+Just build it with maven
 
 ```
 mvn clean install
@@ -26,21 +26,18 @@ mvn clean install
 
 ### Maven
 
-Snapshots (Repository http://oss.sonatype.org/content/repositories/snapshots)
-
 ```xml
-
 <dependency>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```
-compile 'com.github.loki-afro:metalarchives-api:1.0.0-SNAPSHOT'
+compile 'com.github.loki-afro:metalarchives-api:1.0.0'
 ```
 
 ### Usage
