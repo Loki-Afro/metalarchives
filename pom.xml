@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Unofficial Encyclopedia Metallum API</description>
@@ -19,7 +19,7 @@
         <connection>scm:git:git://github.com/Loki-Afro/metalarchives.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/Loki-Afro/metalarchives.git</developerConnection>
         <url>https://github.com/Loki-Afro/metalarchives</url>
-      <tag>1.0.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
 
