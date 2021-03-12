@@ -600,6 +600,7 @@ public class BandSearchServiceTest {
         final Band resultBand = API.getBandById(7L);
 
         assertThat(resultBand.getYearsActive()).containsExactly(
+                YearRange.of(of(1987), of(1987), "Brainwarp", null),
                 YearRange.of(of(1987), of(1989), "Nihilist", 14076L),
                 YearRange.of(of(1989), of(2014), "Entombed", 7L),
                 YearRange.of(of(2016), present(), "Entombed", 7L)
