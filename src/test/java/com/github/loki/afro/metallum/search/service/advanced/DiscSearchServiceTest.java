@@ -738,7 +738,7 @@ public class DiscSearchServiceTest {
         assertThat(disc.getTrackList())
                 .extracting(Track::getBandName, t -> t.getBand().getId(), Track::getName)
                 .contains(
-                        tuple("Judas Priest", 97L, "Diamonds and Rust"),
+                        tuple("Judas Priest", 97L, "Diamonds and Rust (Joan Baez cover)"),
                         tuple("Scorpions", 15424L, "It All Depends"),
                         tuple("Hawkwind", 0L, "Motorhead")
                 );
