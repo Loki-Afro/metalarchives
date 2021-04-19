@@ -270,7 +270,7 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getName()).isEqualTo("Burzum");
         assertThat(discResult.getTrackList()).hasSize(2);
         assertThat(discResult.getType()).isEqualTo(DiscType.DEMO);
-        assertThat(discResult.getLabelPartial().getName()).isEqualTo("Independent");
+        assertThat(discResult.getLabelPartial().getName()).isEqualTo("Deathlike Silence Productions");
         assertThat(discResult.getArtwork()).isNull();
         assertThat(discResult.getAddedBy()).isNotEmpty();
         assertThat(discResult.getAddedOn()).isNotEmpty();
