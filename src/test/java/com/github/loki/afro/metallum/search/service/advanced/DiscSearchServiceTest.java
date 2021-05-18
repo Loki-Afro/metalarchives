@@ -13,6 +13,7 @@ import com.github.loki.afro.metallum.search.query.entity.DiscQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchDiscResult;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -682,6 +683,7 @@ public class DiscSearchServiceTest {
         assertThat(foundMember).isTrue();
     }
 
+    @Disabled("unable to find another example of only misc members")
     @Test
     public void onlyMiscMemberCategoryButNoMembers() throws MetallumException {
         final Disc disc = API.getDiscById(248488L);
