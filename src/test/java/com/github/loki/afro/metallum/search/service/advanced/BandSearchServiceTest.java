@@ -299,7 +299,7 @@ public class BandSearchServiceTest {
         assertThat("Grenoble, Auvergne-Rhône-Alpes").isEqualTo(resultBand.getProvince());
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2004).isEqualTo(resultBand.getYearFormedIn());
-        assertThat("Depressive Black Metal").isEqualTo(resultBand.getGenre());
+        assertThat("Black Metal").isEqualTo(resultBand.getGenre());
         assertThat("Suicide, Sorrow, Despair, Death, Nature").isEqualTo(resultBand.getLyricalThemes());
         assertThat("Sun & Moon Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
