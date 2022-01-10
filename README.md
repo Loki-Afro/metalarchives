@@ -1,6 +1,6 @@
 # Unofficial Encyclopedia Metallum API
 
-[![Build Status](https://travis-ci.org/Loki-Afro/metalarchives.svg?branch=master)](https://travis-ci.org/Loki-Afro/metalarchives)
+[![Build Status](https://github.com/Loki-Afro/metalarchives//actions/workflows/main.yml/badge.svg?branch=master)]
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api/badge.svg?style=plastic)](https://maven-badges.herokuapp.com/maven-central/com.github.loki-afro/metalarchives-api)
 
 Unfortunately http://www.metal-archives.com/ does not provide any API whats so ever, this library exists. Because
