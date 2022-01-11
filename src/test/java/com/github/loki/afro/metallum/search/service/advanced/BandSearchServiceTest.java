@@ -92,7 +92,7 @@ public class BandSearchServiceTest {
         assertThat(1993).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Brutal/Technical Death Metal").isEqualTo(resultBand.getGenre());
         assertThat("Egyptian mythology, Death, Rituals, Lovecraft").isEqualTo(resultBand.getLyricalThemes());
-        assertThat(resultBand.getPartialLabel().getName()).isEqualTo("Nuclear Blast");
+        assertThat(resultBand.getPartialLabel().getName()).isEqualTo("Napalm Records");
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo()).startsWith("In the late 1980s way prior to forming Nile");
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
@@ -177,10 +177,9 @@ public class BandSearchServiceTest {
         assertThat(2009).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Doom Metal, Atmospheric/Alternative Rock").isEqualTo(resultBand.getGenre());
         assertThat("Relationships, Longing, Introspection").isEqualTo(resultBand.getLyricalThemes());
-        assertThat("Radiance Records").isEqualTo(resultBand.getPartialLabel().getName());
+        assertThat("Svart Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
-        assertThat(resultBand.getInfo().startsWith("Patrick Walker took the band name")).isTrue();
-        assertThat(resultBand.getInfo().endsWith("\"Emerald Lies\".")).isTrue();
+        assertThat(resultBand.getInfo().startsWith("Patrick Walker took the band's name")).isTrue();
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
@@ -237,7 +236,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.US).isEqualTo(resultBand.getCountry());
         assertThat("Providence, Rhode Island").isEqualTo(resultBand.getProvince());
-        assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
+        assertThat(BandStatus.UNKNOWN).isEqualTo(resultBand.getStatus());
         assertThat(1988).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Death Metal").isEqualTo(resultBand.getGenre());
         assertThat("Satanism, Occultism, Anti-Christianity, Death").isEqualTo(resultBand.getLyricalThemes());
@@ -349,41 +348,11 @@ public class BandSearchServiceTest {
     }
 
     @Test
-    public void onHoldTest() throws MetallumException {
-        BandQuery bandQuery = BandQuery.builder()
-                .name("Cruel Force")
-                .status(BandStatus.ON_HOLD)
-                .build();
-
-        final Band resultBand = API.getSingleUniqueBand(bandQuery);
-        assertThat("Cruel Force").isEqualTo(resultBand.getName());
-        assertThat(resultBand.getId() != 0).isTrue();
-        assertThat(Country.DE).isEqualTo(resultBand.getCountry());
-        assertThat("Rhineland-Palatinate").isEqualTo(resultBand.getProvince());
-        assertThat(BandStatus.ON_HOLD).isEqualTo(resultBand.getStatus());
-        assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
-        assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
-        assertThat("Satan, Blasphemy, Heavy Metal Cult").isEqualTo(resultBand.getLyricalThemes());
-        assertThat("Heavy Forces Records").isEqualTo(resultBand.getPartialLabel().getName());
-        assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
-        assertThat(resultBand.getInfo().isEmpty()).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
-        checkDefaultDisc(resultBand.getDiscsPartial(), 4);
-        assertThat(resultBand.getAddedBy()).isNotEmpty();
-        assertThat(resultBand.getAddedOn()).isNotEmpty();
-        assertThat(resultBand.getModifiedBy()).isNotEmpty();
-        assertThat(resultBand.getLastModifiedOn()).isNotEmpty();
-    }
-
-    @Test
     public void lyricalThemesTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Nocturnal", false);
-        query.setLyricalThemes("Satan, Evil, Metal");
+        query.setLyricalThemes("Satanism, Death, Evil, Violence, Metal");
         final SearchBandResult resultBand = service.performSearch(query).get(0);
         assertThat("Nocturnal").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId()).isNotEqualTo(0);
@@ -392,7 +361,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getStatus()).isEmpty();
         assertThat(resultBand.getYearFormedIn()).isEmpty();
         assertThat(resultBand.getGenre()).contains("Black/Thrash Metal");
-        assertThat(resultBand.getLyricalThemes()).contains("Satan, Evil, Metal");
+        assertThat(resultBand.getLyricalThemes()).contains("Satanism, Death, Evil, Violence, Metal");
     }
 
     @Test
@@ -418,15 +387,15 @@ public class BandSearchServiceTest {
         service.setLoadImages(true);
         BandQuery bandQuery = BandQuery.builder()
                 .name("Cruel Force")
-                .status(BandStatus.ON_HOLD)
+                .status(BandStatus.ACTIVE)
                 .build();
 
         final Band resultBand = Iterables.getOnlyElement(service.getFully(bandQuery));
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
-        assertThat("Rhineland-Palatinate").isEqualTo(resultBand.getProvince());
-        assertThat(BandStatus.ON_HOLD).isEqualTo(resultBand.getStatus());
+        assertThat("Mannheim, Baden-Württemberg").isEqualTo(resultBand.getProvince());
+        assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
         assertThat("Satan, Blasphemy, Heavy Metal Cult").isEqualTo(resultBand.getLyricalThemes());
@@ -450,6 +419,7 @@ public class BandSearchServiceTest {
         service.setLoadReadMore(true);
         final BandSearchQuery query = new BandSearchQuery();
         query.setBandName("Madness", true);
+        query.setProvince("Piracicaba, São Paulo");
         final Band resultBand = service.performSearchAndLoadFully(query).get(0);
         assertThat("Madness").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
@@ -468,7 +438,7 @@ public class BandSearchServiceTest {
         checkDefaultDisc(resultBand.getDiscsPartial(), 3);
 
         assertThat(resultBand.getInfo().endsWith("(2009).")).isTrue();
-        assertThat(resultBand.getInfo().startsWith("Additional discograp")).isTrue();
+        assertThat(resultBand.getInfo().startsWith("Not to be confused with")).isTrue();
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
         assertThat(resultBand.getModifiedBy()).isNotEmpty();

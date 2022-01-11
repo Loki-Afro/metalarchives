@@ -271,7 +271,7 @@ public class DiscSearchServiceTest {
         assertThat(discResult.getName()).isEqualTo("Burzum");
         assertThat(discResult.getTrackList()).hasSize(2);
         assertThat(discResult.getType()).isEqualTo(DiscType.DEMO);
-        assertThat(discResult.getLabelPartial().getName()).isEqualTo("Deathlike Silence Productions");
+        assertThat(discResult.getLabelPartial().getName()).isEqualTo("Independent");
         assertThat(discResult.getArtwork()).isNull();
         assertThat(discResult.getAddedBy()).isNotEmpty();
         assertThat(discResult.getAddedOn()).isNotEmpty();
@@ -543,6 +543,7 @@ public class DiscSearchServiceTest {
         DiscQuery query = DiscQuery.builder()
                 .bandName("Cannibal Corpse")
                 .name("Eaten Back to Life")
+                .discType(DiscType.FULL_LENGTH)
                 .build();
         final Disc discResult = new DiscSearchService(false, true).getSingleUniqueByQuery(query);
 
