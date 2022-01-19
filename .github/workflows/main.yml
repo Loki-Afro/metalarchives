@@ -1,7 +1,11 @@
 
 name: build and test
 
-on: [push]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '59 6 * * *'
 
 jobs:
   build:
