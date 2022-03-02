@@ -703,15 +703,15 @@ public class DiscSearchServiceTest {
         assertThat(disc.getName()).isEqualTo("Chthonic Libations");
         assertThat(disc.getSplitBands())
                 .extracting(PartialBand::getId, PartialBand::getName)
-                .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L, "Acherontas"));
-        assertThat(disc.getBandName()).isEqualTo("Nåstrond / Acherontas");
+                .containsExactly(tuple(7218L, "Nåstrond"), tuple(112532L, "Αχεροντας"));
+        assertThat(disc.getBandName()).isEqualTo("Nåstrond / Αχεροντας");
         assertThat(disc.getBand()).isNull();
 
         List<Track> trackList = disc.getTrackList();
         assertThat(trackList).hasSize(5);
         for (Track track : trackList) {
             assertThat(track.getBand()).isNull();
-            assertThat(track.getBandName()).isEqualTo("Nåstrond / Acherontas");
+            assertThat(track.getBandName()).isEqualTo("Nåstrond / Αχεροντας");
         }
     }
 

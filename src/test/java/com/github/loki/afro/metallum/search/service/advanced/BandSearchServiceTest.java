@@ -94,8 +94,8 @@ public class BandSearchServiceTest {
         assertThat("Egyptian mythology, Death, Rituals, Lovecraft").isEqualTo(resultBand.getLyricalThemes());
         assertThat(resultBand.getPartialLabel().getName()).isEqualTo("Napalm Records");
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
-        assertThat(resultBand.getInfo()).startsWith("In the late 1980s way prior to forming Nile");
-        assertThat(resultBand.getInfo().endsWith("...")).isTrue();
+        assertThat(resultBand.getInfo()).startsWith("In the late 1980");
+        assertThat(resultBand.getInfo()).endsWith("...");
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
@@ -302,8 +302,8 @@ public class BandSearchServiceTest {
         assertThat("Suicide, Sorrow, Despair, Death, Nature").isEqualTo(resultBand.getLyricalThemes());
         assertThat("Sun & Moon Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
-        assertThat(resultBand.getInfo().startsWith("Herr Suizid ")).isTrue();
-        assertThat(resultBand.getInfo().endsWith("performances.")).isTrue();
+        assertThat(resultBand.getInfo()).startsWith("Nocturnal Depression started playing");
+        assertThat(resultBand.getInfo()).endsWith("Silence of Cold Forest (2017)");
         assertThat(resultBand.hasLogo()).isFalse();
         assertThat(resultBand.hasPhoto()).isFalse();
         assertThat(resultBand.getPhotoUrl()).isNotEmpty();
@@ -394,7 +394,7 @@ public class BandSearchServiceTest {
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
-        assertThat("Mannheim, Baden-Württemberg").isEqualTo(resultBand.getProvince());
+        assertThat(resultBand.getProvince()).isEqualTo("Mannheim, Baden-Württemberg (later); Rheinzabern, (Rhineland-Palatinate) (early)");
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
