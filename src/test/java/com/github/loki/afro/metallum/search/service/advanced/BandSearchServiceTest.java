@@ -236,7 +236,7 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.US).isEqualTo(resultBand.getCountry());
         assertThat("Providence, Rhode Island").isEqualTo(resultBand.getProvince());
-        assertThat(BandStatus.UNKNOWN).isEqualTo(resultBand.getStatus());
+        assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(1988).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Death Metal").isEqualTo(resultBand.getGenre());
         assertThat("Satanism, Occultism, Anti-Christianity, Death").isEqualTo(resultBand.getLyricalThemes());
