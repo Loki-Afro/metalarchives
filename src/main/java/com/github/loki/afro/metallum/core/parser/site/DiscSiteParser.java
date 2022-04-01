@@ -177,10 +177,9 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         Elements bands = bandsElement.select(("a[href]"));
         String fullString = bandsElement.text();
         for (Element bandElem : bands) {
-            String bandLink = bandElem.toString();
             String bandName = bandElem.text();
-            String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandName));
-            bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
+            String hrefAttr = bandElem.attr("href");
+            String bandId = hrefAttr.substring(hrefAttr.lastIndexOf("/") + 1);
             list.add(new PartialBand(Long.parseLong(bandId), bandName));
         }
         for (PartialBand partialBand : list) {

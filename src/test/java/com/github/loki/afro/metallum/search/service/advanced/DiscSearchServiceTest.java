@@ -747,5 +747,15 @@ public class DiscSearchServiceTest {
                 );
     }
 
+    @Test
+    public void bandWithAndSignAndSplit() throws MetallumException {
+        final Disc resultDisc = API.getDiscById(994505);
+        assertThat(resultDisc.getName()).isEqualTo("Battle of the Bands");
+        assertThat(resultDisc.getSplitBands())
+                .extracting(PartialBand::getName)
+                .containsExactly("SYJ", "Rahim Maarof & Whitesteel", "Ella & the Boys", "Lefthanded", "Bloodshed", "Various");
+
+        assertThat(resultDisc.getTrackList().size()).isEqualTo(11);
+    }
 
 }
