@@ -178,7 +178,8 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         String fullString = bandsElement.text();
         for (Element bandElem : bands) {
             String bandLink = bandElem.toString();
-            String bandName = bandElem.text();
+            String bandName = bandElem.text()
+                    .replace("&", "&amp;");
             String bandId = bandLink.substring(0, bandLink.indexOf("\">" + bandName));
             bandId = bandId.substring(bandId.lastIndexOf("/") + 1);
             list.add(new PartialBand(Long.parseLong(bandId), bandName));

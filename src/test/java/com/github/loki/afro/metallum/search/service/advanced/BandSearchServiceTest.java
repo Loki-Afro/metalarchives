@@ -634,4 +634,12 @@ public class BandSearchServiceTest {
                         "?-? (as 44 X ES$98226)");
     }
 
+    @Test
+    public void escapeSpecialCharactersInBandnameWhenFindingDiscs() throws MetallumException {
+        final Band resultBand = API.getBandById(3540497980L);
+        assertThat(resultBand.getName()).isEqualTo("Rahim Maarof & Whitesteel");
+        // this is where the ampersand character throws an exception if it is not escaped:
+        assertThat(resultBand.getDiscs().size()).isEqualTo(4);
+    }
+
 }
