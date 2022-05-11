@@ -394,7 +394,7 @@ public class BandSearchServiceTest {
         assertThat("Cruel Force").isEqualTo(resultBand.getName());
         assertThat(resultBand.getId() != 0).isTrue();
         assertThat(Country.DE).isEqualTo(resultBand.getCountry());
-        assertThat(resultBand.getProvince()).isEqualTo("Mannheim, Baden-Württemberg (later); Rheinzabern, (Rhineland-Palatinate) (early)");
+        assertThat(resultBand.getProvince()).isEqualTo("Rheinzabern, (Rhineland-Palatinate) (early); Mannheim (Baden Württemberg) (later)");
         assertThat(BandStatus.ACTIVE).isEqualTo(resultBand.getStatus());
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
