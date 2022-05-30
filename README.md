@@ -133,7 +133,7 @@ public class APIExample {
                 .build();
 
 //        loading lyrics is activated here
-        Track track new TrackSearchService(true).getFully(query).get(0);
+        Track track = new TrackSearchService(true).getFully(query).iterator().next();;
 
         System.out.println(track.getLyrics());
     }
