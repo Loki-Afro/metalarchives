@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class PartialReview extends LoadablePartial<Review> {
+public class PartialReview extends IdentifiablePartial<Review> {
 
     @Getter
     private final long discId;

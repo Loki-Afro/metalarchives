@@ -1,15 +1,12 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Disc extends AbstractEntity {
@@ -20,9 +17,8 @@ public class Disc extends AbstractEntity {
     private String releaseDate;
     private PartialBand band;
     private PartialLabel label;
-    private BufferedImage artwork = null;
+    private PartialImage artwork = null;
     private String details;
-    private String artworkURL = null;
     /**
      * Only filled if DiscType.isSplit(type) is true
      * Does only contain BandName and Id.
@@ -109,7 +105,7 @@ public class Disc extends AbstractEntity {
         trackList.addAll(tracks);
     }
 
-    public void setArtwork(final BufferedImage artwork) {
+    public void setArtwork(final PartialImage artwork) {
         this.artwork = artwork;
     }
 
@@ -121,8 +117,8 @@ public class Disc extends AbstractEntity {
         return DiscType.isSplit(this.type);
     }
 
-    public BufferedImage getArtwork() {
-        return this.artwork;
+    public Optional<byte[]> getArtwork() {
+        return Optional.ofNullable(artwork).map(PartialImage::load);
     }
 
     public String getDetails() {
@@ -211,14 +207,6 @@ public class Disc extends AbstractEntity {
 
     public final void setTrackList(final List<Track> newTrackList) {
         this.trackList = newTrackList;
-    }
-
-    public String getArtworkURL() {
-        return this.artworkURL;
-    }
-
-    public void setArtworkURL(final String artworkURL) {
-        this.artworkURL = artworkURL;
     }
 
     /**

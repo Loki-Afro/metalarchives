@@ -1,15 +1,17 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.entity.Label;
+import com.github.loki.afro.metallum.entity.YearRange;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
-import com.github.loki.afro.metallum.enums.DiscType;
-import com.github.loki.afro.metallum.search.API;
-import com.github.loki.afro.metallum.search.query.entity.BandQuery;
-import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
+import com.github.loki.afro.metallum.enums.DiscType;
+import com.github.loki.afro.metallum.search.API;
 import com.github.loki.afro.metallum.search.query.BandSearchQuery;
+import com.github.loki.afro.metallum.search.query.entity.BandQuery;
+import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.google.common.collect.Iterables;
 import org.junit.jupiter.api.Test;
 
@@ -69,10 +71,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo().startsWith("On the Australian and European tour")).isTrue();
         assertThat(resultBand.getInfo().endsWith("Solitude Productions)")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasPhoto()).isTrue();
+        assertThat(resultBand.hasLogo()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 13);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -96,10 +96,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo()).startsWith("In the late 1980");
         assertThat(resultBand.getInfo()).endsWith("...");
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 15);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -150,10 +148,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId() == 0).isTrue();
         assertThat(resultBand.getInfo().startsWith("Formed by Patrick")).isTrue();
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 6);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -180,10 +176,8 @@ public class BandSearchServiceTest {
         assertThat("Svart Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo().startsWith("Patrick Walker took the band's name")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 1);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -244,10 +238,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId()).isEqualTo(0);
         assertThat(resultBand.getInfo().startsWith("Compilation ")).isTrue();
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 14);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -273,10 +265,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getName()).isEqualTo("Century Media Records");
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo().startsWith("Formed by Tom G. Warrior after his")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 3);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -304,10 +294,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo()).startsWith("Nocturnal Depression started playing");
         assertThat(resultBand.getInfo()).endsWith("Silence of Cold Forest (2017)");
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 16);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -336,10 +324,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo().startsWith("The picture here shows")).isTrue();
         assertThat(resultBand.getInfo().endsWith("...")).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 8);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -384,7 +370,6 @@ public class BandSearchServiceTest {
     @Test
     public void imagesTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
-        service.setLoadImages(true);
         BandQuery bandQuery = BandQuery.builder()
                 .name("Cruel Force")
                 .status(BandStatus.ACTIVE)
@@ -404,8 +389,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getInfo().isEmpty()).isTrue();
         assertThat(resultBand.hasLogo()).isTrue();
         assertThat(resultBand.hasPhoto()).isTrue();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.getPhoto()).isNotNull();
+        assertThat(resultBand.getLogo()).isNotNull();
         checkDefaultDisc(resultBand.getDiscsPartial(), 4);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -431,10 +416,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getLyricalThemes()).isNotEmpty();
         assertThat(resultBand.getPartialLabel().getName()).isEqualTo("Murdher Records");
         assertThat(resultBand.getPartialLabel().getId()).isEqualTo(36846L);
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 3);
 
         assertThat(resultBand.getInfo().endsWith("(2009).")).isTrue();
@@ -474,10 +457,8 @@ public class BandSearchServiceTest {
         assertThat(resultBand.getLyricalThemes()).isNotEmpty();
         assertThat("Unsigned/independent").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() == 0).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         assertThat(!resultBand.getInfo().isEmpty()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 6);
         final Map<Integer, List<Band.SimilarBand>> similarArtists = resultBand.getSimilarArtists();
@@ -513,10 +494,8 @@ public class BandSearchServiceTest {
         assertThat("Philosophical and existentialistic themes").isEqualTo(resultBand.getLyricalThemes());
         assertThat("Elevate Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
-        assertThat(resultBand.hasLogo()).isFalse();
-        assertThat(resultBand.hasPhoto()).isFalse();
-        assertThat(resultBand.getPhotoUrl()).isNotEmpty();
-        assertThat(resultBand.getLogoUrl()).isNotEmpty();
+        assertThat(resultBand.hasLogo()).isTrue();
+        assertThat(resultBand.hasPhoto()).isTrue();
         checkDefaultDisc(resultBand.getDiscsPartial(), 3);
         assertThat(resultBand.getAddedBy()).isNotEmpty();
         assertThat(resultBand.getAddedOn()).isNotEmpty();
@@ -534,7 +513,6 @@ public class BandSearchServiceTest {
     @Test
     public void bitmapImageTest() throws MetallumException {
         final BandSearchService service = new BandSearchService();
-        service.setLoadImages(true);
         final Band resultBand = service.getById(4515L);
 
         assertThat(resultBand.getLogo()).isNotNull();

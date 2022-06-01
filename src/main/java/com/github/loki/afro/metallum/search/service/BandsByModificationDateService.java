@@ -19,6 +19,6 @@ public class BandsByModificationDateService extends AbstractSearchService<Band, 
 
     @Override
     protected Function<Long, Band> getById() {
-        return id -> new BandSiteParser(id, false, false, false, false).parse();
+        return id -> new BandSiteParser(id, false, false, false).parse();
     }
 }

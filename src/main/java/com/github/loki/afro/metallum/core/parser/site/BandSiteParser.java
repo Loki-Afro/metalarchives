@@ -11,6 +11,7 @@ import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Link;
 import com.github.loki.afro.metallum.entity.YearRange;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
@@ -19,7 +20,6 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +34,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     private static final Logger logger = LoggerFactory.getLogger(BandSiteParser.class);
     private static final Pattern periodMatcher = Pattern.compile("(\\d\\d\\d\\d|\\?)(?:-(\\d\\d\\d\\d|present|\\?))?(?:\\s\\(as\\s(.+)\\))?");
 
-    public BandSiteParser(final long entityId, final boolean loadImages, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) {
-        super(entityId, loadImages, loadLinks);
+    public BandSiteParser(final long entityId, final boolean loadSimilarArtists, final boolean loadLinks, final boolean loadReadMore) {
+        super(entityId, loadLinks);
         this.loadSimilarArtists = loadSimilarArtists;
         this.loadReadMore = loadReadMore;
     }
@@ -62,10 +62,8 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     private final Band parseBandImages(final Band band) {
         final String logoUrl = parseLogoUrl();
-        band.setLogoUrl(logoUrl);
         band.setLogo(parseBandLogo(logoUrl));
         final String photoUrl = parsePhotoUrl();
-        band.setPhotoUrl(photoUrl);
         band.setPhoto(parseBandPhoto(photoUrl));
         return band;
     }
@@ -255,10 +253,10 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         }
     }
 
-    private final BufferedImage parseBandLogo(final String imageUrl) {
-        if (this.loadImage && imageUrl != null) {
+    private PartialImage parseBandLogo(final String imageUrl) {
+        if (imageUrl != null) {
             try {
-                return Downloader.getImage((imageUrl));
+                return new PartialImage(imageUrl);
             } catch (final MetallumException e) {
                 throw new MetallumException("Exception while downloading an image from \"" + imageUrl + "\" ," + this.entityId, e);
             }
@@ -267,10 +265,10 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         }
     }
 
-    private final BufferedImage parseBandPhoto(final String photoUrl) {
-        if (this.loadImage && photoUrl != null) {
+    private PartialImage parseBandPhoto(final String photoUrl) {
+        if (photoUrl != null) {
             try {
-                return Downloader.getImage(photoUrl);
+                return new PartialImage(photoUrl);
             } catch (MetallumException e) {
                 throw new MetallumException("Exception while downloading an image from \"" + photoUrl + "\" ," + this.entityId, e);
             }

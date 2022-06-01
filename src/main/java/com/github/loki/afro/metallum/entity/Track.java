@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialLyrics;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public class Track extends AbstractEntity {
     private final PartialBand bandPartial;
     private boolean instrumental = false;
 
-    private String lyrics;
+    private PartialLyrics partialLyrics;
     private String playTime;
     private int trackNumber;
     private int discNumber = 1;
@@ -81,12 +82,16 @@ public class Track extends AbstractEntity {
         return this.instrumental;
     }
 
-    public void setLyrics(final String lyrics) {
-        this.lyrics = lyrics;
+    public void setLyrics(final PartialLyrics partialLyrics) {
+        this.partialLyrics = partialLyrics;
     }
 
-    public String getLyrics() {
-        return this.lyrics;
+    public Optional<PartialLyrics> getLyricsPartial() {
+        return Optional.ofNullable(partialLyrics);
+    }
+
+    public Optional<String> getLyrics() {
+        return Optional.ofNullable(partialLyrics).map(PartialLyrics::load);
     }
 
     public void setPlayTime(final String playTime) {

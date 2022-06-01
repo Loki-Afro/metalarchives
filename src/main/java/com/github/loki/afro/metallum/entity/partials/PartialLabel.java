@@ -3,7 +3,7 @@ package com.github.loki.afro.metallum.entity.partials;
 import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.search.API;
 
-public class PartialLabel extends LoadablePartial<Label> {
+public class PartialLabel extends IdentifiablePartial<Label> {
     public PartialLabel(long id, String name) {
         super(id, name);
     }

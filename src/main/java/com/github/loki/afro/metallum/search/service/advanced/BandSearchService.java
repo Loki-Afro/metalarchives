@@ -11,23 +11,17 @@ import java.util.function.Function;
 
 public final class BandSearchService extends AbstractSearchService<Band, BandQuery, SearchBandResult> {
 
-    private boolean loadImages;
     private boolean loadSimilar;
-    private boolean loadLinks = false;
+    private boolean loadLinks;
     private boolean loadReadMore;
 
     public BandSearchService() {
-        this.loadImages = false;
         this.loadSimilar = false;
         this.loadReadMore = false;
     }
 
     public final void setLoadReadMore(final boolean loadReadMore) {
         this.loadReadMore = loadReadMore;
-    }
-
-    public final void setLoadImages(final boolean loadImages) {
-        this.loadImages = loadImages;
     }
 
     public final void setLoadSimilar(final boolean loadSimilar) {
@@ -45,7 +39,7 @@ public final class BandSearchService extends AbstractSearchService<Band, BandQue
 
     @Override
     protected Function<Long, Band> getById() {
-        return id -> new BandSiteParser(id, this.loadImages, this.loadSimilar, this.loadLinks, this.loadReadMore).parse();
+        return id -> new BandSiteParser(id, this.loadSimilar, this.loadLinks, this.loadReadMore).parse();
     }
 
 

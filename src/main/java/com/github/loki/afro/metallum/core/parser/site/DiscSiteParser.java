@@ -1,14 +1,13 @@
 package com.github.loki.afro.metallum.core.parser.site;
 
-import com.github.loki.afro.metallum.MetallumException;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteMemberParser;
 import com.github.loki.afro.metallum.core.parser.site.helper.disc.DiscSiteTrackParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
-import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Track;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
@@ -17,21 +16,18 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DiscSiteParser extends AbstractSiteParser<Disc> {
 
-    private final boolean loadLyrics;
     private static final Logger logger = LoggerFactory.getLogger(DiscSiteParser.class);
 
     /**
      * Creates a new DiscParser, just call parse
      */
-    public DiscSiteParser(final long entityId, final boolean loadImages, final boolean loadLyrics) {
-        super(entityId, loadImages, false);
-        this.loadLyrics = loadLyrics;
+    public DiscSiteParser(final long entityId) {
+        super(entityId, false);
     }
 
     @Override
@@ -45,9 +41,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
         }
         disc.addTracks(parseTracks(disc));
 
-        final String artworkURL = parseArtworkURL();
-        disc.setArtworkURL(artworkURL);
-        disc.setArtwork(parseDiscArtwork(artworkURL));
+        disc.setArtwork(parseDiscArtwork());
         disc.setLabel(parseLabel());
         disc.setDetails(parseDetails());
         disc.setReleaseDate(parseReleaseDate());
@@ -72,7 +66,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     }
 
     private List<Track> parseTracks(final Disc disc) {
-        DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc, disc, this.loadLyrics);
+        DiscSiteTrackParser trackParser = new DiscSiteTrackParser(this.doc, disc);
         List<Track> tracks = trackParser.parse();
         int discCount = tracks.stream()
                 .mapToInt(Track::getDiscNumber)
@@ -156,17 +150,10 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
 //        }
     }
 
-    private final String parseArtworkURL() {
-        return parseImageURL("album_img");
-    }
-
-    private final BufferedImage parseDiscArtwork(final String artworkURL) {
-        if (this.loadImage && artworkURL != null) {
-            try {
-                return Downloader.getImage(artworkURL);
-            } catch (final MetallumException e) {
-                throw new MetallumException("Exception while downloading an image from \"" + artworkURL + "\" ," + this.entityId, e);
-            }
+    private PartialImage parseDiscArtwork() {
+        String artworkURL = parseImageURL("album_img");
+        if (artworkURL != null) {
+            return new PartialImage(artworkURL);
         }
         return null;
     }

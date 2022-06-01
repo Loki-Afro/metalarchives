@@ -1,10 +1,10 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LabelStatus;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class Label extends AbstractEntity {
@@ -25,8 +25,7 @@ public class Label extends AbstractEntity {
     private Map<Band, Integer> pastRoster = new LinkedHashMap<>();
     private String details;
     private List<Link> links = new ArrayList<>();
-    private BufferedImage logo = null;
-    private String logoUrl = null;
+    private PartialImage logo;
 
     public Label(final long id, final String labelName) {
         super(id, labelName);
@@ -84,8 +83,8 @@ public class Label extends AbstractEntity {
         return this.releases;
     }
 
-    public BufferedImage getLogo() {
-        return this.logo;
+    public Optional<byte[]> getLogo() {
+        return Optional.ofNullable(this.logo).map(PartialImage::load);
     }
 
     public String getSpecialisation() {
@@ -164,7 +163,7 @@ public class Label extends AbstractEntity {
         this.parentLabel = parseParentLabel;
     }
 
-    public void setLogo(final BufferedImage logo) {
+    public void setLogo(final PartialImage logo) {
         this.logo = logo;
     }
 
@@ -174,14 +173,6 @@ public class Label extends AbstractEntity {
 
     public boolean hasLogo() {
         return this.logo != null;
-    }
-
-    public final void setLogoUrl(final String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public final String getLogoUrl() {
-        return this.logoUrl;
     }
 
 }

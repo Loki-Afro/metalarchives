@@ -21,7 +21,7 @@ public class Downloader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Downloader.class);
 
-    public static BufferedImage getImage(final String urlString) throws MetallumException {
+    public static byte[] getImage(final String urlString) throws MetallumException {
         return get(urlString, new ImageDownloader(urlString));
     }
 
