@@ -38,20 +38,19 @@ public class LabelSearchServiceTest {
 
     /**
      * This test exists because there is no date and no user who added this Label
-     * http://www.metal-archives.com/labels/Spinefarm_Records/14
+     * https://www.metal-archives.com/labels/Spinefarm_Records/14
      *
      */
     @Test
     public void addedByTest() throws MetallumException {
         final Label label = new LabelSearchService().getById(14L);
 
-        assertThat(label.getLogo()).isNull();
         assertDefaultLabel(label);
     }
 
     @Test
     public void labelLogoTest() throws MetallumException {
-        final Label result = new LabelSearchService(true).getById(1878L);
+        final Label result = new LabelSearchService().getById(1878L);
 
         assertThat(result.getLogo()).isNotNull();
         assertDefaultLabel(result);
@@ -61,7 +60,7 @@ public class LabelSearchServiceTest {
         assertThat(result.getId()).isNotSameAs(0L);
         assertThat(result.getName().isEmpty()).isFalse();
         assertThat(result.getSpecialisation()).isNotEmpty();
-        assertThat(result.getLogoUrl()).isNotNull();
+        assertThat(result.hasLogo()).isTrue();
         assertThat(result.getCountry()).isNotNull();
         assertThat(result.getAddedBy()).isNotEmpty();
         assertThat(result.getAddedOn()).isNotEmpty();

@@ -40,8 +40,7 @@ public class MemberSearchServiceTest {
         assertThat(member.getGender()).isEqualTo("Male");
         assertThat(member.getProvince()).isEqualTo("Lohja, Uusimaa");
         assertThat(member.getAge()).isGreaterThanOrEqualTo(44);
-        assertThat(member.getPhoto()).isNull();
-        assertThat(member.getPhotoUrl()).isNotEmpty();
+        assertThat(member.hasPhoto()).isTrue();
         assertThat(member.getAlternativeName()).isNull();
         assertThat(member.getDetails()).isNotEmpty();
         assertThat(member.getLinks()).isNotEmpty();
@@ -66,38 +65,38 @@ public class MemberSearchServiceTest {
 
     @Test
     public void photoTest() throws MetallumException {
-        final MemberSearchService searchService = new MemberSearchService(true, false, false);
+        final MemberSearchService searchService = new MemberSearchService(false, false);
         final Iterable<Member> result = searchService.getFully(new MemberQuery("Eicca Toppinen"));
         Member member = Iterables.getOnlyElement(result);
         defaultSearchMemberCheck(member);
-        assertThat(member.getPhotoUrl().isEmpty()).isFalse();
         assertThat(member.getPhoto()).isNotNull();
+        assertThat(member.hasPhoto()).isTrue();
     }
 
     @Test
     public void detailsTest() throws MetallumException {
-        final MemberSearchService searchService = new MemberSearchService(false, false, true);
+        final MemberSearchService searchService = new MemberSearchService(false, true);
         final Iterable<Member> result = searchService.getFully(new MemberQuery("George \"Corpsegrinder\" Fisher"));
         final Member member = Iterables.getOnlyElement(result);
         defaultSearchMemberCheck(member);
-        assertThat(member.getPhotoUrl().isEmpty()).isFalse();
+        assertThat(member.hasPhoto()).isTrue();
         assertThat(member.getDetails().startsWith("George")).isTrue();
         assertThat(member.getDetails().endsWith("Forgotten.")).isTrue();
     }
 
     @Test
     public void linksTest() throws MetallumException {
-        final MemberSearchService searchService = new MemberSearchService(false, true, false);
+        final MemberSearchService searchService = new MemberSearchService(true, false);
         final List<Member> result = Lists.newArrayList(searchService.getFully(new MemberQuery("Tom G. Warrior")));
         assertThat(result.isEmpty()).isFalse();
         final Member member = result.get(0);
         defaultSearchMemberCheck(member);
-        assertThat(member.getPhotoUrl()).isNotEmpty();
-        defaulLinkTest(member.getLinks());
+        assertThat(member.hasPhoto()).isTrue();
+        defaultLinkTest(member.getLinks());
         assertThat(member.getRealName()).isNotEmpty();
     }
 
-    private void defaulLinkTest(final Collection<Link> links) {
+    private void defaultLinkTest(final Collection<Link> links) {
         for (final Link link : links) {
             assertThat(link.getName()).isNotEmpty();
             assertThat(link.getURL()).isNotEmpty();

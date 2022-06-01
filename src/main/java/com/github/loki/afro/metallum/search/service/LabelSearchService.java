@@ -11,24 +11,10 @@ import java.util.function.Function;
 
 public class LabelSearchService extends AbstractSearchService<Label, LabelQuery, SearchLabelResult> {
 
-    private boolean loadImages;
     private LabelSiteParser.PARSE_STYLE loadCurrentRooster = LabelSiteParser.PARSE_STYLE.NONE;
     private LabelSiteParser.PARSE_STYLE loadPastRooster = LabelSiteParser.PARSE_STYLE.NONE;
     private LabelSiteParser.PARSE_STYLE loadReleases = LabelSiteParser.PARSE_STYLE.NONE;
     private boolean loadLinks = false;
-
-    public LabelSearchService() {
-        this(false);
-    }
-
-    public LabelSearchService(final boolean loadImages) {
-        this.loadImages = loadImages;
-    }
-
-
-    public void setLoadImages(boolean loadImages) {
-        this.loadImages = loadImages;
-    }
 
     public void setLoadCurrentRooster(LabelSiteParser.PARSE_STYLE style) {
         this.loadCurrentRooster = style;
@@ -53,7 +39,7 @@ public class LabelSearchService extends AbstractSearchService<Label, LabelQuery,
 
     @Override
     protected Function<Long, Label> getById() {
-        return id -> new LabelSiteParser(id, this.loadImages, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases).parse();
+        return id -> new LabelSiteParser(id, this.loadLinks, this.loadCurrentRooster, this.loadPastRooster, this.loadReleases).parse();
     }
 
 }

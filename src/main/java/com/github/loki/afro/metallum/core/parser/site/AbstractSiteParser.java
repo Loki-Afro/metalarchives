@@ -12,14 +12,11 @@ public abstract class AbstractSiteParser<T extends AbstractEntity> {
     @Deprecated
     protected final String html;
     final Document doc;
-    final boolean loadImage;
     final boolean loadLinks;
-    //    protected final T entity;
     protected final long entityId;
 
-    AbstractSiteParser(final long entityId, final boolean loadImage, final boolean loadLinks) {
+    AbstractSiteParser(final long entityId, final boolean loadLinks) {
         this.entityId = entityId;
-        this.loadImage = loadImage;
         this.loadLinks = loadLinks;
         this.html = Downloader.getHTML(getSiteURL());
         this.doc = Jsoup.parse(this.html);

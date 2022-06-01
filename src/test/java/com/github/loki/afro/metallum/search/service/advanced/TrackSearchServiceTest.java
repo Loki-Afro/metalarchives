@@ -179,15 +179,15 @@ public class TrackSearchServiceTest {
                 .discType(DiscType.FULL_LENGTH)
                 .build();
 
-        final Track resultTrack = new TrackSearchService(true).getSingleUniqueByQuery(query);
+        final Track resultTrack = new TrackSearchService().getSingleUniqueByQuery(query);
         assertThat(resultTrack.getBandName()).isEqualTo("Burzum");
         assertThat(resultTrack.getDiscName()).isEqualTo("Burzum");
         assertThat(resultTrack.getName()).isEqualTo("War");
         assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
         assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
         assertThat(resultTrack.getDisc().getDiscType()).isSameAs(DiscType.FULL_LENGTH);
-        assertThat(resultTrack.getLyrics()).startsWith("This is war!");
-        assertThat(resultTrack.getLyrics()).endsWith("War!");
+        assertThat(resultTrack.getLyrics().get()).startsWith("This is war!");
+        assertThat(resultTrack.getLyrics().get()).endsWith("War!");
     }
 
     @Test
@@ -207,7 +207,7 @@ public class TrackSearchServiceTest {
             assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
             assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
             assertThat(resultTrack.getDisc().getDiscType()).isNotNull();
-            assertThat(resultTrack.getLyrics()).isNull();
+            assertThat(resultTrack.getLyricsPartial()).isNotNull();
         }
     }
 

@@ -1,10 +1,10 @@
 package com.github.loki.afro.metallum.core.util.net.downloader;
 
-import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IHTMLDownloader;
+import com.github.loki.afro.metallum.core.util.net.downloader.interfaces.IContentDownloader;
 
 import java.nio.charset.StandardCharsets;
 
-final class HTMLDownloader extends AbstractDownloader implements IHTMLDownloader {
+final class HTMLDownloader extends AbstractDownloader implements IContentDownloader<String> {
 
     HTMLDownloader(final String urlString) {
         super(urlString);

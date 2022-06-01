@@ -2,6 +2,7 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.core.parser.search.TrackSearchParser;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.partials.PartialLyrics;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.search.AbstractSearchService;
 import com.github.loki.afro.metallum.search.query.entity.SearchTrackResult;
@@ -11,36 +12,13 @@ import java.util.function.Function;
 
 public class TrackSearchService extends AbstractSearchService<Track, TrackQuery, SearchTrackResult> {
 
-    private boolean loadLyrics;
-
-    /**
-     * Constructs a default TrackSearchService.
-     */
-    public TrackSearchService() {
-        this(false);
-    }
-
-    /**
-     * Constructs a default TrackSearchService.
-     *
-     * @param loadLyrics If true, the lyrics will get downloaded.
-     */
-    public TrackSearchService(final boolean loadLyrics) {
-        this.loadLyrics = loadLyrics;
-    }
-
-
-    public final void setLoadLyrics(final boolean loadLyrics) {
-        this.loadLyrics = loadLyrics;
-    }
-
     @Override
     protected Function<SearchTrackResult, Track> parseFully() {
         return searchResult -> {
             Track.PartialDisc partialDisc = new Track.PartialDisc(searchResult.getDiscId(), searchResult.getDiscName(), searchResult.getDiscType().orElse(null));
             PartialBand bandPartial = new PartialBand(searchResult.getBandId(), searchResult.getBandName());
             Track track = new Track(partialDisc, bandPartial, searchResult.getId(), searchResult.getName());
-            track.setLyrics(searchResult.getLyrics().orElse(null));
+            track.setLyrics(new PartialLyrics(track.getId(), track.getName()));
             return track;
         };
     }
@@ -52,9 +30,7 @@ public class TrackSearchService extends AbstractSearchService<Track, TrackQuery,
 
     @Override
     protected final TrackSearchParser getSearchParser(TrackQuery trackQuery) {
-        TrackSearchParser trackSearchParser = new TrackSearchParser(trackQuery);
-        trackSearchParser.setLoadLyrics(this.loadLyrics);
-        return trackSearchParser;
+        return new TrackSearchParser(trackQuery);
     }
 
 }

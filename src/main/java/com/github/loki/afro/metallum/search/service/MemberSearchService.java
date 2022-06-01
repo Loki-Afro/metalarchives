@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 
 public class MemberSearchService extends AbstractSearchService<Member, MemberQuery, SearchMemberResult> {
-    private boolean loadImages;
     private boolean loadLinks;
     private boolean loadDetails;
 
@@ -22,31 +21,16 @@ public class MemberSearchService extends AbstractSearchService<Member, MemberQue
      * You'll download Member-details.
      */
     public MemberSearchService() {
-        this(false, true, true);
+        this(true, true);
     }
 
     /**
-     * @param loadImages  true if you care about the photo, false otherwise
      * @param loadLinks   true if you care about the links, false otherwise
      * @param loadDetails true if you care about the details, false otherwise
      */
-    public MemberSearchService(final boolean loadImages, final boolean loadLinks, final boolean loadDetails) {
+    public MemberSearchService(final boolean loadLinks, final boolean loadDetails) {
         this.loadLinks = loadLinks;
         this.loadDetails = loadDetails;
-        this.loadImages = loadImages;
-    }
-
-    /**
-     * If you want to have the photo of the Member you have to invoke this method with true. <br>
-     * To go more into detail:<br>
-     * The parser will download the Image and make it a <br>
-     * <br>
-     * Default false
-     *
-     * @param loadImages true if you care about the photo, false otherwise
-     */
-    public final void setLoadImages(final boolean loadImages) {
-        this.loadImages = loadImages;
     }
 
     /**
@@ -80,7 +64,7 @@ public class MemberSearchService extends AbstractSearchService<Member, MemberQue
 
     @Override
     protected Function<Long, Member> getById() {
-        return id -> new MemberSiteParser(id, this.loadImages, this.loadLinks, this.loadDetails).parse();
+        return id -> new MemberSiteParser(id, this.loadLinks, this.loadDetails).parse();
     }
 
 }

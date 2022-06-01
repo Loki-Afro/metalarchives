@@ -3,7 +3,7 @@ package com.github.loki.afro.metallum.entity.partials;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.search.API;
 
-public class PartialBand extends LoadablePartial<Band> {
+public class PartialBand extends IdentifiablePartial<Band> {
 
     public PartialBand(long id, String name) {
         super(id, name);

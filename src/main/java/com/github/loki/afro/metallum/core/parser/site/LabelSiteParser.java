@@ -7,11 +7,11 @@ import com.github.loki.afro.metallum.core.parser.site.helper.label.PastRosterPar
 import com.github.loki.afro.metallum.core.parser.site.helper.label.ReleaseParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
-import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Label;
 import com.github.loki.afro.metallum.entity.Link;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.Country;
 import com.github.loki.afro.metallum.enums.LabelStatus;
@@ -20,7 +20,6 @@ import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,6 +73,10 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * The SiteParser for the Label!<br>
      * <br>
      * A good example for a Label with all tags and so on: <br>
+     *
+     * @param currentRooster If you care about the current Bands that are used by this Label.
+     * @param pastRooster    If you care about the past Bands that were used by this Label.
+     * @param releases       If you care about the releases that this Label published.
      * @see <a href="http://www.metal-archives.com/labels/Metal_Blade_Records/3"></a>.<br>
      * <br>
      * <b>The last 3 parameter...</b>
@@ -83,14 +86,9 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
      * You should use PARSE_STYLE.BAND_SEARCH_MODE if care about the data and don't understand the
      * documentation. <br>
      * By default the 3 Fields are disabled (PARSE_STYLE.NONE)
-     *
-     * @param loadImages     if you want are interested in the Label-logo.
-     * @param currentRooster If you care about the current Bands that are used by this Label.
-     * @param pastRooster    If you care about the past Bands that were used by this Label.
-     * @param releases       If you care about the releases that this Label published.
      */
-    public LabelSiteParser(final long entityId, final boolean loadImages, final boolean loadLinks, final PARSE_STYLE currentRooster, final PARSE_STYLE pastRooster, final PARSE_STYLE releases) {
-        super(entityId, loadImages, loadLinks);
+    public LabelSiteParser(final long entityId, final boolean loadLinks, final PARSE_STYLE currentRooster, final PARSE_STYLE pastRooster, final PARSE_STYLE releases) {
+        super(entityId, loadLinks);
         this.loadCurrentRooster = currentRooster;
         this.loadPastRooster = pastRooster;
         this.loadReleases = releases;
@@ -115,9 +113,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
         label.addLink(parseLinks());
         label.setAdditionalNotes(parseAdditionalNotes());
-        final String logoUrl = parseLogoUrl();
-        label.setLogoUrl(logoUrl);
-        label.setLogo(parseLabelLogo(logoUrl));
+        label.setLogo(parseLabelLogo());
         label = parseModifications(label);
         return label;
     }
@@ -347,7 +343,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         return "";
     }
 
-    private final String parseLogoUrl() {
+    private String parseLogoUrl() {
         String logoUrl = null;
         if (this.html.contains("class=\"label_img\"")) {
             logoUrl = this.html.substring(this.html.indexOf("class=\"label_img\"") + 16);
@@ -357,18 +353,10 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         return logoUrl;
     }
 
-    /**
-     * If loadImage is true this method tries to download the Label logo.
-     *
-     * @return null if loadImage is false or if there is no artwork.
-     */
-    private final BufferedImage parseLabelLogo(final String logoUrl) {
-        if (this.loadImage && logoUrl != null) {
-            try {
-                return Downloader.getImage(logoUrl);
-            } catch (final MetallumException e) {
-                throw new MetallumException("Exception while downloading an image from \"" + logoUrl + "\" ," + this.entityId, e);
-            }
+    private PartialImage parseLabelLogo() {
+        String logoUrl = parseLogoUrl();
+        if (logoUrl != null) {
+            return new PartialImage(logoUrl);
         }
         return null;
     }

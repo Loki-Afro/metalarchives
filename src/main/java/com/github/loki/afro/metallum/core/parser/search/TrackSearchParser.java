@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.core.parser.search;
 
 import com.github.loki.afro.metallum.MetallumException;
+import com.github.loki.afro.metallum.core.parser.site.helper.disc.LyricsSiteParser;
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
 import com.github.loki.afro.metallum.core.util.net.MetallumURL;
 import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
@@ -106,10 +107,7 @@ public class TrackSearchParser extends AbstractSearchParser<SearchTrackResult> {
         // downloading the Lyrics!
         try {
             if (this.loadLyrics) {
-                String lyricsHtml = Downloader.getHTML(MetallumURL.assembleLyricsURL(track.getId())).trim();
-                // making it nice and if there are no lyrics there should be nothing to return!
-                lyricsHtml = MetallumUtil.parseHtmlWithLineSeparators(lyricsHtml);
-                return Strings.emptyToNull(lyricsHtml.replaceAll("\\(lyrics not available\\)", ""));
+                return Strings.emptyToNull(new LyricsSiteParser(track.getId()).parseLyrics());
             }
         } catch (final MetallumException e) {
             logger.error("Unable to get the Lyrics from " + track, e);

@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
@@ -9,7 +10,6 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,8 +24,8 @@ public class Band extends AbstractEntity {
     private String lyricalThemes;
     private PartialLabel label;
     private Integer yearFormedIn;
-    private BufferedImage photo = null;
-    private BufferedImage logo = null;
+    private PartialImage partialPhoto;
+    private PartialImage partialLogo;
     private String info;
     private List<PartialDisc> discs = new ArrayList<>();
     private Map<Member, String> currentMember = new HashMap<>();
@@ -38,8 +38,6 @@ public class Band extends AbstractEntity {
     private List<Link> tablatureLinks = new ArrayList<>();
     private List<Link> labelLinks = new ArrayList<>();
     private Map<Integer, List<SimilarBand>> similarArtist = new HashMap<>();
-    private String photoUrl = null;
-    private String logoUrl = null;
     private TreeSet<YearRange> yearsActive = new TreeSet<>();
 
     public Band(final long id, final String name) {
@@ -131,13 +129,12 @@ public class Band extends AbstractEntity {
         this.yearFormedIn = year;
     }
 
-    public void setPhoto(final BufferedImage bandPhoto) {
-        this.photo = bandPhoto;
+    public void setPhoto(final PartialImage bandPhoto) {
+        this.partialPhoto = bandPhoto;
     }
 
-    public void setLogo(final BufferedImage bandLogo) {
-        this.logo = bandLogo;
-
+    public void setLogo(final PartialImage bandLogo) {
+        this.partialLogo = bandLogo;
     }
 
     public void setInfo(final String info) {
@@ -160,22 +157,20 @@ public class Band extends AbstractEntity {
         this.lastMember = lastMembers;
     }
 
-    /**
-     * The band photo is mostly a picture of the band members.
-     *
-     * @return the photo as Image, could be null if there is none!
-     */
-    public BufferedImage getPhoto() {
-        return this.photo;
+    public Optional<PartialImage> getPartialPhoto() {
+        return Optional.ofNullable(partialPhoto);
     }
 
-    /**
-     * The Band logo is mostly the lettering of the band.
-     *
-     * @return the logo as Image, could be null if there is none!
-     */
-    public BufferedImage getLogo() {
-        return this.logo;
+    public Optional<PartialImage> getPartialLogo() {
+        return Optional.ofNullable(partialLogo);
+    }
+
+    public Optional<byte[]> getPhoto() {
+        return Optional.ofNullable(partialPhoto).map(PartialImage::load);
+    }
+
+    public Optional<byte[]> getLogo() {
+        return Optional.ofNullable(partialLogo).map(PartialImage::load);
     }
 
     public BandStatus getStatus() {
@@ -304,11 +299,11 @@ public class Band extends AbstractEntity {
     }
 
     public final boolean hasPhoto() {
-        return this.photo != null;
+        return this.partialPhoto != null;
     }
 
     public final boolean hasLogo() {
-        return this.logo != null;
+        return this.partialLogo != null;
     }
 
     public final void setDiscs(final List<PartialDisc> discList) {
@@ -333,22 +328,6 @@ public class Band extends AbstractEntity {
 
     public void setTablatureLinks(final List<Link> list) {
         this.tablatureLinks = list;
-    }
-
-    public void setLogoUrl(final String logoUrl) {
-        this.logoUrl = logoUrl;
-    }
-
-    public void setPhotoUrl(final String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
-
-    public String getLogoUrl() {
-        return this.logoUrl;
-    }
-
-    public String getPhotoUrl() {
-        return this.photoUrl;
     }
 
     public TreeSet<YearRange> getYearsActive() {

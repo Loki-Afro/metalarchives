@@ -10,12 +10,12 @@ import com.github.loki.afro.metallum.entity.Link;
 import com.github.loki.afro.metallum.entity.Member;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialDisc;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.enums.Country;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -25,8 +25,8 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 
     private final boolean loadReadMore;
 
-    public MemberSiteParser(final long entityId, final boolean loadImages, final boolean loadMemberLinks, final boolean loadReadMore) {
-        super(entityId, loadImages, loadMemberLinks);
+    public MemberSiteParser(final long entityId, final boolean loadMemberLinks, final boolean loadReadMore) {
+        super(entityId, loadMemberLinks);
         this.loadReadMore = loadReadMore;
     }
 
@@ -39,9 +39,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         member.setCountry(parseCountry());
         member.setProvince(parseProvince());
         member.setGender(parseGender());
-        final String imageUrl = parseImageUrl();
-        member.setPhotoUrl(imageUrl);
-        member.setPhoto(parseImage(imageUrl));
+        member.setPhoto(parseImage());
         member.setGuestIn(parseGuestSessionBands());
         member.setActiveIn(parseActiveBands());
         member.setPastBands(parsePastBands());
@@ -137,7 +135,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         return new Link[0];
     }
 
-    private final String parseImageUrl() {
+    private String parseImageUrl() {
         String imageUrl = null;
         if (this.html.contains("<div class=\"member_img\">")) {
             imageUrl = this.html.substring(this.html.indexOf("<div class=\"member_img\""));
@@ -148,14 +146,10 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
 
     }
 
-    private final BufferedImage parseImage(final String imageUrl) {
-        if (this.loadImage && imageUrl != null) {
-            try {
-                return Downloader.getImage(imageUrl);
-            } catch (final MetallumException e) {
-                throw new MetallumException("Unable get photo for " + this.entityId, e);
-
-            }
+    private PartialImage parseImage() {
+        String imageUrl = parseImageUrl();
+        if (imageUrl != null) {
+            return new PartialImage(imageUrl);
         }
         return null;
     }

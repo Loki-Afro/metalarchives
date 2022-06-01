@@ -2,6 +2,7 @@ package com.github.loki.afro.metallum.entity;
 
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialDisc;
+import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.enums.Country;
 
 import java.awt.image.BufferedImage;
@@ -16,7 +17,7 @@ public class Member extends AbstractEntity {
     private Integer age;
     private String province;
     private String gender;
-    private BufferedImage photo = null;
+    private PartialImage photo;
     private String alternativeName;
     private Map<PartialBand, Map<PartialDisc, String>> guestSessionBands = new LinkedHashMap<>();
     private Map<PartialBand, Map<PartialDisc, String>> activeInBands = new LinkedHashMap<>();
@@ -24,7 +25,6 @@ public class Member extends AbstractEntity {
     private Map<PartialBand, Map<PartialDisc, String>> miscBands = new LinkedHashMap<>();
     private final List<Link> linkList = new ArrayList<>();
     private String details;
-    private String photoUrl;
 
     public Member(long id, String name) {
         super(id, name);
@@ -71,7 +71,7 @@ public class Member extends AbstractEntity {
         this.gender = gender;
     }
 
-    public void setPhoto(final BufferedImage parseMemberImage) {
+    public void setPhoto(final PartialImage parseMemberImage) {
         this.photo = parseMemberImage;
     }
 
@@ -115,8 +115,8 @@ public class Member extends AbstractEntity {
         return this.gender;
     }
 
-    public BufferedImage getPhoto() {
-        return this.photo;
+    public Optional<byte[]> getPhoto() {
+        return Optional.ofNullable(photo).map(PartialImage::load);
     }
 
     public String getAlternativeName() {
@@ -157,14 +157,6 @@ public class Member extends AbstractEntity {
 
     public boolean hasPhoto() {
         return this.photo != null;
-    }
-
-    public final void setPhotoUrl(final String photoUrl) {
-        this.photoUrl = photoUrl;
-    }
-
-    public final String getPhotoUrl() {
-        return this.photoUrl;
     }
 
 }
