@@ -27,6 +27,7 @@ mvn clean install
 ### Maven
 
 ```xml
+
 <dependency>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
@@ -55,23 +56,23 @@ import com.google.common.collect.Sets;
 import java.util.List;
 
 public class APIExample {
-// unit tests are full of examples
-    private bandExample() {
+    // unit tests are full of examples
+    private void bandExample() {
 
         // just using the search
-        BandQuery simpleSearchQuery = BandQuery.builder()
+        BandQuery query = BandQuery.builder()
                 .country(Country.DE)
                 .statuses(Sets.newHashSet(BandStatus.SPLIT_UP, BandStatus.ON_HOLD))
                 .build();
-        for (SearchBandResult result : API.getBands(build)) {
+        for (SearchBandResult result : API.getBands(query)) {
             System.out.println("BandName" + result.getName());
             System.out.println("BandId" + result.getId());
         }
 
 
         // or if you wanna go all in: search and load all bands by name
-        BandQuery query = BandQuery.byName("Slayer", true);
-        for (final Band fullBand : API.getBandsFully(query)) {
+        BandQuery query2 = BandQuery.byName("Slayer", true);
+        for (final Band fullBand : API.getBandsFully(query2)) {
             System.out.println("Bandname: " + fullBand.getName());
             System.out.println("Bandgenre: " + fullBand.getGenre());
             System.out.println("Bandstatus: " + fullBand.getStatus());
@@ -87,44 +88,41 @@ public class APIExample {
 
     }
 
-    public discExample() {
+    public void discExample() {
 //        same with band we can do the default operations like searching and getting a single disc by its id
         Disc disc = API.getDiscById(845L);
         for (Track track : disc.getTrackList()) {
             System.out.println("name " + track.getPlayTime());
             System.out.println("playtime " + track.getPlayTime());
+            System.out.println("lyrics " + track.getLyrics().orElse(""));
 //            ...
         }
-        
-//        you can also load the lyrics of the tracks
-        DiscSearchService service = new DiscSearchService();
-        service.setLoadLyrics(true);
 
         DiscQuery query = DiscQuery.builder()
                 .name("Hordanes Land")
                 .discType(DiscType.EP)
                 .build();
+
 //        enforces that you get only one result, if there are more than one an exception will be thrown
-        final Disc discResult = service.getSingleUniqueByQuery(query);
-        
-//        or you might be interested in reviews + artworks + lyrics?
-        DiscQuery query = DiscQuery.builder()
+        final Disc singleDisc = API.getSingleUniqueDisc(query);
+
+//        or you might be interested in reviews? or artworks?
+        DiscQuery query2 = DiscQuery.builder()
                 .name("The Wretched Spawn")
                 .build();
-        final Disc discResult = new DiscSearchService(true, true, true).getById(query);
-        System.out.println(convertToAsciiArtNotIncluded(discResult.getArtwork()));
-        for (Review review : discResult.getReviews()) {
-            System.out.println(review.getAuthor());
-            System.out.println(review.getDate());
-            System.out.println(review.getContent());
+        for (Disc discResult : API.getDiscsFully(query2)) {
+            System.out.println(convertToAsciiArtNotIncluded(discResult.getArtwork()));
+            for (Review review : discResult.getReviews()) {
+                System.out.println(review.getAuthor());
+                System.out.println(review.getDate());
+                System.out.println(review.getContent());
+                System.out.println(review.getPercent());
 //            ...
+            }
         }
     }
 
-    public trackExample() {
-//        getting the lyrics of a single track is a bit tricky
-//        There is no dedicated "Track Webpage", but its not impossible ..
-        
+    public void trackExample() {
 //        this query results, as of January 2021 to one result 
         TrackQuery query = TrackQuery.builder()
                 .name("Fatal Self-Inflicted Disfigurement")
@@ -132,17 +130,17 @@ public class APIExample {
                 .discType(DiscType.FULL_LENGTH)
                 .build();
 
-//        loading lyrics is activated here
-        Track track = new TrackSearchService(true).getFully(query).iterator().next();;
-
-        System.out.println(track.getLyrics());
+        for (SearchTrackResult track : API.getTracks(query)) {
+            System.out.println(track.getLyrics().orElse(""));
+        }
     }
 }
 ```
 
 ## Background
 
-I wrote this library almost 10 years a ago, used it to tag my music library. (that tagger is not available and was just a
+I wrote this library almost 15 years a ago, used it to tag my music library. (that tagger is not available and was just
+a
 huge hack)
 Later it was used in an Android App to have a mobile version of the original site.
 

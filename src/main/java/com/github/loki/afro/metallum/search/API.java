@@ -10,6 +10,7 @@ import com.github.loki.afro.metallum.search.service.LabelSearchService;
 import com.github.loki.afro.metallum.search.service.MemberSearchService;
 import com.github.loki.afro.metallum.search.service.advanced.BandSearchService;
 import com.github.loki.afro.metallum.search.service.advanced.DiscSearchService;
+import com.github.loki.afro.metallum.search.service.advanced.TrackSearchService;
 import com.google.common.collect.Iterables;
 
 public abstract class API {
@@ -59,6 +60,10 @@ public abstract class API {
 
     public static Label getLabelById(long id) {
         return new LabelSearchService().getById(id);
+    }
+
+    public static Iterable<SearchTrackResult> getTracks(TrackQuery query) {
+        return new TrackSearchService().get(query);
     }
 
 }

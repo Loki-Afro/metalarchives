@@ -238,4 +238,12 @@ public class TrackSearchServiceTest {
         assertThat(track.getGenre()).isNull();
     }
 
+    @Test
+    public void bla() {
+        API.getTracks(TrackQuery.builder()
+                .name("")
+                .build()
+        );
+    }
+
 }
