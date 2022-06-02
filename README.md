@@ -31,29 +31,19 @@ mvn clean install
 <dependency>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```
-compile 'com.github.loki-afro:metalarchives-api:1.0.1'
+compile 'com.github.loki-afro:metalarchives-api:1.1.0'
 ```
 
 ### Usage
 
 ```java
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.enums.BandStatus;
-import com.github.loki.afro.metallum.enums.Country;
-import com.github.loki.afro.metallum.search.API;
-import com.github.loki.afro.metallum.search.query.entity.BandQuery;
-import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
-import com.google.common.collect.Sets;
-
-import java.util.List;
 
 public class APIExample {
     // unit tests are full of examples
