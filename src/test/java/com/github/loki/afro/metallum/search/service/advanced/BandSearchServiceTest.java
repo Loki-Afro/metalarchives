@@ -1,9 +1,7 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Label;
-import com.github.loki.afro.metallum.entity.YearRange;
+import com.github.loki.afro.metallum.entity.*;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
@@ -17,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
@@ -610,6 +609,26 @@ public class BandSearchServiceTest {
                         "1992-1994 (as Crashcat)",
                         "1994-? (as Crash for Excess)",
                         "?-? (as 44 X ES$98226)");
+    }
+
+
+    @Test
+    public void testMetallicaLyrics() throws MetallumException {
+//        final Band resultBand = API.getBandById(125L);
+//        List<Optional<String>> collect = resultBand.getDiscs().stream()
+//                .flatMap(d -> d.getTrackList().stream())
+//                .map(Track::getLyrics)
+//                .collect(Collectors.toList());
+//
+//        System.out.println(collect);
+
+        Disc discById = API.getDiscById(379007L);
+        List<Optional<String>> collect = discById.getTrackList().stream().map(Track::getLyrics).collect(Collectors.toList());
+
+//        System.out.println(collect);
+
+        List<String> collect1 = collect.stream().map(Optional::get).collect(Collectors.toList());
+        System.out.println(collect1);
     }
 
 }

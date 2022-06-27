@@ -2,6 +2,7 @@ package com.github.loki.afro.metallum.core.parser.site.helper.disc;
 
 import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Track;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialLyrics;
 import com.github.loki.afro.metallum.enums.DiscType;
 import org.jsoup.nodes.Document;
@@ -60,7 +61,7 @@ public final class DiscSiteTrackParser {
                 final String bandName = parseBandName(row);
                 track = Track.createSplitTrack(this.disc, bandName, trackId, trackTitle);
             } else {
-                track = new Track(this.disc, this.disc.getBandName(), trackId, trackTitle);
+                track = new Track(Track.PartialDisc.of(this.disc), new PartialBand(this.disc.getBand().getId(), this.disc.getBandName()), trackId, trackTitle);
             }
 
 

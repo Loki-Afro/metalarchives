@@ -1,5 +1,6 @@
 package com.github.loki.afro.metallum.entity;
 
+import com.github.loki.afro.metallum.entity.partials.NullBand;
 import com.github.loki.afro.metallum.entity.partials.PartialLyrics;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.enums.DiscType;
@@ -20,10 +21,6 @@ public class Track extends AbstractEntity {
     private int discNumber = 1;
     private String collaborationBandName;
 
-
-    public Track(Disc disc, String bandName, long id, String name) {
-        this(disc, disc.getBand().getId(), bandName, id, name);
-    }
 
     private Track(Disc disc, long bandId, String bandName, long id, String name) {
         this(PartialDisc.of(disc),
@@ -53,9 +50,9 @@ public class Track extends AbstractEntity {
                 .filter(pb -> pb.getName().equals(bandName))
                 .findFirst();
         if (first.isPresent()) {
-            return new Track(disc, first.get().getId(), bandName, trackId, trackTitle);
+            return new Track(PartialDisc.of(disc), new PartialBand(first.get().getId(), bandName), trackId, trackTitle);
         } else {
-            throw new IllegalStateException("could not find split band from previously parsed disc with id " + disc.getId());
+            return new Track(PartialDisc.of(disc), new NullBand(bandName), trackId, trackTitle);
         }
     }
 
@@ -136,7 +133,7 @@ public class Track extends AbstractEntity {
             this.discType = discType;
         }
 
-        static PartialDisc of(Disc disc) {
+        public static PartialDisc of(Disc disc) {
             return new PartialDisc(disc.getId(), disc.getName(), disc.getType());
         }
     }
