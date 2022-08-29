@@ -246,7 +246,7 @@ public enum Country {
     TO("Tonga"),
     TT("Trinidad and Tobago"),
     TN("Tunisia"),
-    TR("Turkey"),
+    TR("Türkiye"),
     TM("Turkmenistan"),
     TC("Turks and Caicos Islands"),
     TV("Tuvalu"),

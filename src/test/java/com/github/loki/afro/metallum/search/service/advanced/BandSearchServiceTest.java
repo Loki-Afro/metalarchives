@@ -384,7 +384,7 @@ public class BandSearchServiceTest {
         assertThat(2008).isEqualTo(resultBand.getYearFormedIn());
         assertThat("Black/Thrash Metal").isEqualTo(resultBand.getGenre());
         assertThat("Satan, Blasphemy, Heavy Metal Cult").isEqualTo(resultBand.getLyricalThemes());
-        assertThat("Mortal Rite Records").isEqualTo(resultBand.getPartialLabel().getName());
+        assertThat("Shadow Kingdom Records").isEqualTo(resultBand.getPartialLabel().getName());
         assertThat(resultBand.getPartialLabel().getId() != 0).isTrue();
         assertThat(resultBand.getInfo().isEmpty()).isFalse();
         assertThat(resultBand.hasLogo()).isTrue();
