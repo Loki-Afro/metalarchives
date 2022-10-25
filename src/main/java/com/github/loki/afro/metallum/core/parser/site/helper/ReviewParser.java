@@ -90,7 +90,7 @@ public final class ReviewParser {
 
     private String parseBody(final Element elem) {
         Element bodyElem = elem.getElementById(elem.id().replaceAll("reviewBox", "reviewText"));
-        return MetallumUtil.parseHtmlWithLineSeparators(bodyElem.html());
+        return MetallumUtil.htmlToPlainText(bodyElem.html());
     }
 
     private String parseAuthor(final Element elem) {

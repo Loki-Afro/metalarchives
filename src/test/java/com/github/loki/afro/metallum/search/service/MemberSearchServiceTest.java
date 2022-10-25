@@ -80,8 +80,9 @@ public class MemberSearchServiceTest {
         final Member member = Iterables.getOnlyElement(result);
         defaultSearchMemberCheck(member);
         assertThat(member.hasPhoto()).isTrue();
-        assertThat(member.getDetails().startsWith("George")).isTrue();
-        assertThat(member.getDetails().endsWith("Forgotten.")).isTrue();
+        assertThat(member.getDetails().startsWith("Biography\n\nGeorge")).isTrue();
+        assertThat(member.getDetails().contains("\n\nTrivia\n\n")).isTrue();
+        assertThat(member.getDetails().endsWith("\"Spirituality and Distortion\" (2020).")).isTrue();
     }
 
     @Test
@@ -94,6 +95,13 @@ public class MemberSearchServiceTest {
         assertThat(member.hasPhoto()).isTrue();
         defaultLinkTest(member.getLinks());
         assertThat(member.getRealName()).isNotEmpty();
+    }
+
+    @Test
+    public void triviaAndBioWithoutReadMoreTest() {
+        Member member = API.getMemberById(435L);
+        assertThat(member.getDetails()).startsWith("Biography\n");
+        assertThat(member.getDetails()).contains("\nTrivia\n");
     }
 
     private void defaultLinkTest(final Collection<Link> links) {

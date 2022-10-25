@@ -87,7 +87,7 @@ public final class MetallumUtil {
      * @param html the HTML String with tags
      * @return a HTML clean String (parsed), but with line separators
      */
-    public static String parseHtmlWithLineSeparators(final String html) {
+    public static String htmlToPlainText(final String html) {
         final StringBuilder strBuf = new StringBuilder();
         String cleanHtml = Jsoup.parse(html.replaceAll("(?i)<br[^>]*>", "br2n")).text();
         for (final String strPart : cleanHtml.split("br2n")) {

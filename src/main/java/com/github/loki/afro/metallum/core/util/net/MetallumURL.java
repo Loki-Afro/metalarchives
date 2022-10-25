@@ -128,6 +128,10 @@ public final class MetallumURL {
         return BASEURL + "artist/read-more/id/" + memberId;
     }
 
+    public static String assembleMemberTriviaReadMoreURL(final long memberId) {
+        return BASEURL + "artist/read-more/id/" + memberId + "/field/trivia";
+    }
+
     public static String assembleGenreSearchURL(final String genreName, final int begin) {
         return BASEURL + "search/ajax-band-search/?field=genre&query=" + encodeURIComponent(genreName) + "&sEcho=1&iColumns=3&sColumns=&iDisplayStart=" + begin + "&iDisplayLength=200&sNames=%2C%2C";
     }
@@ -138,7 +142,7 @@ public final class MetallumURL {
 
     /**
      * to get an URL to view the discography of a Band example for Bathory:
-     * http://www.metal-archives.com/band/discography/id/184/tab/all
+     * https://www.metal-archives.com/band/discography/id/184/tab/all
      * @param id the DiscographyId
      * @return the URL
      */

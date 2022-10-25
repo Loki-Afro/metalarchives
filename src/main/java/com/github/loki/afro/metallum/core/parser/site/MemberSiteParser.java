@@ -13,9 +13,12 @@ import com.github.loki.afro.metallum.entity.partials.PartialDisc;
 import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.enums.Country;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -44,7 +47,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         member.setActiveIn(parseActiveBands());
         member.setPastBands(parsePastBands());
         member.setMiscActivities(parseMiscBands());
-        member.setDetails(parseDetails());
+        parseDetails(member);
         member.addLinks(parseLinks());
         member = parseModifications(member);
         return member;
@@ -58,7 +61,7 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         String[] discDetails = this.html.substring(this.html.indexOf("<dl class=\"float_left\"")).split("<dd>");
         String realName = discDetails[1];
         realName = realName.substring(0, realName.indexOf("</dd>"));
-        return MetallumUtil.parseHtmlWithLineSeparators(realName);
+        return MetallumUtil.htmlToPlainText(realName);
     }
 
     private final int parseAge() {
@@ -154,26 +157,64 @@ public class MemberSiteParser extends AbstractSiteParser<Member> {
         return null;
     }
 
-    private String parseReadMore() {
-        String html = "";
-        try {
-            html = Downloader.getHTML(MetallumURL.assembleMemberReadMoreURL(this.entityId));
-        } catch (final MetallumException e) {
-            throw new MetallumException("Unable get \"read more\" for " + this.entityId, e);
+    private Member loadAdditionalDetails(Member member) {
+        boolean hasBioReadMore = false;
+        boolean hasTriviaReadMore = false;
+        Elements select = this.doc.select("a[class=btn_read_more]");
+        for (Element element : select) {
+            hasBioReadMore = hasBioReadMore || element.attr("onclick").toLowerCase(Locale.ENGLISH).contains("bio");
+            hasTriviaReadMore = hasTriviaReadMore || element.attr("onclick").toLowerCase(Locale.ENGLISH).contains("trivia");
         }
-        return MetallumUtil.parseHtmlWithLineSeparators(html);
+
+        String plainTextBio = "";
+        String plainTextTrivia = "";
+
+        if (hasBioReadMore) {
+            try {
+                String html = Downloader.getHTML(MetallumURL.assembleMemberReadMoreURL(this.entityId));
+                plainTextBio = MetallumUtil.htmlToPlainText(html);
+            } catch (final MetallumException e) {
+                throw new MetallumException("Unable get \"read more\" for " + this.entityId, e);
+            }
+        }
+
+        if (hasTriviaReadMore) {
+            try {
+                String html = Downloader.getHTML(MetallumURL.assembleMemberTriviaReadMoreURL(this.entityId));
+                plainTextTrivia = MetallumUtil.htmlToPlainText(html);
+            } catch (final MetallumException e) {
+                throw new MetallumException("Unable get \"read more\" for " + this.entityId, e);
+            }
+        }
+
+        String details = "";
+        if (hasBioReadMore) {
+            details += "Biography\n\n";
+            details += plainTextBio;
+        }
+        if (hasTriviaReadMore) {
+            if (hasBioReadMore) {
+                details += "\n\n";
+            }
+            details += "Trivia\n\n";
+            details += plainTextTrivia;
+        }
+
+        member.setDetails(details);
+        return member;
     }
 
-    private final String parseDetails() {
+    private Member parseDetails(Member member) {
         if (this.loadReadMore && this.html.contains("class=\"btn_read_more")) {
-            return parseReadMore();
+            return loadAdditionalDetails(member);
         }
         String biography = this.html.substring(this.html.indexOf("<div class=\"clear band_comment\">"));
         biography = biography.substring(0, biography.indexOf("</div>"));
         // To keep the headlines formatted
         biography = biography.replaceAll("</?h.*?>", "<br><br>");
-        biography = MetallumUtil.parseHtmlWithLineSeparators(biography);
-        return biography;
+        biography = MetallumUtil.htmlToPlainText(biography);
+        member.setDetails(biography);
+        return member;
     }
 
     @Override

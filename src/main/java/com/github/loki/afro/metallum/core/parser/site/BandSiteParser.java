@@ -195,12 +195,12 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     private final String parseInfo() {
         Element bandComment = this.doc.getElementsByClass("band_comment").get(0);
-        String info = MetallumUtil.parseHtmlWithLineSeparators(bandComment.html()).replaceAll(" Read more$", "");
+        String info = MetallumUtil.htmlToPlainText(bandComment.html()).replaceAll(" Read more$", "");
 
         if (this.loadReadMore && !this.doc.getElementsByClass("btn_read_more").isEmpty()) {
             try {
                 final String downloadedReadMore = Downloader.getHTML(MetallumURL.assembleMoreInfoURL(this.entityId));
-                return MetallumUtil.parseHtmlWithLineSeparators(downloadedReadMore);
+                return MetallumUtil.htmlToPlainText(downloadedReadMore);
             } catch (MetallumException e) {
                 logger.error("error in parsing additional information for band: " + this.entityId, e);
             }

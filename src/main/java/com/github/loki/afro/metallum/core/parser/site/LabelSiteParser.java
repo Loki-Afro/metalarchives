@@ -161,7 +161,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
 
     private String parseAddress(final String upperLeftPart) {
         String address = upperLeftPart.substring(upperLeftPart.indexOf("> ") + 2, upperLeftPart.indexOf("</dd>"));
-        address = MetallumUtil.parseHtmlWithLineSeparators(address);
+        address = MetallumUtil.htmlToPlainText(address);
         return address;
     }
 
@@ -289,7 +289,7 @@ public class LabelSiteParser extends AbstractSiteParser<Label> {
         if (this.html.contains("<div id=\"label_notes")) {
             additionalNotes = this.html.substring(this.html.indexOf("<div id=\"label_notes"), this.html.indexOf("<div id=\"auditTrail"));
             additionalNotes = additionalNotes.replaceAll("<.?p>", "<br><br>");
-            additionalNotes = MetallumUtil.parseHtmlWithLineSeparators(additionalNotes);
+            additionalNotes = MetallumUtil.htmlToPlainText(additionalNotes);
         }
         return additionalNotes;
     }

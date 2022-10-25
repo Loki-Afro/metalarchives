@@ -54,7 +54,7 @@ public class DiscSiteParser extends AbstractSiteParser<Disc> {
     private String parseDetails() {
         Element notesElement = this.doc.getElementById("album_tabs_notes");
         if (notesElement != null) {
-            return MetallumUtil.parseHtmlWithLineSeparators(notesElement.html());
+            return MetallumUtil.htmlToPlainText(notesElement.html());
         }
         return "";
     }
