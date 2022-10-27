@@ -11,10 +11,12 @@ import com.github.loki.afro.metallum.search.query.BandSearchQuery;
 import com.github.loki.afro.metallum.search.query.entity.BandQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.google.common.collect.Iterables;
+import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -613,22 +615,34 @@ public class BandSearchServiceTest {
 
 
     @Test
-    public void testMetallicaLyrics() throws MetallumException {
-//        final Band resultBand = API.getBandById(125L);
-//        List<Optional<String>> collect = resultBand.getDiscs().stream()
-//                .flatMap(d -> d.getTrackList().stream())
-//                .map(Track::getLyrics)
-//                .collect(Collectors.toList());
-//
-//        System.out.println(collect);
-
+    public void splitAlbumLyricsWithoutBand() throws MetallumException {
+//        here AC/DC and The Black Crowes are not on metallum yet have lyrics on that disc
         Disc discById = API.getDiscById(379007L);
-        List<Optional<String>> collect = discById.getTrackList().stream().map(Track::getLyrics).collect(Collectors.toList());
 
-//        System.out.println(collect);
+        List<String> lyrics = discById.getTrackList().stream()
+                .map(Track::getLyrics)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
-        List<String> collect1 = collect.stream().map(Optional::get).collect(Collectors.toList());
-        System.out.println(collect1);
+        assertThat(lyrics).hasSize(13);
+        assertThat(lyrics).allMatch(s -> !Strings.isNullOrEmpty(s));
+    }
+
+
+    @Test
+    public void splitAlbumLyricsWithBandButPartlyNoLyrics() throws MetallumException {
+//        here reverend bizarre has lyrics but orodruin has not
+        Disc discById = API.getDiscById(38148L);
+
+        List<Optional<String>> lyrics = discById.getTrackList().stream()
+                .map(Track::getLyrics)
+                .collect(Collectors.toList());
+
+        assertThat(lyrics).hasSize(3);
+        assertThat(lyrics.get(0)).isPresent();
+        assertThat(lyrics.get(1)).isNotPresent();
+        assertThat(lyrics.get(2)).isNotPresent();
     }
 
 }
