@@ -130,7 +130,7 @@ public enum Country {
     IM("Isle of Man"),
     IL("Israel"),
     IT("Italy"),
-    CI("Ivory Coast"),
+    CI("Côte d'Ivoire"),
     JM("Jamaica"),
     JP("Japan"),
     JE("Jersey"),
