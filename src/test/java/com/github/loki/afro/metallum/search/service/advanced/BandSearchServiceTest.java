@@ -1,7 +1,10 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
+import com.github.loki.afro.metallum.BandNotRecognizedByMetallum;
 import com.github.loki.afro.metallum.MetallumException;
+import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BandSearchServiceTest {
 
@@ -619,7 +623,8 @@ public class BandSearchServiceTest {
 //        here AC/DC and The Black Crowes are not on metallum yet have lyrics on that disc
         Disc discById = API.getDiscById(379007L);
 
-        List<String> lyrics = discById.getTrackList().stream()
+        List<Track> trackList = discById.getTrackList();
+        List<String> lyrics = trackList.stream()
                 .map(Track::getLyrics)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -627,6 +632,11 @@ public class BandSearchServiceTest {
 
         assertThat(lyrics).hasSize(13);
         assertThat(lyrics).allMatch(s -> !Strings.isNullOrEmpty(s));
+
+        PartialBand nullBand = trackList.get(12).getBand();
+        assertThat(nullBand.getName()).isEqualTo("AC/DC");
+        assertThatThrownBy(nullBand::load)
+                .isInstanceOf(BandNotRecognizedByMetallum.class);
     }
 
 
