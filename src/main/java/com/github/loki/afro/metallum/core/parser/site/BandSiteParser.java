@@ -220,7 +220,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     private void parseMember(final Band band) {
         final MemberParser memberParser = new MemberParser();
-        memberParser.parse(this.html);
+        memberParser.parse(this.doc);
         // split by cat
         band.setCurrentLineup(memberParser.getCurrentLineup());
         band.setPastLineup(memberParser.getPastLineup());

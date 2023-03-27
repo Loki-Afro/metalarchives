@@ -656,4 +656,14 @@ public class BandSearchServiceTest {
         assertThat(lyrics.get(2)).isNotPresent();
     }
 
+
+    @Test
+    public void getLineUp() throws MetallumException {
+        Band bandById = API.getBandById(3540325435L);
+
+        Map<Member, String> currentLineup = bandById.getCurrentLineup();
+
+        assertThat(currentLineup).hasSize(3);
+    }
+
 }
