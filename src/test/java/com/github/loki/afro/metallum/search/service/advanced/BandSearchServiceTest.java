@@ -1,9 +1,10 @@
 package com.github.loki.afro.metallum.search.service.advanced;
 
+import com.github.loki.afro.metallum.BandNotRecognizedByMetallum;
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Label;
-import com.github.loki.afro.metallum.entity.YearRange;
+import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
+import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
 import com.github.loki.afro.metallum.enums.Country;
@@ -13,14 +14,18 @@ import com.github.loki.afro.metallum.search.query.BandSearchQuery;
 import com.github.loki.afro.metallum.search.query.entity.BandQuery;
 import com.github.loki.afro.metallum.search.query.entity.SearchBandResult;
 import com.google.common.collect.Iterables;
+import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BandSearchServiceTest {
 
@@ -610,6 +615,44 @@ public class BandSearchServiceTest {
                         "1992-1994 (as Crashcat)",
                         "1994-? (as Crash for Excess)",
                         "?-? (as 44 X ES$98226)");
+    }
+
+
+    @Test
+    public void splitAlbumLyricsWithoutBand() throws MetallumException {
+//        here AC/DC and The Black Crowes are not on metallum yet have lyrics on that disc
+        Disc discById = API.getDiscById(379007L);
+
+        List<Track> trackList = discById.getTrackList();
+        List<String> lyrics = trackList.stream()
+                .map(Track::getLyrics)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        assertThat(lyrics).hasSize(13);
+        assertThat(lyrics).allMatch(s -> !Strings.isNullOrEmpty(s));
+
+        PartialBand nullBand = trackList.get(12).getBand();
+        assertThat(nullBand.getName()).isEqualTo("AC/DC");
+        assertThatThrownBy(nullBand::load)
+                .isInstanceOf(BandNotRecognizedByMetallum.class);
+    }
+
+
+    @Test
+    public void splitAlbumLyricsWithBandButPartlyNoLyrics() throws MetallumException {
+//        here reverend bizarre has lyrics but orodruin has not
+        Disc discById = API.getDiscById(38148L);
+
+        List<Optional<String>> lyrics = discById.getTrackList().stream()
+                .map(Track::getLyrics)
+                .collect(Collectors.toList());
+
+        assertThat(lyrics).hasSize(3);
+        assertThat(lyrics.get(0)).isPresent();
+        assertThat(lyrics.get(1)).isNotPresent();
+        assertThat(lyrics.get(2)).isNotPresent();
     }
 
 }
