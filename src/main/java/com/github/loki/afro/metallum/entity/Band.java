@@ -28,10 +28,10 @@ public class Band extends AbstractEntity {
     private PartialImage partialLogo;
     private String info;
     private List<PartialDisc> discs = new ArrayList<>();
-    private Map<Member, String> currentMember = new HashMap<>();
-    private Map<Member, String> lastMember = new HashMap<>();
-    private Map<Member, String> liveMember = new HashMap<>();
-    private Map<Member, String> pastMember = new HashMap<>();
+    private Map<Member, String> currentMembers = new HashMap<>();
+    private Map<Member, String> currentLiveMembers = new HashMap<>();
+    private Map<Member, String> pastMembers = new HashMap<>();
+    private Map<Member, String> pastLiveMembers = new HashMap<>();
     private List<Link> officialLinks = new ArrayList<>();
     private List<Link> officialMerchLinks = new ArrayList<>();
     private List<Link> unofficialLinks = new ArrayList<>();
@@ -141,20 +141,16 @@ public class Band extends AbstractEntity {
         this.info = info;
     }
 
-    public void setCurrentLineup(final Map<Member, String> currentMember) {
-        this.currentMember = currentMember;
+    public void setCurrentMembers(final Map<Member, String> currentMember) {
+        this.currentMembers = currentMember;
     }
 
-    public void setPastLineup(final Map<Member, String> pastMembers) {
-        this.pastMember = pastMembers;
+    public void setPastMembers(final Map<Member, String> pastMembers) {
+        this.pastMembers = pastMembers;
     }
 
-    public void setLiveLineup(final Map<Member, String> liveMembers) {
-        this.liveMember = liveMembers;
-    }
-
-    public void setLastKnownLineup(final Map<Member, String> lastMembers) {
-        this.lastMember = lastMembers;
+    public void setCurrentLiveMembers(final Map<Member, String> liveMembers) {
+        this.currentLiveMembers = liveMembers;
     }
 
     public Optional<PartialImage> getPartialPhoto() {
@@ -244,20 +240,24 @@ public class Band extends AbstractEntity {
         return this.info;
     }
 
-    public Map<Member, String> getCurrentLineup() {
-        return this.currentMember;
+    public Map<Member, String> getCurrentMembers() {
+        return currentMembers;
     }
 
-    public Map<Member, String> getLastKnownLineup() {
-        return this.lastMember;
+    public Map<Member, String> getCurrentLiveMembers() {
+        return currentLiveMembers;
     }
 
-    public Map<Member, String> getLiveLineup() {
-        return this.liveMember;
+    public Map<Member, String> getPastLiveMembers() {
+        return pastLiveMembers;
     }
 
-    public Map<Member, String> getPastLineup() {
-        return this.pastMember;
+    public void setPastLiveMembers(Map<Member, String> pastLiveMembers) {
+        this.pastLiveMembers = pastLiveMembers;
+    }
+
+    public Map<Member, String> getPastMembers() {
+        return pastMembers;
     }
 
     public List<Link> getOfficialLinks() {

@@ -2,6 +2,8 @@ package com.github.loki.afro.metallum.entity.partials;
 
 import lombok.ToString;
 
+import java.util.Objects;
+
 @ToString
 abstract class IdentifiablePartial<X> extends Partial<X> {
     private final long id;
@@ -20,5 +22,20 @@ abstract class IdentifiablePartial<X> extends Partial<X> {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        IdentifiablePartial<?> that = (IdentifiablePartial<?>) o;
+        return id == that.id && Objects.equals(name, that.name);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

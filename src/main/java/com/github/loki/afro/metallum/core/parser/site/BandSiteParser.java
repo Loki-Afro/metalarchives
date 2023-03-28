@@ -222,10 +222,10 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         final MemberParser memberParser = new MemberParser();
         memberParser.parse(this.doc);
         // split by cat
-        band.setCurrentLineup(memberParser.getCurrentLineup());
-        band.setPastLineup(memberParser.getPastLineup());
-        band.setLiveLineup(memberParser.getLiveLineup());
-        band.setLastKnownLineup(memberParser.getLastKnownLineup());
+        band.setCurrentMembers(memberParser.getCurrentLineup());
+        band.setPastMembers(memberParser.getPastLineup());
+        band.setCurrentLiveMembers(memberParser.getCurrentLiveLineup());
+        band.setPastLiveMembers(memberParser.getPastLiveLineupList());
     }
 
     private final Map<Integer, List<Band.SimilarBand>> parseSimilarArtists() {
