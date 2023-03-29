@@ -55,30 +55,36 @@ public class MemberParser {
                 this.role = columns.get(1).text();
             } else if (row.hasClass("lineupBandsRow")) {
                 Objects.requireNonNull(this.currentMember);
-                List<PartialBand> bands = new ArrayList<>();
-                String[] bandStrings = row.html().replaceAll("</td>", "")
-                        .replaceAll("<td.*?>", "")
-                        .replaceAll("\\(R\\.I\\.P\\. \\d\\d\\d\\d\\) ", "")
-                        .replaceAll("See also: ", "")
-                        .replaceAll("ex-", "")
-                        .replaceAll("\\(live\\)", "")
-                        .split(",");
-                for (String bandStr : bandStrings) {
-                    bandStr = bandStr.trim();
-                    if (bandStr.startsWith("<a href")) {
-                        long bandId = parseIdFromUrl(bandStr.replaceAll("<a href=\"(http.+\\d+)\".*", "$1"));
-                        String name = bandStr.replaceAll(".+\">(.+)</a>", "$1");
-                        bands.add(new PartialBand(bandId, name));
-                    } else {
-                        bands.add(new NullBand(bandStr));
-                    }
-                }
+                List<PartialBand> bands = parseBandRow(row);
                 this.currentMember.setUncategorizedBands(bands);
             } else {
                 throw new MetallumException("Unknown member row :" + row.text());
             }
         }
         addCurrentMember();
+    }
+
+    private List<PartialBand> parseBandRow(Element row) {
+        List<PartialBand> bands = new ArrayList<>();
+        String[] bandStrings = row.html()
+                .replace("</td>", "")
+                .replaceAll("\\(R\\.I\\.P\\. \\d\\d\\d\\d\\) ", "")
+                .replace("See also: ", "")
+                .replace("ex-", "")
+                .replace("(live)", "")
+                .replaceAll("<td.*?>", "")
+                .split(",");
+        for (String bandStr : bandStrings) {
+            bandStr = bandStr.trim();
+            if (bandStr.startsWith("<a href")) {
+                long bandId = parseIdFromUrl(bandStr.replaceAll("<a href=\"(http.+\\d+)\".*", "$1"));
+                String name = bandStr.replaceAll(".+\">(.+)</a>", "$1");
+                bands.add(new PartialBand(bandId, name));
+            } else {
+                bands.add(new NullBand(bandStr));
+            }
+        }
+        return bands;
     }
 
     private void addCurrentMember() {
