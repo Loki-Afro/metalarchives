@@ -736,4 +736,50 @@ public class BandSearchServiceTest {
                                 "Vocals (1988-1991)"));
     }
 
+    @Test
+    public void getLastKnownLineUp() throws MetallumException {
+        // slayer, split-up
+        Band bandById = API.getBandById(72L);
+
+        assertThat(bandById.getCurrentMembers()).hasSize(3);
+        assertThat(bandById.getPastMembers()).hasSize(3);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(1);
+        assertThat(bandById.getPastLiveMembers()).hasSize(5);
+
+
+        assertThat(bandById.getPastMembers())
+                .extractingFromEntries(
+                        e -> e.getKey().getName(),
+                        e -> e.getKey().getId(),
+                        e -> e.getKey().getUncategorizedBands().stream()
+                                .sorted(Comparator.comparing(PartialBand::getId))
+                                .collect(Collectors.toList()),
+                        Map.Entry::getValue)
+                .contains(tuple("Jeff Hanneman", 265L,
+                                List.of(new NullBand("Pap Smear")),
+                                "Guitars (1981-2013)"),
+                        tuple("Jon Dette", 819L,
+                                List.of(
+                                        new NullBand("Animetal USA"),
+                                        new NullBand("Pushed"),
+                                        new PartialBand(4L, "Iced Earth"),
+                                        new PartialBand(70L, "Testament"),
+                                        new PartialBand(169L, "Anthrax"),
+                                        new PartialBand(320L, "Impellitteri"),
+                                        new PartialBand(378L, "Heathen"),
+                                        new PartialBand(1232L, "Evildead"),
+                                        new PartialBand(3365L, "HavocHate"),
+                                        new PartialBand(4578L, "Killing Machine"),
+                                        new PartialBand(33323L, "Volbeat"),
+                                        new PartialBand(44583L, "Terror"),
+                                        new PartialBand(49705L, "Temple of Brutality"),
+                                        new PartialBand(71769L, "Chaotic Realm"),
+                                        new PartialBand(3540335339L, "Apocalypse"),
+                                        new PartialBand(3540388054L, "Metal Machine"),
+                                        new PartialBand(3540415139L, "Meshiaak")
+                                ),
+                                "Drums (1996-1997)")
+                );
+    }
+
 }
