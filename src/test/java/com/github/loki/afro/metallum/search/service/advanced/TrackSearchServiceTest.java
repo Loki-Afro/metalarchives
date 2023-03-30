@@ -183,8 +183,8 @@ public class TrackSearchServiceTest {
         assertThat(resultTrack.getBandName()).isEqualTo("Burzum");
         assertThat(resultTrack.getDiscName()).isEqualTo("Burzum");
         assertThat(resultTrack.getName()).isEqualTo("War");
-        assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
+        assertThat(resultTrack.getBand().getId()).isNotSameAs(0L);
+        assertThat(resultTrack.getDisc().getId()).isNotSameAs(0L);
         assertThat(resultTrack.getDisc().getDiscType()).isSameAs(DiscType.FULL_LENGTH);
         assertThat(resultTrack.getLyrics().get()).startsWith("This is war!");
         assertThat(resultTrack.getLyrics().get()).endsWith("War!");
@@ -204,8 +204,8 @@ public class TrackSearchServiceTest {
             assertThat(resultTrack.getBandName()).isEqualTo("Reverend Bizarre");
             assertThat(resultTrack.getDiscName().isEmpty()).isFalse();
             assertThat(resultTrack.getName()).isEqualTo("Fucking Wizard");
-            assertThat(resultTrack.getBand().getId()).isNotSameAs(0);
-            assertThat(resultTrack.getDisc().getId()).isNotSameAs(0);
+            assertThat(resultTrack.getBand().getId()).isNotSameAs(0L);
+            assertThat(resultTrack.getDisc().getId()).isNotSameAs(0L);
             assertThat(resultTrack.getDisc().getDiscType()).isNotNull();
             assertThat(resultTrack.getLyricsPartial()).isNotNull();
         }
