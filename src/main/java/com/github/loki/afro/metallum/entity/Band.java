@@ -28,10 +28,10 @@ public class Band extends AbstractEntity {
     private PartialImage partialLogo;
     private String info;
     private List<PartialDisc> discs = new ArrayList<>();
-    private Map<Member, String> currentMembers = new HashMap<>();
-    private Map<Member, String> currentLiveMembers = new HashMap<>();
-    private Map<Member, String> pastMembers = new HashMap<>();
-    private Map<Member, String> pastLiveMembers = new HashMap<>();
+    private List<PartialMember> currentMembers = new ArrayList<>();
+    private List<PartialMember> currentLiveMembers = new ArrayList<>();
+    private List<PartialMember> pastMembers = new ArrayList<>();
+    private List<PartialMember> pastLiveMembers = new ArrayList<>();
     private List<Link> officialLinks = new ArrayList<>();
     private List<Link> officialMerchLinks = new ArrayList<>();
     private List<Link> unofficialLinks = new ArrayList<>();
@@ -141,15 +141,15 @@ public class Band extends AbstractEntity {
         this.info = info;
     }
 
-    public void setCurrentMembers(final Map<Member, String> currentMember) {
+    public void setCurrentMembers(final List<PartialMember> currentMember) {
         this.currentMembers = currentMember;
     }
 
-    public void setPastMembers(final Map<Member, String> pastMembers) {
+    public void setPastMembers(final List<PartialMember> pastMembers) {
         this.pastMembers = pastMembers;
     }
 
-    public void setCurrentLiveMembers(final Map<Member, String> liveMembers) {
+    public void setCurrentLiveMembers(final List<PartialMember> liveMembers) {
         this.currentLiveMembers = liveMembers;
     }
 
@@ -240,23 +240,23 @@ public class Band extends AbstractEntity {
         return this.info;
     }
 
-    public Map<Member, String> getCurrentMembers() {
+    public List<PartialMember> getCurrentMembers() {
         return currentMembers;
     }
 
-    public Map<Member, String> getCurrentLiveMembers() {
+    public List<PartialMember> getCurrentLiveMembers() {
         return currentLiveMembers;
     }
 
-    public Map<Member, String> getPastLiveMembers() {
+    public List<PartialMember> getPastLiveMembers() {
         return pastLiveMembers;
     }
 
-    public void setPastLiveMembers(Map<Member, String> pastLiveMembers) {
+    public void setPastLiveMembers(List<PartialMember> pastLiveMembers) {
         this.pastLiveMembers = pastLiveMembers;
     }
 
-    public Map<Member, String> getPastMembers() {
+    public List<PartialMember> getPastMembers() {
         return pastMembers;
     }
 
@@ -369,6 +369,17 @@ public class Band extends AbstractEntity {
             this.reviewCount = reviewCount;
             this.averageReviewPercentage = averageReviewPercentage;
         }
+    }
 
+    public static class PartialMember extends com.github.loki.afro.metallum.entity.partials.PartialMember {
+        @Getter
+        private final List<PartialBand> bands;
+        @Getter
+        private final String role;
+        public PartialMember(long id, String name, String role, List<PartialBand> getBands) {
+            super(id, name);
+            this.role = role;
+            this.bands = getBands;
+        }
     }
 }

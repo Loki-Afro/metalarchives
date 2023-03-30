@@ -1,28 +1,29 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.band;
 
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.entity.Band;
 import com.github.loki.afro.metallum.entity.partials.NullBand;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MemberParser {
 
     private enum MemberCategory {
-        PAST, PAST_LIVE, CURRENT, LIVE;
+        PAST, PAST_LIVE, CURRENT, LIVE
     }
 
-    private final Map<Member, String> currentLineupList = new HashMap<>();
-    private final Map<Member, String> pastLineupList = new HashMap<>();
-    private final Map<Member, String> liveLineupList = new HashMap<>();
-    private final Map<Member, String> pastLiveLineupList = new HashMap<>();
+    private final List<Band.PartialMember> currentLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> pastLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> liveLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> pastLiveLineupList = new ArrayList<>();
 
-    private Member currentMember = null;
-    private String role = null;
+    private CurrentlyParsedMember currentMember = null;
     private MemberCategory memberCategory = null;
 
     public void parse(Document doc) {
@@ -51,17 +52,32 @@ public class MemberParser {
                 Element firstColumn = columns.get(0);
                 String href = firstColumn.select("a").attr("href");
                 String memberName = firstColumn.text();
-                this.currentMember = new Member(parseIdFromUrl(href), memberName);
-                this.role = columns.get(1).text();
+                this.currentMember = new CurrentlyParsedMember(parseIdFromUrl(href), memberName, columns.get(1).text());
             } else if (row.hasClass("lineupBandsRow")) {
                 Objects.requireNonNull(this.currentMember);
-                List<PartialBand> bands = parseBandRow(row);
-                this.currentMember.setUncategorizedBands(bands);
+                this.currentMember.bands = parseBandRow(row);
             } else {
                 throw new MetallumException("Unknown member row :" + row.text());
             }
         }
         addCurrentMember();
+    }
+
+    private static class CurrentlyParsedMember {
+        private final long id;
+        private final String name;
+        private final String role;
+        private List<PartialBand> bands = new ArrayList<>();
+
+        public CurrentlyParsedMember(long id, String name, String role) {
+            this.name = name;
+            this.id = id;
+            this.role = role;
+        }
+
+        Band.PartialMember toPartialMember() {
+            return new Band.PartialMember(id, name, this.role, bands);
+        }
     }
 
     private List<PartialBand> parseBandRow(Element row) {
@@ -89,9 +105,8 @@ public class MemberParser {
 
     private void addCurrentMember() {
         Objects.requireNonNull(this.memberCategory);
-        addToMemberList(this.currentMember, this.role, this.memberCategory);
+        addToMemberList(this.currentMember.toPartialMember(), this.memberCategory);
         this.currentMember = null;
-        this.role = null;
     }
 
     private static MemberCategory getMemberCategory(String text) {
@@ -115,38 +130,38 @@ public class MemberParser {
         return Long.parseLong(memberId);
     }
 
-    private void addToMemberList(final Member memberToAdd, final String role, final MemberCategory category) {
+    private void addToMemberList(final Band.PartialMember memberToAdd, final MemberCategory category) {
         switch (category) {
             case CURRENT:
-                this.currentLineupList.put(memberToAdd, role);
+                this.currentLineupList.add(memberToAdd);
                 break;
             case LIVE:
-                this.liveLineupList.put(memberToAdd, role);
+                this.liveLineupList.add(memberToAdd);
                 break;
             case PAST:
-                this.pastLineupList.put(memberToAdd, role);
+                this.pastLineupList.add(memberToAdd);
                 break;
             case PAST_LIVE:
-                this.pastLiveLineupList.put(memberToAdd, role);
+                this.pastLiveLineupList.add(memberToAdd);
                 break;
             default:
                 break;
         }
     }
 
-    public final Map<Member, String> getCurrentLineup() {
+    public final List<Band.PartialMember> getCurrentLineup() {
         return this.currentLineupList;
     }
 
-    public final Map<Member, String> getCurrentLiveLineup() {
+    public final List<Band.PartialMember> getCurrentLiveLineup() {
         return this.liveLineupList;
     }
 
-    public final Map<Member, String> getPastLineup() {
+    public final List<Band.PartialMember> getPastLineup() {
         return this.pastLineupList;
     }
 
-    public Map<Member, String> getPastLiveLineupList() {
+    public List<Band.PartialMember> getPastLiveLineupList() {
         return pastLiveLineupList;
     }
 }

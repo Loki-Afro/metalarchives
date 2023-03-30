@@ -662,16 +662,16 @@ public class BandSearchServiceTest {
 
         assertThat(bandById.getCurrentMembers())
                 .size().isEqualTo(3)
-                .returnToMap().extractingFromEntries(
-                        e -> e.getKey().getName(), e -> e.getKey().getId(), Map.Entry::getValue)
+                .returnToIterable()
+                .extracting(Band.PartialMember::getName, Band.PartialMember::getId, Band.PartialMember::getRole)
                 .contains(tuple("Odalv", 440L, "Drums (2010-present)"),
                         tuple("Vrolok", 431L, "Vocals, Bass, Vargan, Shakuhachi (2010-present)"),
                         tuple("Helg", 33725L, "Vocals, Guitars, Keyboards (2010-present)"));
 
         assertThat(bandById.getCurrentLiveMembers())
                 .size().isEqualTo(1)
-                .returnToMap().extractingFromEntries(
-                        e -> e.getKey().getName(), e -> e.getKey().getId(), Map.Entry::getValue)
+                .returnToIterable()
+                .extracting(Band.PartialMember::getName, Band.PartialMember::getId, Band.PartialMember::getRole)
                 .contains(
                         tuple("Goreon", 759332L, "Guitars (2019-present)"));
 
@@ -688,22 +688,20 @@ public class BandSearchServiceTest {
         assertThat(bandById.getCurrentLiveMembers()).hasSize(0);
         assertThat(bandById.getPastMembers()).hasSize(4);
         assertThat(bandById.getPastLiveMembers()).hasSize(5);
-
         assertThat(bandById.getCurrentMembers())
-                .extractingFromEntries(
-                        e -> e.getKey().getName(),
-                        e -> e.getKey().getId(),
-                        e -> e.getKey().getUncategorizedBands().stream()
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
                                 .sorted(Comparator.comparing(PartialBand::getId))
-                                .collect(Collectors.toList()),
-                        Map.Entry::getValue)
-                .contains(tuple("Lars Ulrich", 187L, List.of(), "Drums (1981-present)"),
-                        tuple("Kirk Hammett", 175L,
+                                .collect(Collectors.toList()))
+                .contains(tuple("Lars Ulrich", 187L, "Drums (1981-present)", List.of()),
+                        tuple("Kirk Hammett", 175L, "Guitars (lead), Vocals (backing) (1983-present)",
                                 List.of(new NullBand("Kirk Hammett"),
                                         new NullBand("The Wedding Band"),
                                         new NullBand("Spastik Children"),
-                                        new PartialBand(173L, "Exodus")),
-                                "Guitars (lead), Vocals (backing) (1983-present)"));
+                                        new PartialBand(173L, "Exodus"))
+                        ));
     }
 
 
@@ -717,23 +715,22 @@ public class BandSearchServiceTest {
         assertThat(bandById.getPastLiveMembers()).hasSize(4);
 
         assertThat(bandById.getPastMembers())
-                .extractingFromEntries(
-                        e -> e.getKey().getName(),
-                        e -> e.getKey().getId(),
-                        e -> e.getKey().getUncategorizedBands().stream()
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
                                 .sorted(Comparator.comparing(PartialBand::getId))
-                                .collect(Collectors.toList()),
-                        Map.Entry::getValue)
-                .contains(tuple("Euronymous", 38L,
+                                .collect(Collectors.toList()))
+                .contains(tuple("Euronymous", 38L, "Guitars (1984-1993), Vocals (1984-1986)",
                                 List.of(new NullBand("Horn"),
                                         new NullBand("L.E.G.O."),
-                                        new PartialBand(41211L, "Checker Patrol")),
-                                "Guitars (1984-1993), Vocals (1984-1986)"),
-                        tuple("Dead", 41L,
+                                        new PartialBand(41211L, "Checker Patrol"))
+                        ),
+                        tuple("Dead", 41L, "Vocals (1988-1991)",
                                 List.of(new NullBand("Ohlin Metal"),
                                         new NullBand("Scapegoat"),
-                                        new PartialBand(6967L, "Morbid")),
-                                "Vocals (1988-1991)"));
+                                        new PartialBand(6967L, "Morbid"))
+                        ));
     }
 
     @Test
@@ -748,17 +745,16 @@ public class BandSearchServiceTest {
 
 
         assertThat(bandById.getPastMembers())
-                .extractingFromEntries(
-                        e -> e.getKey().getName(),
-                        e -> e.getKey().getId(),
-                        e -> e.getKey().getUncategorizedBands().stream()
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
                                 .sorted(Comparator.comparing(PartialBand::getId))
-                                .collect(Collectors.toList()),
-                        Map.Entry::getValue)
-                .contains(tuple("Jeff Hanneman", 265L,
-                                List.of(new NullBand("Pap Smear")),
-                                "Guitars (1981-2013)"),
-                        tuple("Jon Dette", 819L,
+                                .collect(Collectors.toList()))
+                .contains(tuple("Jeff Hanneman", 265L, "Guitars (1981-2013)",
+                                List.of(new NullBand("Pap Smear"))
+                        ),
+                        tuple("Jon Dette", 819L, "Drums (1996-1997)",
                                 List.of(
                                         new NullBand("Animetal USA"),
                                         new NullBand("Pushed"),
@@ -777,8 +773,7 @@ public class BandSearchServiceTest {
                                         new PartialBand(3540335339L, "Apocalypse"),
                                         new PartialBand(3540388054L, "Metal Machine"),
                                         new PartialBand(3540415139L, "Meshiaak")
-                                ),
-                                "Drums (1996-1997)")
+                                ))
                 );
     }
 

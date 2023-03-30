@@ -13,7 +13,6 @@ public class Member extends AbstractEntity {
 
     private Country country;
     private String realName;
-    private List<PartialBand> uncategorizedBands = new ArrayList<>();
     private Integer age;
     private String province;
     private String gender;
@@ -38,25 +37,12 @@ public class Member extends AbstractEntity {
         this.realName = realName;
     }
 
-    /**
-     * If we just search for the Member it is not possible to know if these are past Bands.
-     *
-     * @return uncategorizedBands
-     */
-    public final List<PartialBand> getUncategorizedBands() {
-        return this.uncategorizedBands;
-    }
-
     public String getRealName() {
         return this.realName;
     }
 
     public Country getCountry() {
         return this.country;
-    }
-
-    public final void setUncategorizedBands(final List<PartialBand> memberBands) {
-        this.uncategorizedBands = memberBands;
     }
 
     public void setAge(final int age) {
