@@ -60,7 +60,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return band;
     }
 
-    private final Band parseBandImages(final Band band) {
+    private Band parseBandImages(final Band band) {
         final String logoUrl = parseLogoUrl();
         band.setLogo(parseBandLogo(logoUrl));
         final String photoUrl = parsePhotoUrl();
@@ -166,19 +166,19 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         }
     }
 
-    private final String parseBandName() {
+    private String parseBandName() {
         Element bandNameElement = this.doc.getElementsByClass("band_name").first();
         return bandNameElement.text();
     }
 
-    private final int parseYearOfCreation(final String firstPartHtml) {
+    private int parseYearOfCreation(final String firstPartHtml) {
         if (firstPartHtml.contains("N/A")) {
             return 0;
         }
         return Integer.parseInt(firstPartHtml);
     }
 
-    private final PartialLabel parseCurrentLabel(final Element labelElement) {
+    private PartialLabel parseCurrentLabel(final Element labelElement) {
         // id
         String labelId;
         String labelElementText = labelElement.html();
@@ -193,7 +193,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     }
 
-    private final String parseInfo() {
+    private String parseInfo() {
         Element bandComment = this.doc.getElementsByClass("band_comment").get(0);
         String info = MetallumUtil.htmlToPlainText(bandComment.html()).replaceAll(" Read more$", "");
 
@@ -209,7 +209,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
     }
 
     // we do not specify complete /main/live/demo/misc -> BandGeneric
-    private final List<Band.PartialDisc> parseDiscography() {
+    private List<Band.PartialDisc> parseDiscography() {
         try {
             final DiscParser discParser = new DiscParser(this.entityId);
             return discParser.parse();
@@ -220,15 +220,15 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
 
     private void parseMember(final Band band) {
         final MemberParser memberParser = new MemberParser();
-        memberParser.parse(this.html);
+        memberParser.parse(this.doc);
         // split by cat
-        band.setCurrentLineup(memberParser.getCurrentLineup());
-        band.setPastLineup(memberParser.getPastLineup());
-        band.setLiveLineup(memberParser.getLiveLineup());
-        band.setLastKnownLineup(memberParser.getLastKnownLineup());
+        band.setCurrentMembers(memberParser.getCurrentLineup());
+        band.setPastMembers(memberParser.getPastLineup());
+        band.setCurrentLiveMembers(memberParser.getCurrentLiveLineup());
+        band.setPastLiveMembers(memberParser.getPastLiveLineupList());
     }
 
-    private final Map<Integer, List<Band.SimilarBand>> parseSimilarArtists() {
+    private Map<Integer, List<Band.SimilarBand>> parseSimilarArtists() {
         if (this.loadSimilarArtists) {
             try {
                 final SimilarArtistsParser sap = new SimilarArtistsParser(this.entityId);
@@ -240,7 +240,7 @@ public class BandSiteParser extends AbstractSiteParser<Band> {
         return new HashMap<>();
     }
 
-    private final Link[] parseLinks() {
+    private Link[] parseLinks() {
         if (this.loadLinks) {
             try {
                 final BandLinkParser parser = new BandLinkParser(this.entityId);

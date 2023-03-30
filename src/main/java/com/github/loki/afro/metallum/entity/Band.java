@@ -28,10 +28,10 @@ public class Band extends AbstractEntity {
     private PartialImage partialLogo;
     private String info;
     private List<PartialDisc> discs = new ArrayList<>();
-    private Map<Member, String> currentMember = new HashMap<>();
-    private Map<Member, String> lastMember = new HashMap<>();
-    private Map<Member, String> liveMember = new HashMap<>();
-    private Map<Member, String> pastMember = new HashMap<>();
+    private List<PartialMember> currentMembers = new ArrayList<>();
+    private List<PartialMember> currentLiveMembers = new ArrayList<>();
+    private List<PartialMember> pastMembers = new ArrayList<>();
+    private List<PartialMember> pastLiveMembers = new ArrayList<>();
     private List<Link> officialLinks = new ArrayList<>();
     private List<Link> officialMerchLinks = new ArrayList<>();
     private List<Link> unofficialLinks = new ArrayList<>();
@@ -141,20 +141,16 @@ public class Band extends AbstractEntity {
         this.info = info;
     }
 
-    public void setCurrentLineup(final Map<Member, String> currentMember) {
-        this.currentMember = currentMember;
+    public void setCurrentMembers(final List<PartialMember> currentMember) {
+        this.currentMembers = currentMember;
     }
 
-    public void setPastLineup(final Map<Member, String> pastMembers) {
-        this.pastMember = pastMembers;
+    public void setPastMembers(final List<PartialMember> pastMembers) {
+        this.pastMembers = pastMembers;
     }
 
-    public void setLiveLineup(final Map<Member, String> liveMembers) {
-        this.liveMember = liveMembers;
-    }
-
-    public void setLastKnownLineup(final Map<Member, String> lastMembers) {
-        this.lastMember = lastMembers;
+    public void setCurrentLiveMembers(final List<PartialMember> liveMembers) {
+        this.currentLiveMembers = liveMembers;
     }
 
     public Optional<PartialImage> getPartialPhoto() {
@@ -244,20 +240,24 @@ public class Band extends AbstractEntity {
         return this.info;
     }
 
-    public Map<Member, String> getCurrentLineup() {
-        return this.currentMember;
+    public List<PartialMember> getCurrentMembers() {
+        return currentMembers;
     }
 
-    public Map<Member, String> getLastKnownLineup() {
-        return this.lastMember;
+    public List<PartialMember> getCurrentLiveMembers() {
+        return currentLiveMembers;
     }
 
-    public Map<Member, String> getLiveLineup() {
-        return this.liveMember;
+    public List<PartialMember> getPastLiveMembers() {
+        return pastLiveMembers;
     }
 
-    public Map<Member, String> getPastLineup() {
-        return this.pastMember;
+    public void setPastLiveMembers(List<PartialMember> pastLiveMembers) {
+        this.pastLiveMembers = pastLiveMembers;
+    }
+
+    public List<PartialMember> getPastMembers() {
+        return pastMembers;
     }
 
     public List<Link> getOfficialLinks() {
@@ -369,6 +369,17 @@ public class Band extends AbstractEntity {
             this.reviewCount = reviewCount;
             this.averageReviewPercentage = averageReviewPercentage;
         }
+    }
 
+    public static class PartialMember extends com.github.loki.afro.metallum.entity.partials.PartialMember {
+        @Getter
+        private final List<PartialBand> bands;
+        @Getter
+        private final String role;
+        public PartialMember(long id, String name, String role, List<PartialBand> getBands) {
+            super(id, name);
+            this.role = role;
+            this.bands = getBands;
+        }
     }
 }

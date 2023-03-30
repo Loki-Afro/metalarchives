@@ -2,8 +2,8 @@ package com.github.loki.afro.metallum.search.service.advanced;
 
 import com.github.loki.afro.metallum.BandNotRecognizedByMetallum;
 import com.github.loki.afro.metallum.MetallumException;
-import com.github.loki.afro.metallum.core.util.net.downloader.Downloader;
 import com.github.loki.afro.metallum.entity.*;
+import com.github.loki.afro.metallum.entity.partials.NullBand;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.enums.BandStatus;
@@ -17,15 +17,14 @@ import com.google.common.collect.Iterables;
 import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.loki.afro.metallum.entity.YearRange.Year.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class BandSearchServiceTest {
 
@@ -654,6 +653,128 @@ public class BandSearchServiceTest {
         assertThat(lyrics.get(0)).isPresent();
         assertThat(lyrics.get(1)).isNotPresent();
         assertThat(lyrics.get(2)).isNotPresent();
+    }
+
+
+    @Test
+    public void getLineUp() throws MetallumException {
+        Band bandById = API.getBandById(3540325435L);
+
+        assertThat(bandById.getCurrentMembers())
+                .size().isEqualTo(3)
+                .returnToIterable()
+                .extracting(Band.PartialMember::getName, Band.PartialMember::getId, Band.PartialMember::getRole)
+                .contains(tuple("Odalv", 440L, "Drums (2010-present)"),
+                        tuple("Vrolok", 431L, "Vocals, Bass, Vargan, Shakuhachi (2010-present)"),
+                        tuple("Helg", 33725L, "Vocals, Guitars, Keyboards (2010-present)"));
+
+        assertThat(bandById.getCurrentLiveMembers())
+                .size().isEqualTo(1)
+                .returnToIterable()
+                .extracting(Band.PartialMember::getName, Band.PartialMember::getId, Band.PartialMember::getRole)
+                .contains(
+                        tuple("Goreon", 759332L, "Guitars (2019-present)"));
+
+
+        assertThat(bandById.getPastMembers()).isEmpty();
+        assertThat(bandById.getPastLiveMembers()).isEmpty();
+    }
+
+    @Test
+    public void getLineUp2() throws MetallumException {
+        Band bandById = API.getBandById(125L);
+
+        assertThat(bandById.getCurrentMembers()).hasSize(4);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(0);
+        assertThat(bandById.getPastMembers()).hasSize(4);
+        assertThat(bandById.getPastLiveMembers()).hasSize(5);
+        assertThat(bandById.getCurrentMembers())
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
+                                .sorted(Comparator.comparing(PartialBand::getId))
+                                .collect(Collectors.toList()))
+                .contains(tuple("Lars Ulrich", 187L, "Drums (1981-present)", List.of()),
+                        tuple("Kirk Hammett", 175L, "Guitars (lead), Vocals (backing) (1983-present)",
+                                List.of(new NullBand("Kirk Hammett"),
+                                        new NullBand("The Wedding Band"),
+                                        new NullBand("Spastik Children"),
+                                        new PartialBand(173L, "Exodus"))
+                        ));
+    }
+
+
+    @Test
+    public void getLineUp3() throws MetallumException {
+        Band bandById = API.getBandById(67L);
+
+        assertThat(bandById.getCurrentMembers()).hasSize(5);
+        assertThat(bandById.getPastMembers()).hasSize(15);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(1);
+        assertThat(bandById.getPastLiveMembers()).hasSize(4);
+
+        assertThat(bandById.getPastMembers())
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
+                                .sorted(Comparator.comparing(PartialBand::getId))
+                                .collect(Collectors.toList()))
+                .contains(tuple("Euronymous", 38L, "Guitars (1984-1993), Vocals (1984-1986)",
+                                List.of(new NullBand("Horn"),
+                                        new NullBand("L.E.G.O."),
+                                        new PartialBand(41211L, "Checker Patrol"))
+                        ),
+                        tuple("Dead", 41L, "Vocals (1988-1991)",
+                                List.of(new NullBand("Ohlin Metal"),
+                                        new NullBand("Scapegoat"),
+                                        new PartialBand(6967L, "Morbid"))
+                        ));
+    }
+
+    @Test
+    public void getLastKnownLineUp() throws MetallumException {
+        // slayer, split-up
+        Band bandById = API.getBandById(72L);
+
+        assertThat(bandById.getCurrentMembers()).hasSize(3);
+        assertThat(bandById.getPastMembers()).hasSize(3);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(1);
+        assertThat(bandById.getPastLiveMembers()).hasSize(5);
+
+
+        assertThat(bandById.getPastMembers())
+                .extracting(Band.PartialMember::getName,
+                        Band.PartialMember::getId,
+                        Band.PartialMember::getRole,
+                        pbm -> pbm.getBands().stream()
+                                .sorted(Comparator.comparing(PartialBand::getId))
+                                .collect(Collectors.toList()))
+                .contains(tuple("Jeff Hanneman", 265L, "Guitars (1981-2013)",
+                                List.of(new NullBand("Pap Smear"))
+                        ),
+                        tuple("Jon Dette", 819L, "Drums (1996-1997)",
+                                List.of(
+                                        new NullBand("Animetal USA"),
+                                        new NullBand("Pushed"),
+                                        new PartialBand(4L, "Iced Earth"),
+                                        new PartialBand(70L, "Testament"),
+                                        new PartialBand(169L, "Anthrax"),
+                                        new PartialBand(320L, "Impellitteri"),
+                                        new PartialBand(378L, "Heathen"),
+                                        new PartialBand(1232L, "Evildead"),
+                                        new PartialBand(3365L, "HavocHate"),
+                                        new PartialBand(4578L, "Killing Machine"),
+                                        new PartialBand(33323L, "Volbeat"),
+                                        new PartialBand(44583L, "Terror"),
+                                        new PartialBand(49705L, "Temple of Brutality"),
+                                        new PartialBand(71769L, "Chaotic Realm"),
+                                        new PartialBand(3540335339L, "Apocalypse"),
+                                        new PartialBand(3540388054L, "Metal Machine"),
+                                        new PartialBand(3540415139L, "Meshiaak")
+                                ))
+                );
     }
 
 }

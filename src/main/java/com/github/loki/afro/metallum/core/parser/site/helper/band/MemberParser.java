@@ -1,151 +1,167 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.band;
 
-import com.github.loki.afro.metallum.core.util.MetallumUtil;
-import com.github.loki.afro.metallum.entity.Member;
+import com.github.loki.afro.metallum.MetallumException;
+import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.entity.partials.NullBand;
 import com.github.loki.afro.metallum.entity.partials.PartialBand;
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class MemberParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MemberParser.class);
-
     private enum MemberCategory {
-        LAST_KNOWN("Last known lineup"), PAST("Past members"), CURRENT("current lineup"), LIVE("Live musicians");
-        private final String[] asString;
-
-        MemberCategory(final String... asString) {
-            this.asString = asString;
-        }
-
-        public final static MemberCategory getMemberTypeForString(final String possibleMemberCategory) {
-            for (final MemberCategory cat : values()) {
-                if (MetallumUtil.isStringInArray(possibleMemberCategory, cat.asString)) {
-                    return cat;
-                }
-            }
-            LOGGER.error("MemberCategory: " + possibleMemberCategory);
-            return null;
-        }
-
+        PAST, PAST_LIVE, CURRENT, LIVE
     }
 
-    private final Map<Member, String> currentLineupList = new HashMap<>();
-    private final Map<Member, String> pastLineupList = new HashMap<>();
-    private final Map<Member, String> liveLineupList = new HashMap<>();
-    private final Map<Member, String> lastKnownLineupList = new HashMap<>();
+    private final List<Band.PartialMember> currentLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> pastLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> liveLineupList = new ArrayList<>();
+    private final List<Band.PartialMember> pastLiveLineupList = new ArrayList<>();
 
-    public final void parse(final String html) {
-        if (!html.contains("id=\"band_members\"")) {
-            return;
-        }
-        final String[] cats = html.split("href=\"#band_tab_members_");
-        for (int x = 1; x < cats.length; x++) {
+    private CurrentlyParsedMember currentMember = null;
+    private MemberCategory memberCategory = null;
 
-            final String cat = cats[x].substring(cats[x].indexOf(">") + 1, cats[x].indexOf("</a>"));
-            if (!cat.contains("Complete lineup")) {
-
-                final String catID = cats[x].substring(0, cats[x].indexOf("\""));
-                String catHtml = html.substring(html.indexOf("id=\"band_tab_members_" + catID + "\""));
-
-                if (catHtml.contains("<!--")) {
-                    catHtml = catHtml.substring(0, catHtml.indexOf("<!--"));
-                }
-
-                final String[] membersArray = catHtml.split("class=\"lineupTab\">");
-                for (int i = 1; i < membersArray.length; i++) {
-                    final String[] memInfo = membersArray[i].split("</td>");
-                    long memberId = parseMemberId(memInfo[0]);
-                    String memberName = parseMemberName(memInfo[0]);
-                    final Member member = new Member(memberId, memberName);
-                    final String role = parseMemberRole(memInfo[1]);
-                    if (memInfo.length > 2) {
-                        member.setUncategorizedBands(parseMemberBands(memInfo[2]));
-                    }
-                    addToMemberList(member, role, cat);
-                }
+    public void parse(Document doc) {
+        Element bandTabMembersCurrent = doc.getElementById("band_tab_members_all");
+        if (bandTabMembersCurrent != null) {
+            Element table = bandTabMembersCurrent.select("table").first();
+            if (table != null) {
+                parseTable(table);
             }
-
         }
     }
 
-    private final void addToMemberList(final Member memberToAdd, final String role, final String category) {
-        final MemberCategory cat = MemberCategory.getMemberTypeForString(category);
-        switch (cat) {
+    private void parseTable(Element table) {
+        for (Element row : table.select("tr")) {
+            Elements columns = row.select("td");
+            if (row.hasClass("lineupHeaders")) {
+                if (this.currentMember != null) {
+                    addCurrentMember();
+                }
+                String text = row.text();
+                this.memberCategory = getMemberCategory(text);
+            } else if (row.hasClass("lineupRow")) {
+                if (this.currentMember != null) {
+                    addCurrentMember();
+                }
+                Element firstColumn = columns.get(0);
+                String href = firstColumn.select("a").attr("href");
+                String memberName = firstColumn.text();
+                this.currentMember = new CurrentlyParsedMember(parseIdFromUrl(href), memberName, columns.get(1).text());
+            } else if (row.hasClass("lineupBandsRow")) {
+                Objects.requireNonNull(this.currentMember);
+                this.currentMember.bands = parseBandRow(row);
+            } else {
+                throw new MetallumException("Unknown member row :" + row.text());
+            }
+        }
+        addCurrentMember();
+    }
+
+    private static class CurrentlyParsedMember {
+        private final long id;
+        private final String name;
+        private final String role;
+        private List<PartialBand> bands = new ArrayList<>();
+
+        public CurrentlyParsedMember(long id, String name, String role) {
+            this.name = name;
+            this.id = id;
+            this.role = role;
+        }
+
+        Band.PartialMember toPartialMember() {
+            return new Band.PartialMember(id, name, this.role, bands);
+        }
+    }
+
+    private List<PartialBand> parseBandRow(Element row) {
+        List<PartialBand> bands = new ArrayList<>();
+        String[] bandStrings = row.html()
+                .replace("</td>", "")
+                .replaceAll("\\(R\\.I\\.P\\. \\d\\d\\d\\d\\) ", "")
+                .replace("See also: ", "")
+                .replace("ex-", "")
+                .replace("(live)", "")
+                .replaceAll("<td[^>]*+>", "")
+                .split(",");
+        for (String bandStr : bandStrings) {
+            bandStr = bandStr.trim();
+            if (bandStr.startsWith("<a href")) {
+                long bandId = parseIdFromUrl(bandStr.replaceAll("<a href=\"(http.+\\d+)\".*", "$1"));
+                String name = bandStr.replaceAll(".+\">(.+)</a>", "$1");
+                bands.add(new PartialBand(bandId, name));
+            } else {
+                bands.add(new NullBand(bandStr));
+            }
+        }
+        return bands;
+    }
+
+    private void addCurrentMember() {
+        Objects.requireNonNull(this.memberCategory);
+        addToMemberList(this.currentMember.toPartialMember(), this.memberCategory);
+        this.currentMember = null;
+    }
+
+    private static MemberCategory getMemberCategory(String text) {
+        MemberCategory memberCategory;
+        if ("current".equalsIgnoreCase(text) || "last known".equalsIgnoreCase(text)) {
+            memberCategory = MemberCategory.CURRENT;
+        } else if ("current (live)".equalsIgnoreCase(text) || "last known (live)".equalsIgnoreCase(text)) {
+            memberCategory = MemberCategory.LIVE;
+        } else if ("past".equalsIgnoreCase(text)) {
+            memberCategory = MemberCategory.PAST;
+        } else if ("past (live)".equalsIgnoreCase(text)) {
+            memberCategory = MemberCategory.PAST_LIVE;
+        } else {
+            throw new IllegalStateException("unknown category: " + text);
+        }
+        return memberCategory;
+    }
+
+    private long parseIdFromUrl(String element) {
+        String memberId = element.substring(element.lastIndexOf("/") + 1);
+        return Long.parseLong(memberId);
+    }
+
+    private void addToMemberList(final Band.PartialMember memberToAdd, final MemberCategory category) {
+        switch (category) {
             case CURRENT:
-                this.currentLineupList.put(memberToAdd, role);
+                this.currentLineupList.add(memberToAdd);
                 break;
             case LIVE:
-                this.liveLineupList.put(memberToAdd, role);
+                this.liveLineupList.add(memberToAdd);
                 break;
             case PAST:
-                this.pastLineupList.put(memberToAdd, role);
+                this.pastLineupList.add(memberToAdd);
                 break;
-            case LAST_KNOWN:
-                this.lastKnownLineupList.put(memberToAdd, role);
+            case PAST_LIVE:
+                this.pastLiveLineupList.add(memberToAdd);
                 break;
             default:
                 break;
         }
     }
 
-    private String parseMemberRole(final String htmlPart) {
-        String role = htmlPart.substring(htmlPart.indexOf(">") + 1);
-        role = role.trim().replaceAll("\\s+", " ");
-        return role;
-    }
-
-    private long parseMemberId(String htmlPart) {
-        htmlPart = htmlPart.substring(htmlPart.indexOf("<a"), htmlPart.indexOf("</a>"));
-        String idStr = htmlPart.substring(0, htmlPart.indexOf("\" style"));
-        idStr = idStr.substring(idStr.lastIndexOf("/") + 1, idStr.length());
-        return Long.parseLong(idStr);
-    }
-
-    private String parseMemberName(final String htmlPart) {
-        return Jsoup.parse(htmlPart).text();
-    }
-
-    private final List<PartialBand> parseMemberBands(final String htmlPart) {
-        final List<PartialBand> mBands = new ArrayList<>();
-        if (!htmlPart.contains("See also:")) {
-            return mBands;
-        }
-
-        final String[] bands = htmlPart.split("<a");
-        for (int i = 1; i < bands.length; i++) {
-            String name = bands[i].substring(bands[i].indexOf(">") + 1, bands[i].indexOf("</a>"));
-
-            String idStr = bands[i].substring(bands[i].indexOf("/bands/") + 7);
-            idStr = idStr.substring(idStr.indexOf("/") + 1, idStr.indexOf("\">"));
-            long id = Long.parseLong(idStr);
-
-            mBands.add(new PartialBand(id, name));
-        }
-
-        return mBands;
-    }
-
-    public final Map<Member, String> getCurrentLineup() {
+    public final List<Band.PartialMember> getCurrentLineup() {
         return this.currentLineupList;
     }
 
-    public final Map<Member, String> getLiveLineup() {
+    public final List<Band.PartialMember> getCurrentLiveLineup() {
         return this.liveLineupList;
     }
 
-    public final Map<Member, String> getLastKnownLineup() {
-        return this.lastKnownLineupList;
-    }
-
-    public final Map<Member, String> getPastLineup() {
+    public final List<Band.PartialMember> getPastLineup() {
         return this.pastLineupList;
     }
 
+    public List<Band.PartialMember> getPastLiveLineupList() {
+        return pastLiveLineupList;
+    }
 }

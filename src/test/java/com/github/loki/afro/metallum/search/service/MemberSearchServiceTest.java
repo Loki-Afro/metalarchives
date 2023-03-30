@@ -44,7 +44,6 @@ public class MemberSearchServiceTest {
         assertThat(member.getAlternativeName()).isNull();
         assertThat(member.getDetails()).isNotEmpty();
         assertThat(member.getLinks()).isNotEmpty();
-        assertThat(member.getUncategorizedBands()).isEmpty();
         assertThat(member.getActiveInBands()).isNotEmpty();
         assertThat(member.getPastBands()).isNotEmpty();
         assertThat(member.getMiscBands()).isNotEmpty();
