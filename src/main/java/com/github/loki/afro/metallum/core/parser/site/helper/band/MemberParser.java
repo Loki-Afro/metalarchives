@@ -88,7 +88,7 @@ public class MemberParser {
                 .replace("See also: ", "")
                 .replace("ex-", "")
                 .replace("(live)", "")
-                .replaceAll("<td.*?>", "")
+                .replaceAll("<td[^>]*+>", "")
                 .split(",");
         for (String bandStr : bandStrings) {
             bandStr = bandStr.trim();
