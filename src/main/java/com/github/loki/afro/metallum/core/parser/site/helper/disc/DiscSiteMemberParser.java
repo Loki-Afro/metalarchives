@@ -1,6 +1,7 @@
 package com.github.loki.afro.metallum.core.parser.site.helper.disc;
 
 import com.github.loki.afro.metallum.core.util.MetallumUtil;
+import com.github.loki.afro.metallum.entity.Disc;
 import com.github.loki.afro.metallum.entity.Member;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,13 +9,15 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DiscSiteMemberParser {
-    private final Map<Member, String> albumLineupList = new HashMap<>();
-    private final Map<Member, String> guestLineupList = new HashMap<>();
-    private final Map<Member, String> otherMemberList = new HashMap<>();
+    private final List<Disc.PartialMember> albumLineupList = new ArrayList<>();
+    private final List<Disc.PartialMember> guestLineupList = new ArrayList<>();
+    private final List<Disc.PartialMember> otherMemberList = new ArrayList<>();
     private final Document doc;
     private static final Logger LOGGER = LoggerFactory.getLogger(DiscSiteMemberParser.class);
 
@@ -26,7 +29,7 @@ public class DiscSiteMemberParser {
             this.asString = asString;
         }
 
-        public final static MemberCategory getMemberTypeForString(final String possibleMemberCategory) {
+        public static MemberCategory getMemberTypeForString(final String possibleMemberCategory) {
             for (final MemberCategory cat : values()) {
                 if (MetallumUtil.isStringInArray(possibleMemberCategory, cat.asString)) {
                     return cat;
@@ -61,14 +64,13 @@ public class DiscSiteMemberParser {
             if (row.hasClass("lineupHeaders")) {
                 category = row.text();
             } else if (row.hasClass("lineupRow")) {
-                Member member = parseMember(row);
-                String role = row.getElementsByTag("td").last().text();
-                addToMemberList(member, role, category);
+                Disc.PartialMember member = parseMember(row);
+                addToMemberList(member, category);
             }
         }
     }
 
-    private final Member parseMember(final Element memberRow) {
+    private Disc.PartialMember parseMember(final Element memberRow) {
         String memberIdStr = "0";
         Element memberLink = memberRow.getElementsByAttribute("href").first();
         if (memberLink != null) {
@@ -77,36 +79,37 @@ public class DiscSiteMemberParser {
         } else {
             LOGGER.warn("Member without Link detected, please report that; Member = " + memberRow.text());
         }
+        String role = memberRow.getElementsByTag("td").last().text();
         String memberName = memberLink != null ? memberLink.text() : memberRow.text();
-        return new Member(Long.parseLong(memberIdStr), memberName);
+        return new Disc.PartialMember(Long.parseLong(memberIdStr), memberName, role);
     }
 
-    private final void addToMemberList(final Member memberToAdd, final String role, final String category) {
+    private void addToMemberList(final Disc.PartialMember memberToAdd, final String category) {
         final MemberCategory cat = MemberCategory.getMemberTypeForString(category);
         switch (cat) {
             case ALBUM_LINEUP:
-                this.albumLineupList.put(memberToAdd, role);
+                this.albumLineupList.add(memberToAdd);
                 break;
             case ALBUM_GUEST:
-                this.guestLineupList.put(memberToAdd, role);
+                this.guestLineupList.add(memberToAdd);
                 break;
             case ALBUM_OTHER:
-                this.otherMemberList.put(memberToAdd, role);
+                this.otherMemberList.add(memberToAdd);
                 break;
             default:
                 break;
         }
     }
 
-    public final Map<Member, String> getLineup() {
+    public final List<Disc.PartialMember> getLineup() {
         return this.albumLineupList;
     }
 
-    public final Map<Member, String> getOtherLineup() {
+    public final List<Disc.PartialMember> getOtherLineup() {
         return this.otherMemberList;
     }
 
-    public final Map<Member, String> getGuestLineup() {
+    public final List<Disc.PartialMember> getGuestLineup() {
         return this.guestLineupList;
     }
 }

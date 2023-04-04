@@ -643,13 +643,13 @@ public class DiscSearchServiceTest {
                 .discType(DiscType.SPLIT_VIDEO)
                 .build());
 
-        Map<Member, String> members = discResult.getMember();
+        List<Disc.PartialMember> members = discResult.getMember();
         boolean foundMember = false;
-        for (Member member : members.keySet()) {
+        for (Disc.PartialMember member : members) {
             if (member.getId() == 1032L) {
-                assertThat("Guitars, Vocals").isEqualTo(members.get(member));
-                assertThat(1032L).isEqualTo(member.getId());
-                assertThat("Jon Nödtveidt").isEqualTo(member.getName());
+                assertThat(member.getName()).isEqualTo("Jon Nödtveidt");
+                assertThat(member.getRole()).isEqualTo("Guitars, Vocals");
+                assertThat(member.getRole()).isEqualTo("Guitars, Vocals");
                 foundMember = true;
                 break;
             }
@@ -728,6 +728,23 @@ public class DiscSearchServiceTest {
                 .containsExactly("SYJ", "Rahim Maarof & Whitesteel", "Ella & the Boys", "Lefthanded", "Bloodshed", "Various");
 
         assertThat(resultDisc.getTrackList().size()).isEqualTo(11);
+    }
+
+    @Test
+    public void miscMembers() {
+        Disc disc = API.getDiscById(254L);
+
+        assertThat(disc.getMiscMember())
+                .hasSize(6)
+                .extracting(Disc.PartialMember::getId, Disc.PartialMember::getName, Disc.PartialMember::getRole)
+                .contains(
+                        tuple(53013L, "Pytten", "Producer, Mixing"),
+                        tuple(38L, "Euronymous", "Producer, Mixing, Songwriting"),
+                        tuple(44L, "Hellhammer", "Producer, Mixing, Songwriting"),
+                        tuple(41L, "Dead", "Lyrics (tracks 1, 2, 4-8)"),
+                        tuple(49L, "Necrobutcher", "Lyrics (track 3), Songwriting"),
+                        tuple(1120L, "Blackthorn", "Lyrics (editing), Songwriting, Photography")
+                        );
     }
 
 }

@@ -5,6 +5,7 @@ import com.github.loki.afro.metallum.entity.partials.PartialImage;
 import com.github.loki.afro.metallum.entity.partials.PartialLabel;
 import com.github.loki.afro.metallum.entity.partials.PartialReview;
 import com.github.loki.afro.metallum.enums.DiscType;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -25,9 +26,9 @@ public class Disc extends AbstractEntity {
      */
     private final List<PartialBand> splitBands = new ArrayList<>();
 
-    private Map<Member, String> lineup = new HashMap<>();
-    private Map<Member, String> miscMember = new HashMap<>();
-    private Map<Member, String> guestMember = new HashMap<>();
+    private List<Disc.PartialMember> lineup = new ArrayList<>();
+    private List<Disc.PartialMember> miscMember = new ArrayList<>();
+    private List<Disc.PartialMember> guestMember = new ArrayList<>();
 
     private int discCount = 1;
 
@@ -126,15 +127,15 @@ public class Disc extends AbstractEntity {
     }
 
 
-    public void setLineup(final Map<Member, String> lineUp) {
+    public void setLineup(final List<Disc.PartialMember> lineUp) {
         this.lineup = lineUp;
     }
 
-    public void setMiscLineup(final Map<Member, String> miscMember) {
+    public void setMiscLineup(final List<Disc.PartialMember> miscMember) {
         this.miscMember = miscMember;
     }
 
-    public void setGuestLineup(final Map<Member, String> guestMember) {
+    public void setGuestLineup(final List<Disc.PartialMember> guestMember) {
         this.guestMember = guestMember;
     }
 
@@ -153,15 +154,15 @@ public class Disc extends AbstractEntity {
         return trackListByDiscNumber;
     }
 
-    public Map<Member, String> getLineup() {
+    public List<Disc.PartialMember> getLineup() {
         return this.lineup;
     }
 
-    public Map<Member, String> getMiscMember() {
+    public List<Disc.PartialMember> getMiscMember() {
         return this.miscMember;
     }
 
-    public Map<Member, String> getGuestMember() {
+    public List<Disc.PartialMember> getGuestMember() {
         return this.guestMember;
     }
 
@@ -215,11 +216,21 @@ public class Disc extends AbstractEntity {
      *
      * @return a map with all Member, where the value the role at the specific album;
      */
-    public Map<Member, String> getMember() {
-        Map<Member, String> completeMemberMap = getLineup();
-        completeMemberMap.putAll(getMiscMember());
-        completeMemberMap.putAll(getGuestMember());
+    public List<PartialMember> getMember() {
+        List<PartialMember> completeMemberMap = getLineup();
+        completeMemberMap.addAll(getMiscMember());
+        completeMemberMap.addAll(getGuestMember());
         return completeMemberMap;
+    }
+
+
+    public static class PartialMember extends com.github.loki.afro.metallum.entity.partials.PartialMember {
+        @Getter
+        private final String role;
+        public PartialMember(long id, String name, String role) {
+            super(id, name);
+            this.role = role;
+        }
     }
 
 }
