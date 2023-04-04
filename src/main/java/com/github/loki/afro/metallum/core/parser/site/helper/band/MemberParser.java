@@ -11,11 +11,21 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class MemberParser {
 
     private enum MemberCategory {
-        PAST, PAST_LIVE, CURRENT, LIVE
+        CURRENT("band_tab_members_current"), PAST("band_tab_members_past"), LIVE("band_tab_members_live"), PAST_LIVE(null);
+
+        private final String elementId;
+
+        MemberCategory(String elementId) {
+            this.elementId = elementId;
+        }
+        static Set<MemberCategory> directlyReferencedCategories() {
+            return Set.of(CURRENT, PAST, LIVE);
+        }
     }
 
     private final List<Band.PartialMember> currentLineupList = new ArrayList<>();
@@ -27,24 +37,29 @@ public class MemberParser {
     private MemberCategory memberCategory = null;
 
     public void parse(Document doc) {
-        Element bandTabMembersCurrent = doc.getElementById("band_tab_members_all");
-        if (bandTabMembersCurrent != null) {
-            Element table = bandTabMembersCurrent.select("table").first();
-            if (table != null) {
-                parseTable(table);
+        for (MemberCategory category : MemberCategory.directlyReferencedCategories()) {
+            Element foundCategoryElement = doc.getElementById(category.elementId);
+            if (foundCategoryElement != null) {
+                Element table = foundCategoryElement.select("table").first();
+                if (table != null) {
+                    parseTable(table, category);
+                }
             }
         }
     }
 
-    private void parseTable(Element table) {
+    private void parseTable(Element table, MemberCategory category) {
+        this.memberCategory = category;
         for (Element row : table.select("tr")) {
             Elements columns = row.select("td");
-            if (row.hasClass("lineupHeaders")) {
+            if (category == MemberCategory.LIVE && row.hasClass("lineupHeaders")) {
                 if (this.currentMember != null) {
                     addCurrentMember();
                 }
-                String text = row.text();
-                this.memberCategory = getMemberCategory(text);
+                // past comes always after current
+                if ("past".equalsIgnoreCase(row.text())) {
+                    this.memberCategory = MemberCategory.PAST_LIVE;
+                }
             } else if (row.hasClass("lineupRow")) {
                 if (this.currentMember != null) {
                     addCurrentMember();
@@ -107,22 +122,6 @@ public class MemberParser {
         Objects.requireNonNull(this.memberCategory);
         addToMemberList(this.currentMember.toPartialMember(), this.memberCategory);
         this.currentMember = null;
-    }
-
-    private static MemberCategory getMemberCategory(String text) {
-        MemberCategory memberCategory;
-        if ("current".equalsIgnoreCase(text) || "last known".equalsIgnoreCase(text)) {
-            memberCategory = MemberCategory.CURRENT;
-        } else if ("current (live)".equalsIgnoreCase(text) || "last known (live)".equalsIgnoreCase(text)) {
-            memberCategory = MemberCategory.LIVE;
-        } else if ("past".equalsIgnoreCase(text)) {
-            memberCategory = MemberCategory.PAST;
-        } else if ("past (live)".equalsIgnoreCase(text)) {
-            memberCategory = MemberCategory.PAST_LIVE;
-        } else {
-            throw new IllegalStateException("unknown category: " + text);
-        }
-        return memberCategory;
     }
 
     private long parseIdFromUrl(String element) {
