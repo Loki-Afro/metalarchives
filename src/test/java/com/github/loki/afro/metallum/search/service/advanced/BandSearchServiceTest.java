@@ -777,4 +777,22 @@ public class BandSearchServiceTest {
                 );
     }
 
+    @Test
+    public void bandWithOnlyLastKnownLineUp () {
+        Band bandById = API.getBandById(2866L);
+        assertThat(bandById.getCurrentMembers()).hasSize(3);
+        assertThat(bandById.getPastMembers()).hasSize(0);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(0);
+        assertThat(bandById.getPastLiveMembers()).hasSize(0);
+    }
+
+    @Test
+    public void noMembersAtAll () {
+        Band bandById = API.getBandById(101469L);
+        assertThat(bandById.getCurrentMembers()).hasSize(0);
+        assertThat(bandById.getPastMembers()).hasSize(0);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(0);
+        assertThat(bandById.getPastLiveMembers()).hasSize(0);
+    }
+
 }
