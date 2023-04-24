@@ -31,14 +31,14 @@ mvn clean install
 <dependency>
     <groupId>com.github.loki-afro</groupId>
     <artifactId>metalarchives-api</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```
-compile 'com.github.loki-afro:metalarchives-api:1.1.0'
+compile 'com.github.loki-afro:metalarchives-api:1.2.0'
 ```
 
 ### Usage
