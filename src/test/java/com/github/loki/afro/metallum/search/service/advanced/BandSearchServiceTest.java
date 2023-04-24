@@ -740,8 +740,8 @@ public class BandSearchServiceTest {
 
         assertThat(bandById.getCurrentMembers()).hasSize(3);
         assertThat(bandById.getPastMembers()).hasSize(3);
-        assertThat(bandById.getCurrentLiveMembers()).hasSize(1);
-        assertThat(bandById.getPastLiveMembers()).hasSize(5);
+        assertThat(bandById.getCurrentLiveMembers()).hasSize(0);
+        assertThat(bandById.getPastLiveMembers()).hasSize(6);
 
 
         assertThat(bandById.getPastMembers())
