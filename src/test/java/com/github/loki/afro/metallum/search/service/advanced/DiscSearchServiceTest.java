@@ -735,7 +735,7 @@ public class DiscSearchServiceTest {
         Disc disc = API.getDiscById(254L);
 
         assertThat(disc.getMiscMember())
-                .hasSize(6)
+                .hasSize(7)
                 .extracting(Disc.PartialMember::getId, Disc.PartialMember::getName, Disc.PartialMember::getRole)
                 .contains(
                         tuple(53013L, "Pytten", "Producer, Mixing"),
@@ -743,7 +743,8 @@ public class DiscSearchServiceTest {
                         tuple(44L, "Hellhammer", "Producer, Mixing, Songwriting"),
                         tuple(41L, "Dead", "Lyrics (tracks 1, 2, 4-8)"),
                         tuple(49L, "Necrobutcher", "Lyrics (track 3), Songwriting"),
-                        tuple(1120L, "Blackthorn", "Lyrics (editing), Songwriting, Photography")
+                        tuple(1120L, "Blackthorn", "Lyrics (editing), Songwriting, Photography"),
+                        tuple(996378L, "Dye", "Design (cover)")
                         );
     }
 
